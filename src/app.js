@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 //rutas
 app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
+app.use(require('./routes/compras'));
 
 
 //inicializacion del servidor

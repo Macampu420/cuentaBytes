@@ -7,7 +7,7 @@
     <li><a href="./productos.php">Inventario</a></li>
     <li><a href="./egresos.php">Egresos</a></li>
     <li><a href="./ventas.php">Ventas</a></li>
-    <li><a href="#">Compras</a></li>
+    <li><a href="./compras.php">Compras</a></li>
     <li><a href="./clientes.php">Clientes</a></li>
     <li><a href="./proveedores.php">Proveedores</a></li>
 </ul>

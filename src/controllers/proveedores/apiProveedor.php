@@ -1,7 +1,7 @@
 <?php 
 include "./../../conexion.php";
 
-$sqlTraerTodo = "select * from proveedor order by idProveedor desc";
+$sqlTraerTodo = "CALL listarProveedores";
 $proveedores = array();
 $datos = $connection -> query($sqlTraerTodo);
 $proveedores['items'] = array();
