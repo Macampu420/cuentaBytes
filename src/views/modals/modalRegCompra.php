@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content text-dark">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
-            <form class="">
+            <form id="formCompras" class="">
                 <div class="row">
 
                     <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal"
