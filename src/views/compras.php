@@ -39,11 +39,11 @@
 
                     <h2 class="text-center fs-2 mt-5">Compras</h2>
 
-                    <input id="buscadorVtas" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar venta">
+                    <input id="buscadorVtas" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar compra">
 
                 </div>
 
-                <!-- btn añadir item y cartas con las ventas -->
+                <!-- btn añadir item y cartas con las compras -->
                 <div class="row col-12 mx-auto pt-5">
 
                     <!-- btn añadir -->
@@ -54,13 +54,10 @@
                         </div>
                     </div>
 
-                    <!-- cartas con todas las ventas registradas -->
+                    <!-- cartas con todas las compras registradas -->
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
-                        <div id="filaVentas" class="row">
-
-
-
+                        <div id="filaCompras" class="row">
                         </div>
 
                     </div>
