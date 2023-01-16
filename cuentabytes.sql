@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2023 at 07:35 AM
+-- Generation Time: Jan 16, 2023 at 05:26 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -84,6 +84,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
 SELECT nombresCliente, idCliente FROM clientes;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompras` ()   SELECT enccompraproducto.*, proveedor.nombreProveedor FROM enccompraproducto INNER JOIN proveedor on proveedor.idProveedor = enccompraproducto.idProveedor ORDER BY enccompraproducto.idCompra DESC$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgreso` (IN `_idEgreso` INT(11))   SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
 detalleegreso.idDetEgreso ,detalleegreso.valorEgreso, detalleegreso.descripcion, detalleegreso.idEgreso,
 tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso FROM encegreso
@@ -99,6 +101,8 @@ INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()   BEGIN
 SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva FROM productos ORDER BY nombreProducto ASC;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()   select * from proveedor order by idProveedor desc$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()   SELECT * FROM tipoegreso$$
 
@@ -252,7 +256,8 @@ CREATE TABLE `detcompraproducto` (
 --
 
 INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) VALUES
-(5, 10, 1200, 5, 5);
+(5, 10, 1200, 5, 5),
+(6, 10, 5000, 6, 26);
 
 -- --------------------------------------------------------
 
@@ -262,17 +267,20 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 
 CREATE TABLE `enccompraproducto` (
   `idCompra` int(11) NOT NULL,
-  `tituloCompra` varchar(10) DEFAULT NULL,
+  `conceptoCompra` varchar(10) DEFAULT NULL,
   `fechaCompra` date NOT NULL,
-  `idProveedor` int(11) DEFAULT NULL
+  `idProveedor` int(11) DEFAULT NULL,
+  `vrTotalCompra` int(11) NOT NULL,
+  `vrTotalIva` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `enccompraproducto`
 --
 
-INSERT INTO `enccompraproducto` (`idCompra`, `tituloCompra`, `fechaCompra`, `idProveedor`) VALUES
-(5, 'XD', '2022-08-08', NULL);
+INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `idProveedor`, `vrTotalCompra`, `vrTotalIva`) VALUES
+(5, 'XD', '2022-08-08', NULL, 0, 0),
+(6, '10 polas', '2023-01-12', 8, 50000, 200);
 
 -- --------------------------------------------------------
 
@@ -595,13 +603,13 @@ ALTER TABLE `detalleventa`
 -- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
-  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `enccompraproducto`
 --
 ALTER TABLE `enccompraproducto`
-  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `imagen`
