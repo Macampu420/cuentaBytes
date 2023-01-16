@@ -147,8 +147,44 @@ let crearItem = (disparador, numeroItem) => {
     vrIva();
 }
 
-//actualiza un item de la compra 
-let actualizarItem = () => {console.log("item para actualizar");}
+//actualiza un item completo de la compra 
+let actualizarItem = (item, disparador, numeroItem) => {
+
+    let producto = vProductos.find(producto => producto.idProducto == disparador.value)
+    let indexItem = vItemsCompra.indexOf(item);
+
+    vItemsCompra[indexItem].idProducto = parseInt(producto.idProducto);
+    vItemsCompra[indexItem].costoProducto = parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
+    vItemsCompra[indexItem].cantidadCompra = parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
+    vItemsCompra[indexItem].porcentajeIva = parseInt(producto.porcentajeIva);
+
+    vrTotal();
+    vrIva();
+}
+
+let actualizarUnidCompradas = (item, numeroItem) => {
+    let indexItem = vItemsCompra.indexOf(item);
+
+    vItemsCompra[indexItem].cantidadCompra = document.querySelector('#inpunidCompslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
+    vrTotal();
+    vrIva();
+}
+
+let actualizarCostoProducto = (item, numeroItem) => {
+    let indexItem = vItemsCompra.indexOf(item);
+
+    vItemsCompra[indexItem].costoProducto = document.querySelector('#inpPrecioUnitslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
+    vrTotal();
+    vrIva();
+}
+
+let eliminarProducto = (item) => {
+    let indexItem = vItemsCompra.indexOf(item);
+    vItemsCompra.splice(indexItem, 1);
+
+    vrTotal();
+    vrIva();
+}
 
 let habilitarInputsItem = disparador => {
     let producto = vProductos.find(producto => parseInt(disparador.value) == producto.idProducto);

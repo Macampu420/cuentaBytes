@@ -31,19 +31,34 @@ document.getElementById("contItems").addEventListener("change", event => {
 
     let disparador = event.target;
     let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
+    let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
 
     if(disparador.tagName == "SELECT"){
-        let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
-
-        if(divModal.getAttribute('editar') == "false") habilitarInputsItem(disparador), item == undefined ? crearItem(disparador, numeroItem) : actualizarItem();
-    }     
-
+        if(divModal.getAttribute('editar') == "false") habilitarInputsItem(disparador), item == undefined ? crearItem(disparador, numeroItem) : actualizarItem(item, disparador, numeroItem);
+    }
 });
 
 document.getElementById('rowItems').addEventListener('input', event => {
-    if (event.target.id.includes('inpunidCompslc')) mostrarNuevoStock(event.target)
+    let disparador = event.target;
+    let numeroItem = disparador.id.slice(disparador.id.length - 1);
+    let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
+
+    if (disparador.id.includes('inpunidCompslc')) {
+        mostrarNuevoStock(disparador);
+        actualizarUnidCompradas(item, numeroItem);
+    } else if (disparador.id.includes('inpPrecioUnitslc')) {
+        mostrarNuevoStock(disparador);
+        actualizarCostoProducto(item, numeroItem);
+    }
 })
 
 document.getElementById('rowItems').addEventListener('click', event => {
-   if (event.target.id.includes('dlt')) event.target.parentElement.parentElement.remove(); 
+   if (event.target.id.includes('dlt')){
+    let disparador = event.target;
+    let numeroItem = disparador.id.slice(disparador.id.length - 1);
+    let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
+
+    disparador.parentElement.parentElement.remove(); 
+    eliminarProducto(item);
+   }
 });
