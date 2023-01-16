@@ -1,7 +1,5 @@
-let vProveedores, vProductos, numeroItem, vCompras;
-let vItemsCompra = [];
+let numeroItem;
 let divModal = document.getElementById("modalCompras");
-const conversorColombia = new Intl.NumberFormat('en-CO');
 
 mostrarProveedores();
 guardarProductos();
@@ -29,76 +27,23 @@ document.getElementById('btnAnadir').addEventListener('click', event => {
 
 });
 
-document.getElementById("contItems").addEventListener("change", (event) => {
+document.getElementById("contItems").addEventListener("change", event => {
 
     let disparador = event.target;
+    let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
 
     if(disparador.tagName == "SELECT"){
+        let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
 
-        console.log("productoSeleccionado");
+        if(divModal.getAttribute('editar') == "false") habilitarInputsItem(disparador), item == undefined ? crearItem(disparador, numeroItem) : actualizarItem();
+    }     
 
-        let stockActual;
-        let slider = document.querySelector(".slider" + disparador.id);
+});
 
-        if(divModal.getAttribute('editar') == "false"){
+document.getElementById('rowItems').addEventListener('input', event => {
+    if (event.target.id.includes('inpunidCompslc')) mostrarNuevoStock(event.target)
+})
 
-            let item = vItemsCompra.find(
-                //busca en los elementos de la compra actual uno que coincida con el item modificado retorna undefined si no encuentra nd
-                item => item.idItem == disparador.parentElement.id
-            );
-    
-            //busca el producto que coincida con el option seleccionado para definir el stockActual
-            vProductos.forEach(element => {
-                if (element.idProducto == disparador.value) {
-                    stockActual = element.stockProducto;
-                }
-            });
-    
-            //valida que haya unidades disponibles para vender
-            if (stockActual <= 0) {
-                slider.nextElementSibling.innerHTML = ("No hay unidades disponibles");
-            } else {
-                habilitarSlider(slider, stockActual);
-                actualizarCrearItem(item, event.target, vItemsVta);
-            }
-        }
-
-    }
-
-    if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "true") {
-
-        slider = document.querySelector("." + event.target.id);
-
-        let item = vItemsEditar.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idVenta == disparador.parentElement.id
-        );
-
-        //busca el producto que coincida con el option seleccionado para definir el stockActual
-        let producto = vObjsProductos.find(element => element.idProducto == parseInt(disparador.value));
-
-        stockActual = producto.stockProducto;
-
-        //valida que haya unidades disponibles para vender
-        if (stockActual <= 0) {
-            slider.nextElementSibling.innerHTML = ("No hay unidades disponibles");
-        } else {
-            habilitarSlider(slider, stockActual);
-            actualizarCrearItem(item, event.target, vItemsEditar);
-        }
-    }
-
-    if (disparador.tagName == "INPUT" && divModal.getAttribute('editar') == "false") {
-
-        actualizarUnidVend(disparador, vItemsVta);
-
-    }
-
-    if (disparador.tagName == "INPUT" && divModal.getAttribute('editar') == "true") {
-
-        actualizarUnidVend(disparador, vItemsEditar);
-
-    }
-
+document.getElementById('rowItems').addEventListener('click', event => {
+   if (event.target.id.includes('dlt')) event.target.parentElement.parentElement.remove(); 
 });
