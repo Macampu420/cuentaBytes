@@ -208,3 +208,32 @@ let mostrarNuevoStock = disparador => {
     leyendaItem.innerHTML = `Actualmente tienes ${leyendaItem.getAttribute('stockactual')}. Quedarás con ${nuevoStock}`;
 }
 
+let enviarCompra = async () => {
+
+    let compraActual = {
+        conceptoCompra: document.getElementById('conceptoCompra').value,
+        fechaCompra: document.getElementById('fechaCompra').value,
+        idProveedor: document.getElementById('slcProveedor').value,
+        vrTotalCompra: document.getElementById('vrTotalCompra').value.replace(',', ''),
+        vrTotalIva: document.getElementById('vrTotalIva').value.replace(',', ''),
+        vItemsCompra
+    };
+
+    await fetch('http://localhost:3000/guardarCompra', {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(compraActual)
+        })
+        .then(response => response.text())
+        .then(mensaje => {
+            alert(mensaje);
+            location.reload();
+        })
+        .catch(err => {
+            alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
+            location.reload();
+        });
+}

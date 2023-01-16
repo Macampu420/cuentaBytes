@@ -121,8 +121,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    console.log(event.target);
-
     divModal.getAttribute("editar") == "false" ? registrarVenta() : actualizarVenta(event);
 });
 

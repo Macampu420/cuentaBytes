@@ -62,3 +62,11 @@ document.getElementById('rowItems').addEventListener('click', event => {
     eliminarProducto(item);
    }
 });
+
+document.querySelector("form").addEventListener("submit", (event) => {
+
+    //evita que la pagina se recargue
+    event.preventDefault();
+
+    divModal.getAttribute("editar") == "false" ? enviarCompra() : actualizarVenta(event);
+});
