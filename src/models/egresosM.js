@@ -1,6 +1,7 @@
 const { query } = require('express');
 const pool = require('../conexion');
 
+
 class ModuloEgresos {
 
     idUltimoEgreso;
@@ -64,6 +65,29 @@ class ModuloEgresos {
                     //para registrarlo en la bd
                     if (req.body.itemsEgreso != undefined && req.body.itemsEgreso.length > 0) {
 
+                        if (req.body.borrarDetEgreso == true) {
+                            req.body.itemEliminar.forEach(element => {
+                                pool.query("CALL eliminarDetEgreso(?)", [element.itemId],
+                                    (err, rows) => {
+
+                                        //si hay error lo imprime y termina la peticion
+                                        if (err) {
+                                            console.log("internal error", err);
+                                            res.write(err);
+                                            res.end();
+                                        } else {
+                                            //si no hay error envia el texto y termina la peticion
+                                            res.write("El egreso fue actualizado correctamente");
+                                            res.end();
+                                        }
+
+                                    })
+
+                                    console.log(element.itemId);
+
+                            })
+                        }
+
                         req.body.itemsEgreso.forEach(element => {
                             if (element.idDetEgreso == null) {
                                 pool.query("CALL insertarDetEgreso(?,?,?)", [element.valorEgreso, element.descripcion, req.body.idEgreso],
@@ -83,6 +107,7 @@ class ModuloEgresos {
                                     }
                                 );
                             }
+
                             else {
                                 pool.query("CALL actualizarDetEgreso(?,?,?)", [element.idDetEgreso, element.valorEgreso, element.descripcion],
                                     (err, rows) => {
@@ -102,6 +127,8 @@ class ModuloEgresos {
                                 );
 
                             }
+
+
                         });
                     }
                 }

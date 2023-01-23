@@ -56,7 +56,7 @@ let mostrarCompras = async () => {
                 
                 <div id="${compra.idCompra}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
-                        <h5 btnAcciones idventa="${compra.idCompra}" class="puntosAcciones m-2 w-25">...</h5>
+                        <h5 btnAcciones idcompra="${compra.idCompra}" class="puntosAcciones m-2 w-25">...</h5>
                         <h5>Concepto: ${compra.conceptoCompra}</h5>
                         <h5>Valor Total: ${conversorColombia.format(compra.vrTotalCompra)}</h5>
                         <h5>Fecha: ${compra.fechaCompra.slice(0, 10)}</h5>
@@ -89,7 +89,7 @@ let renderItem = (numeroItem, vProductos_) => {
                 <div class="row">
                     <div class="col-7 col-lg-5 mx-auto">
                         <label for="inpunidCompslc${numeroItem}">Unidades compradas:</label>
-                        <input disabled id="inpunidCompslc${numeroItem}" type="number" min="1" value="5" class="unidCompslc${numeroItem} w-100">
+                        <input disabled id="inpunidCompslc${numeroItem}" type="number" min="1" value="0" class="unidCompslc${numeroItem} w-100">
                     </div>
                     <div class="col-7 col-lg-5 mx-auto">
                         <label for="inpPrecioUnitslc${numeroItem}">Valor unitario:</label>
@@ -99,7 +99,6 @@ let renderItem = (numeroItem, vProductos_) => {
                 <p id="pslc${numeroItem}" class="d-none mx-auto mt-2 mb-0 text-center">Actualmente tienes 1. Quedarás con 20.</p>
             </div>
         </div>
-
         `);
 
     //pone todos los productos que se traigan en el select del item creado
@@ -118,6 +117,23 @@ let configModalReg = () => {
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     vItemsCompra = [];
 
+}
+
+let configModalEdit = (event) => {
+    //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
+    document.getElementById('rowItems').innerHTML = "";
+    //muestra las acciones para poder ejecutarlas
+    document.getElementById('divAcciones').classList.remove("d-none");
+    //desabilita el btn guardar que se habilitara cuando el usuario clickee editar
+    document.getElementById('btnGuardar').disabled = true;
+    //cambia el valor del btn actualizar
+    document.getElementById('btnGuardar').innerHTML = "Actualizar";
+
+    let idCompra = event.target.getAttribute("idcompra");
+
+    document.getElementById("btnGuardar").setAttribute("idCompra", idCompra);
+    document.querySelector("form").setAttribute("idCompra", idCompra);
+    document.getElementById('btnEliminar').setAttribute("idCompra", idCompra)
 }
 
 let vrTotal = () => {
@@ -236,4 +252,19 @@ let enviarCompra = async () => {
             alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
             location.reload();
         });
+}
+
+let modalEditar = async event => {
+    let idCompra = event.target.getAttribute("idcompra");
+
+    //trae la venta (enc y dets) para renderizarlos
+    await fetch(`http://localhost:3000/editCompra${idCompra}`)
+        .then(res => res.json())
+        .then(data => {
+            vItemsEditar = data
+        })
+        .catch(e => console.log(e));
+
+    console.log(vItemsEditar);
+
 }

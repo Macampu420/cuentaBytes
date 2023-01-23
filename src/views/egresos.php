@@ -124,7 +124,7 @@
                 }
 
             });
-            document.getElementById('rowItems').addEventListener('change', event =>{
+            document.getElementById('rowItems').addEventListener('change', event => {
                 vrTotalRegistar();
             })
 
@@ -135,7 +135,7 @@
                 event.preventDefault();
 
                 detalleVenta(vItemsEditar);
-                
+
 
                 divModal.getAttribute("editar") == "false" ? registrarEgreso(vItemsEgreso) : console.log("me tengo que actualizar");
                 divModal.getAttribute("editar") == "true" ? actualizarEgreso(vItemsEgreso, vItemsEditar) : console.log("me tengo que actualizar");
@@ -153,7 +153,7 @@
 
             document.getElementById("filaVentas").addEventListener("click", async event => {
 
-                if (event.target.hasAttribute("cartaitem") || event.target.tagName == "H5") {
+                if (event.target.hasAttribute("btnAcciones")) {
 
                     divModal.setAttribute('editar', true);
 

@@ -5,6 +5,7 @@ var numeroItem = 0;
 var numeroItemAct = 0;
 var vObjsEncEgreso = [];
 var vItemsEditar = [];
+
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -48,17 +49,30 @@ const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item" + numeroItem}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+        <div id="${divModal.getAttribute('editar') == "true" ? "id" + numeroItemAct : "item" + numeroItem}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
         <div class="containerBtn">
           <div id="dlt${numeroItem}" class="btnEliminar"></div>
         </div>
-        <p class="mb-0 quicksand"><input required type="number" id="vr${numeroItem}" placeholder="Valor Egreso"></p><br>
-        <p class="mb-0 quicksand"><input required type="text" id="titulo${numeroItem}" placeholder="Titulo Egreso"> </p>
+        <p class="mb-0 quicksand"><input required type="number" id="${divModal.getAttribute('editar') == "true" ? "vr" + numeroItemAct : "vr" + numeroItem}" placeholder="Valor Egreso"></p><br>
+        <p class="mb-0 quicksand"><input required type="text" id="${divModal.getAttribute('editar') == "true" ? "titulo" + numeroItemAct : "titulo" + numeroItem}" placeholder="Titulo Egreso"> </p>
         </div>
         `);
 
 
-    numeroItem++;
+    if (divModal.getAttribute('editar') == "true") {
+        numeroItemAct++;
+        comparar = "vr" + numeroItemAct;
+        if(comparar !== itemsDetEgreso[numeroItemAct-1]){
+            itemsDetEgreso.push("vr" + numeroItemAct);
+        }
+    } 
+    numeroItem++; 
+
+    console.log("A " + numeroItemAct);
+    console.log("B " + numeroItem);
+    console.log(itemsDetEgreso);
+
+
 }
 //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -82,20 +96,20 @@ const detalleVenta = (vectorId) => {
                 //     idDetEgreso = vectorId[e].idDetEgreso;
                 // }
                 let idDetEgreso = parseInt(document.getElementById(`id${i}`).className);
-        
+
                 vItemsEgreso.push({
                     valorEgreso,
                     descripcion,
                     idDetEgreso,
-                })       
+                })
             }
-            else{
+            else {
                 idDetEgreso = null;
                 vItemsEgreso.push({
                     valorEgreso,
                     descripcion,
                     idDetEgreso,
-                }) 
+                })
             }
         } else {
 
@@ -173,7 +187,7 @@ const eliminarItem = (disparador, vector_) => {
     let item = vector_.find(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
-        element => element.idItem || element.idDetVenta == disparador.parentElement.parentElement.id
+        element => element.idItem || element.idDetEgreso == disparador.parentElement.parentElement.id
     );
 
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
@@ -183,15 +197,11 @@ const eliminarItem = (disparador, vector_) => {
         if (vector_.indexOf(item) == 0) {
 
             vector_.shift();
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
             disparador.parentElement.parentElement.remove();
 
         } else {
 
             vector_.pop(vector_.indexOf(item));
-
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
-
             disparador.parentElement.parentElement.remove();
         }
     } else {
@@ -199,6 +209,20 @@ const eliminarItem = (disparador, vector_) => {
     }
 
     numeroItem = numeroItem - 1;
+    numeroItemAct = numeroItemAct - 1;
+
+    if (divModal.getAttribute("editar") == "true") {
+        itemId = item.idDetEgreso;
+        itemEliminar.push({
+            itemId
+        })
+        borrarDetEgreso = true;
+
+
+    }
+
+    console.log(vItemsEditar);
+    console.log(itemEliminar);
 
 
 }
@@ -231,7 +255,8 @@ const renderEgresos = async () => {
             filaVentas.insertAdjacentHTML('beforeend', `
                 
                 <div id="${element.idEgreso}" idventa="${element.idEgreso}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
-                    <div idventa="${element.idEgreso}" class="card-body mt-2 mx-auto">
+                    <div class="card-body mt-2 mx-auto">
+                    <h5 btnAcciones idventa="${element.idEgreso}" class="puntosAcciones m-2 w-25">...</h5>
                         <h5 idventa="${element.idEgreso}">Titulo: ${element.tituloEgreso}</h5>
                         <h5 idventa="${element.idEgreso}">Valor Total: ${conversorColombia.format(element.vrTotalEgreso)}</h5>
                         <h5 idventa="${element.idEgreso}">Fecha: ${element.fechaEgreso}</h5>
@@ -271,7 +296,9 @@ const desplegarModal = (modal, event) => {
 
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 const modalEditar = async event => {
-
+    borrarDetEgreso = false;
+    itemEliminar = [];
+    itemsDetEgreso = [];
     //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
     document.getElementById('rowItems').innerHTML = "";
     //muestra las acciones para poder ejecutarlas
@@ -319,6 +346,9 @@ const modalEditar = async event => {
 
         numeroItem++;
         numeroItemAct++;
+
+        itemsDetEgreso.push("vr" + numeroItem);
+
 
     });
 
@@ -376,7 +406,9 @@ const actualizarEgreso = (vector, vectorId) => {
             fecha,
             vrTotalEgreso,
             idTipoEgreso,
-            itemsEgreso: vector
+            itemsEgreso: vector,
+            itemEliminar: itemEliminar,
+            borrarDetEgreso
         };
 
         enviarActEgreso(egresoActual);
@@ -403,7 +435,7 @@ const enviarActEgreso = async (egresoActual_) => {
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
-            // location.reload();
+            location.reload();
         })
         .catch(err => {
             alert("Ha ocurrido un error registrando el egreso, por favor intentalo mas tarde");
