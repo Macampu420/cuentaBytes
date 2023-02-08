@@ -28,7 +28,7 @@
                             <label for="fechaCompra" class="form-label quicksand">Fecha:</label>
                             <input required type="date" class="form-control" id="fechaCompra" aria-describedby="basic-addon3">
                         </div>
-                        <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-3">
+                        <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-5">
                             <label for="conceptoCompra" class="form-label quicksand">Concepto:</label>
                             <input required type="text" class="form-control" id="conceptoCompra" aria-describedby="basic-addon3">
                         </div>

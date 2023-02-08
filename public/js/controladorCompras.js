@@ -11,9 +11,9 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
     divModal.setAttribute("editar", "false")
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        divModal.getAttribute("editar") == "false" ? configModalReg() : console.log("editar");
+        configModalReg();
         modalCompras.show();
-        numeroItem = 0;
+        numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
     }
 
 });
@@ -21,7 +21,8 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
 document.getElementById('btnAnadir').addEventListener('click', event => {
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        renderItem(numeroItem, vProductos);
+
+        divModal.getAttribute('editar') == 'false' ? renderItemReg(numeroItem, vProductos) : renderItemEdit(vProductos);
         numeroItem++;
     }
 
@@ -29,47 +30,46 @@ document.getElementById('btnAnadir').addEventListener('click', event => {
 
 document.getElementById("contItems").addEventListener("change", event => {
 
+    let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
     let disparador = event.target;
     let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
-    let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
+    let item = vector.find(item => item.idItem == ('item' + numeroItem));
 
     if (disparador.tagName == "SELECT") {
-        if (divModal.getAttribute('editar') == "false") habilitarInputsItem(disparador), item == undefined ? crearItem(disparador, numeroItem) : actualizarItem(item, disparador, numeroItem);
-    } else if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "true") {
-
-        slider = document.querySelector("." + event.target.id);
-
-        let item = vItemsEditar.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idVenta == disparador.parentElement.id
-  
-        )
+        habilitarInputsItem(disparador);
+        if (divModal.getAttribute('editar') == 'false') {
+            item == undefined ? crearItemReg(vector, disparador, numeroItem) : actualizarItem(vector, item, disparador, numeroItem);
+        } else {
+            item == undefined ? crearItemEdit(vector) : actualizarItem(vector, item, disparador, numeroItem);
+        }
     }
 });
 
 document.getElementById('rowItems').addEventListener('input', event => {
-    let disparador = event.target;
-    let numeroItem = disparador.id.slice(disparador.id.length - 1);
-    let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
+    if (event.target.tagName == "INPUT") {
+        let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
+        let disparador = event.target;
+        let numeroItem = disparador.id.slice(disparador.id.length - 1);
+        let item = vector.find(item => item.idItem == ('item' + numeroItem));
 
-    if (disparador.id.includes('inpunidCompslc')) {
-        mostrarNuevoStock(disparador);
-        actualizarUnidCompradas(item, numeroItem);
-    } else if (disparador.id.includes('inpPrecioUnitslc')) {
-        mostrarNuevoStock(disparador);
-        actualizarCostoProducto(item, numeroItem);
+        if (disparador.id.includes('inpunidCompslc')) {
+            actualizarUnidCompradas(vector, item, numeroItem);
+            // mostrarNuevoStock(disparador);
+        } else if (disparador.id.includes('inpPrecioUnitslc')) {
+            actualizarCostoProducto(vector, item, numeroItem);
+        }
     }
 })
 
 document.getElementById('rowItems').addEventListener('click', event => {
     if (event.target.id.includes('dlt')) {
+        let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
         let disparador = event.target;
         let numeroItem = disparador.id.slice(disparador.id.length - 1);
-        let item = vItemsCompra.find(item => item.idItem == ('item' + numeroItem));
+        let item = vector.find(item => item.idItem == ('item' + numeroItem));
 
         disparador.parentElement.parentElement.remove();
-        eliminarProducto(item);
+        eliminarProducto(vector, item);
     }
 });
 
@@ -78,19 +78,19 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    divModal.getAttribute("editar") == "false" ? enviarCompra() : actualizarVenta(event);
+    divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
 });
 
 document.getElementById('filaCompras').addEventListener('click', event => {
-    if(event.target.classList.contains("puntosAcciones")){
+    if (event.target.classList.contains("puntosAcciones")) {
         divModal.setAttribute("editar", "true");
-        divModal.getAttribute("editar") == "false" ? configModalReg() : configModalEdit(event);
+        divModal.getAttribute("editar") == "false" ? configModalReg() : configModalEdit(event, vProductos);
         modalCompras.show();
         numeroItem = 0;
     }
 })
 
-document.getElementById('btnEliminar').addEventListener("click", async event => {
+document.getElementById('btnEliminar').addEventListener("click", async () => {
     let idCompra = document.getElementById('btnEliminar').getAttribute('idcompra');
 
     if (confirm("¿Deseas eliminar la compra?") == true) {
@@ -102,3 +102,5 @@ document.getElementById('btnEliminar').addEventListener("click", async event => 
 
     }
 })
+
+document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false)

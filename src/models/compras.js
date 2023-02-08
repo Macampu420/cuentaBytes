@@ -1,4 +1,3 @@
-const { query } = require('express');
 const pool = require('./../conexion');
 
 class moduloCompras {
@@ -68,7 +67,7 @@ class moduloCompras {
                 console.log("internal error", err);
                 res.send(null);
             } else if (rows[0].length === 0) {
-                res.send("No hay compras registradas");
+                res.send(JSON.stringify({mensaje: "no hay compras registradas"}));
             } else {
                 this.idUltimaCompra = rows[0][0].idCompra;
                 res.send(rows[0]);
@@ -85,7 +84,7 @@ class moduloCompras {
                 res.end();
             } else if (rows[0].length === 0) {
 
-                res.write("no hay ventas registradas");
+                res.status(400).send(JSON.stringify({mensaje: "no hay compras registradas"}));
                 res.end();
 
             } else {
@@ -97,7 +96,5 @@ class moduloCompras {
         });
     }
 }
-
-
 
 module.exports = moduloCompras

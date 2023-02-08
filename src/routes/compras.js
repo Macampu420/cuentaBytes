@@ -16,4 +16,6 @@ router.get('/listarCompra:id', (req, res) => {
     objModuloCompras.listarCompra(req, res); 
 })
 
+router.post('/compras/editarCompra', async (req, res) => console.log(req.body));
+
 module.exports = router;

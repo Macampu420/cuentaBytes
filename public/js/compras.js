@@ -1,7 +1,8 @@
 let vProveedores, vProductos;
 let vItemsCompra = [];
-let vCompras = [];
+let vCompras, vItemsEditar = [];
 const conversorColombia = new Intl.NumberFormat('en-CO');
+
 
 //trae todos los proveedores de la api y los devuelve como json
 let traerProveedores = async () => {
@@ -47,7 +48,7 @@ let mostrarCompras = async () => {
     vCompras = await traerCompras();
 
     //valida que haya compras registradas y renderiza cada una, si no hay muestra un mensaje indicando esto
-    if (vCompras.length > 0) {
+    if (Array.isArray(vCompras)) {
 
         let filaCompras = document.getElementById('filaCompras');
 
@@ -74,7 +75,7 @@ let mostrarCompras = async () => {
 
 }
 
-let renderItem = (numeroItem, vProductos_) => {
+let renderItemReg = (numeroItem, vProductos_) => {
 
     //agrega un nuevo item de la compra al modal
     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
@@ -107,6 +108,42 @@ let renderItem = (numeroItem, vProductos_) => {
          <option value="${producto.idProducto}">${producto.nombreProducto}</option>`)
     });
 }
+
+let renderItemEdit = (vProductos_) => {
+
+    crearItemEdit(vItemsEditar);
+
+    //agrega un nuevo item de la compra al modal
+    document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
+        <div id="item${vItemsEditar.length - 1}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+            <div class="containerBtn">
+                <div id="dlt${vItemsEditar.length - 1}" class="btnEliminar"></div>
+            </div>
+            <select id="slc${vItemsEditar.length - 1}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
+                <option selected>Selecciona el producto</option>
+            </select>
+            <div id="slidecontainer${vItemsEditar.length - 1}" class="">
+                <div class="row">
+                    <div class="col-7 col-lg-5 mx-auto">
+                        <label for="inpunidCompslc${vItemsEditar.length - 1}">Unidades compradas:</label>
+                        <input disabled id="inpunidCompslc${vItemsEditar.length - 1}" type="number" min="1" value="0" class="unidCompslc${vItemsEditar.length - 1} w-100">
+                    </div>
+                    <div class="col-7 col-lg-5 mx-auto">
+                        <label for="inpPrecioUnitslc${vItemsEditar.length - 1}">Valor unitario:</label>
+                        <input disabled id="inpPrecioUnitslc${vItemsEditar.length - 1}" type="number" min="1" class="precioUnitslc${vItemsEditar.length - 1} w-100">
+                    </div>
+                </div>
+                <p id="pslc${vItemsEditar.length - 1}" class="d-none mx-auto mt-2 mb-0 text-center">Actualmente tienes 1. Quedarás con 20.</p>
+            </div>
+        </div>
+        `);
+
+    //pone todos los productos que se traigan en el select del item creado
+    vProductos_.forEach(producto => {
+        document.getElementById(("slc" + (vItemsEditar.length - 1))).insertAdjacentHTML("beforeend", `
+         <option value="${producto.idProducto}">${producto.nombreProducto}</option>`)
+    });
+}
 //reinicia el modal
 let configModalReg = () => {
 
@@ -119,7 +156,46 @@ let configModalReg = () => {
 
 }
 
-let configModalEdit = (event) => {
+let configModalEdit = async (event) => {
+    let idCompra = event.target.getAttribute("idcompra");
+    let resultado = await fetch(`http://localhost:3000/listarCompra${idCompra}`);
+    let compra = await resultado.json();
+    let numeroItem = 0;
+    vItemsEditar = [];
+
+    reiniciarModal(idCompra);
+    llenarEncCompra(compra[0]);
+    creaVitemsActualizar(compra);
+
+    compra.forEach((item, index) => {
+        document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
+        <div id="id${item.index}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+            <div class="containerBtn">
+                <div id="dlt${index}" class="btnEliminar"></div>
+            </div>
+            <select disabled id="slc${index}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
+                <option selected value='${item.idProducto}'>${item.nombreProducto}</option>
+            </select>
+            <div id="slidecontainer${index}" class="">
+                <div class="row">
+                    <div class="col-7 col-lg-5 mx-auto">
+                        <label for="inpunidCompslc${numeroItem}">Unidades compradas:</label>
+                        <input id="inpunidCompslc${numeroItem}" type="number" min="1" value='${item.cantidadCompra}' class="unidCompslc${numeroItem} w-100">
+                    </div>
+                    <div class="col-7 col-lg-5 mx-auto">
+                        <label for="inpPrecioUnitslc${numeroItem}">Valor unitario:</label>
+                        <input id="inpPrecioUnitslc${numeroItem}" type="number" min="1" value='${item.precioUnitario}' class="precioUnitslc${numeroItem} w-100">
+                    </div>
+                </div>
+                <p id="pslc${numeroItem}" class="mx-auto mt-2 mb-0 text-center">Quedarás con ${item.stockProducto}.</p>
+            </div>
+        </div>
+        `);
+        numeroItem++;
+    });
+}
+
+let reiniciarModal = idCompra => {
     //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
     document.getElementById('rowItems').innerHTML = "";
     //muestra las acciones para poder ejecutarlas
@@ -129,29 +205,49 @@ let configModalEdit = (event) => {
     //cambia el valor del btn actualizar
     document.getElementById('btnGuardar').innerHTML = "Actualizar";
 
-    let idCompra = event.target.getAttribute("idcompra");
-
     document.getElementById("btnGuardar").setAttribute("idCompra", idCompra);
     document.querySelector("form").setAttribute("idCompra", idCompra);
-    document.getElementById('btnEliminar').setAttribute("idCompra", idCompra)
+    document.getElementById('btnEliminar').setAttribute("idCompra", idCompra);
 }
 
-let vrTotal = () => {
-    let vrTotal = vItemsCompra.reduce((acum, item) => acum += (item.costoProducto * item.cantidadCompra), 0);
+let llenarEncCompra = compra => {
+    document.getElementById('fechaCompra').value = compra.fechaCompra.slice(0, 10);
+    document.getElementById('conceptoCompra').value = compra.conceptoCompra;
+    document.getElementById('slcProveedor').value = compra.idProveedor;
+    document.getElementById('vrTotalIva').value = conversorColombia.format(compra.vrTotalIva);
+    document.getElementById('vrTotalCompra').value = conversorColombia.format(compra.vrTotalCompra);
+}
+
+let creaVitemsActualizar = (compra) => {
+    compra.forEach(item => {
+        let producto = vProductos.find(element => element.idProducto == item.idProducto);
+        let {cantidadCompra, idProducto} = item;
+
+        vItemsEditar.push({
+            cantidadCompra,
+            idItem: ('item'+compra.indexOf(item)),
+            idProducto: parseInt(idProducto),
+            porcentajeIva: parseInt(producto.porcentajeIva),
+            costoProducto: parseInt(producto.costoProducto)
+        })
+    });
+}
+    
+let vrTotal = vector => {
+    let vrTotal = vector.reduce((acum, item) => acum += (item.costoProducto * item.cantidadCompra), 0);
     document.getElementById('vrTotalCompra').value = conversorColombia.format(vrTotal).toString()
 }
 
-let vrIva = () => {
-    let vrIva = vItemsCompra.reduce((acum, item) => item.porcentajeIva <= 0 ? acum += 0 : acum += item.cantidadCompra * ((item.porcentajeIva / 100) * item.costoProducto), 0);
+let vrIva = vector => {
+    let vrIva = vector.reduce((acum, item) => item.porcentajeIva <= 0 ? acum += 0 : acum += item.cantidadCompra * ((item.porcentajeIva / 100) * item.costoProducto), 0);
     document.getElementById('vrTotalIva').value = conversorColombia.format(vrIva).toString()
 }
 
 //añade un item de la compra al vector correspondiente
-let crearItem = (disparador, numeroItem) => {
+let crearItemReg = (vector, disparador, numeroItem) => {
+    let producto = vProductos.find(producto => producto.idProducto == disparador.value);
 
-    let producto = vProductos.find(producto => producto.idProducto == disparador.value)
-
-    vItemsCompra.push({
+    vector.push({
         idItem: ('item' + numeroItem),
         idProducto: parseInt(producto.idProducto),
         costoProducto: parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value),
@@ -159,55 +255,65 @@ let crearItem = (disparador, numeroItem) => {
         porcentajeIva: parseInt(producto.porcentajeIva)
     })
 
-    vrTotal();
-    vrIva();
+    vrTotal(vector);
+    vrIva(vector);
+}
+
+//añade un item de la compra al vector correspondiente
+let crearItemEdit = (vector) => {
+    vector.push({
+        idItem: ('item' + vector.length),
+        costoProducto: 0,
+        cantidadCompra: 0,
+        porcentajeIva: 0
+    })
 }
 
 //actualiza un item completo de la compra 
-let actualizarItem = (item, disparador, numeroItem) => {
+let actualizarItem = (vector, item, disparador, numeroItem) => {
 
     let producto = vProductos.find(producto => producto.idProducto == disparador.value)
-    let indexItem = vItemsCompra.indexOf(item);
+    let indexItem = vector.indexOf(item);
 
-    vItemsCompra[indexItem].idProducto = parseInt(producto.idProducto);
-    vItemsCompra[indexItem].costoProducto = parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
-    vItemsCompra[indexItem].cantidadCompra = parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
-    vItemsCompra[indexItem].porcentajeIva = parseInt(producto.porcentajeIva);
+    vector[indexItem].idProducto = parseInt(producto.idProducto);
+    vector[indexItem].costoProducto = parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
+    vector[indexItem].cantidadCompra = parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
+    vector[indexItem].porcentajeIva = parseInt(producto.porcentajeIva);
 
-    vrTotal();
-    vrIva();
+    vrTotal(vector);
+    vrIva(vector);
 }
 
-let actualizarUnidCompradas = (item, numeroItem) => {
-    let indexItem = vItemsCompra.indexOf(item);
+let actualizarUnidCompradas = (vector, item, numeroItem) => {
+    let indexItem = vector.indexOf(item);
 
-    vItemsCompra[indexItem].cantidadCompra = document.querySelector('#inpunidCompslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
-    vrTotal();
-    vrIva();
+    vector[indexItem].cantidadCompra = document.querySelector('#inpunidCompslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value);
+    vrTotal(vector);
+    vrIva(vector);
 }
 
-let actualizarCostoProducto = (item, numeroItem) => {
-    let indexItem = vItemsCompra.indexOf(item);
+let actualizarCostoProducto = (vector, item, numeroItem) => {
+    let indexItem = vector.indexOf(item);
 
-    vItemsCompra[indexItem].costoProducto = document.querySelector('#inpPrecioUnitslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
-    vrTotal();
-    vrIva();
+    vector[indexItem].costoProducto = document.querySelector('#inpPrecioUnitslc' + numeroItem).value == '' ? 0 : parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value);
+    vrTotal(vector);
+    vrIva(vector);
 }
 
-let eliminarProducto = (item) => {
-    let indexItem = vItemsCompra.indexOf(item);
-    vItemsCompra.splice(indexItem, 1);
+let eliminarProducto = (vector, item) => {
+    let indexItem = vector.indexOf(item);
+    vector.splice(indexItem, 1);
 
-    vrTotal();
-    vrIva();
+    vrTotal(vector);
+    vrIva(vector);
 }
 
 let habilitarInputsItem = disparador => {
     let producto = vProductos.find(producto => parseInt(disparador.value) == producto.idProducto);
         
-    document.querySelector(".unidComp" + disparador.id).disabled = false;
-    document.querySelector(".precioUnit" + disparador.id).disabled = false;
-    document.querySelector(".precioUnit" + disparador.id).value = producto.costoProducto;
+    document.querySelector("#inpunidComp" + disparador.id).disabled = false;
+    document.querySelector("#inpPrecioUnit" + disparador.id).disabled = false;
+    document.querySelector("#inpPrecioUnit" + disparador.id).value = producto.costoProducto;
     document.querySelector("#p" + disparador.id).innerHTML = `Actualmente tienes ${producto.stockProducto}. Quedarás con ${parseInt(document.querySelector(".unidComp" + disparador.id).value) + parseInt(producto.stockProducto)}.`
     document.querySelector("#p" + disparador.id).classList.remove('d-none');
     document.querySelector("#p" + disparador.id).setAttribute('stockActual', producto.stockProducto);
@@ -224,7 +330,7 @@ let mostrarNuevoStock = disparador => {
     leyendaItem.innerHTML = `Actualmente tienes ${leyendaItem.getAttribute('stockactual')}. Quedarás con ${nuevoStock}`;
 }
 
-let enviarCompra = async () => {
+let enviarRegCompra = async () => {
 
     let compraActual = {
         conceptoCompra: document.getElementById('conceptoCompra').value,
@@ -250,6 +356,36 @@ let enviarCompra = async () => {
         })
         .catch(err => {
             alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
+            location.reload();
+        });
+}
+
+let enviarEditCompra = async () => {
+
+    let compraActual = {
+        conceptoCompra: document.getElementById('conceptoCompra').value,
+        fechaCompra: document.getElementById('fechaCompra').value,
+        idProveedor: document.getElementById('slcProveedor').value,
+        vrTotalCompra: document.getElementById('vrTotalCompra').value.replace(',', ''),
+        vrTotalIva: document.getElementById('vrTotalIva').value.replace(',', ''),
+        vItemsEditar
+    };
+
+    await fetch('http://localhost:3000/compras/editarCompra', {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(compraActual)
+        })
+        .then(response => response.text())
+        .then(mensaje => {
+            alert(mensaje);
+            location.reload();
+        })
+        .catch(err => {
+            alert("Ha ocurrido un error actualizando la compra, por favor intentalo mas tarde");
             location.reload();
         });
 }
