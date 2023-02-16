@@ -147,7 +147,9 @@ let renderItemEdit = (vProductos_) => {
 //reinicia el modal
 let configModalReg = () => {
 
+    let date = new Date();
     document.getElementById("formCompras").reset();
+    document.getElementById('fechaCompra').value = date.toISOString().slice(0, 10);
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('divAcciones').classList.add("d-none");
     document.getElementById('rowItems').innerHTML = "";
@@ -371,6 +373,8 @@ let enviarEditCompra = async () => {
         vItemsEditar
     };
 
+    console.log(compraActual);
+
     await fetch('http://localhost:3000/compras/editarCompra', {
             method: "POST",
             credentials: "same-origin",
@@ -390,17 +394,17 @@ let enviarEditCompra = async () => {
         });
 }
 
-let modalEditar = async event => {
-    let idCompra = event.target.getAttribute("idcompra");
+// let modalEditar = async event => {
+//     let idCompra = event.target.getAttribute("idcompra");
 
-    //trae la venta (enc y dets) para renderizarlos
-    await fetch(`http://localhost:3000/editCompra${idCompra}`)
-        .then(res => res.json())
-        .then(data => {
-            vItemsEditar = data
-        })
-        .catch(e => console.log(e));
+//     //trae la venta (enc y dets) para renderizarlos
+//     await fetch(`http://localhost:3000/editCompra${idCompra}`)
+//         .then(res => res.json())
+//         .then(data => {
+//             vItemsEditar = data
+//         })
+//         .catch(e => console.log(e));
 
-    console.log(vItemsEditar);
+//     console.log(vItemsEditar);
 
-}
+// }

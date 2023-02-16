@@ -3,19 +3,23 @@
 </div>
 <div class="text-white">
 <ul>
-    <li ><a href="./balances.php">Inicio</a></li>
-    <li><a href="./productos.php">Inventario</a></li>
-    <li><a href="./egresos.php">Egresos</a></li>
-    <li><a href="./ventas.php">Ventas</a></li>
-    <li><a href="./compras.php">Compras</a></li>
-    <li><a href="./clientes.php">Clientes</a></li>
-    <li><a href="./proveedores.php">Proveedores</a></li>
+    <li class><a class="nav-link" href="./balances.php">Inicio</a></li>
+    <li class><a class="nav-link" href="./productos.php">Inventario</a></li>
+    <li class><a class="nav-link" href="./egresos.php">Egresos</a></li>
+    <li class><a class="nav-link" href="./ventas.php">Ventas</a></li>
+    <li class><a class="nav-link" href="./compras.php">Compras</a></li>
+    <li class><a class="nav-link" href="./clientes.php">Clientes</a></li>
+    <li class><a class="nav-link" href="./proveedores.php">Proveedores</a></li>
 </ul>
 </div>
 <style>
     *{
     text-decoration: none;
     list-style: none;
+}
+
+.nav{
+    background: #218DA3;
 }
 
 li{
@@ -28,13 +32,15 @@ li{
     border-bottom: solid 2px transparent;
 }
 
-a{
+.nav-link{
     color: #fff;
     text-decoration: none;
+    margin: 0;
+    padding: 0 !important;
 }
 
-a:hover{
-
+.nav-link:hover{
+    color: #fff !important;
 }
 
 li:hover{

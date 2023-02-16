@@ -363,11 +363,13 @@ const modalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsEgreso = [];
+    let date = new Date();
+
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('divAcciones').classList.add("d-none");
     document.getElementById('rowItems').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
-    document.getElementById('inpFecha').value = 0;
+    document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('inpTitulo').value = "";
     document.getElementById('slcTipoEgreso').value = 0;
     document.getElementById('inpVrTotal').value = 0;

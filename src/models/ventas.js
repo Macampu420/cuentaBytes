@@ -16,7 +16,7 @@ class ModuloVentas {
         this.idUltimaVenta++;
 
         //se inserta el encabezado de la venta con los campos que vienen del formilario
-        await pool.query("CALL insertarEncVenta(?, ?, ?, ?, ?, ?, ?, ?)", [this.idUltimaVenta, req.body.tituloVenta, req.body.fecha, req.body.metPago, req.body.dto, req.body.vrTotal, req.body.vrIva, req.body.idCliente, ],
+        await pool.query("CALL insertarEncVenta(?, ?, ?, ?, ?, ?, ?)", [this.idUltimaVenta, req.body.tituloVenta, req.body.metPago, req.body.dto, req.body.vrTotal, req.body.vrIva, req.body.idCliente],
             (err, rows) => {
                 //si hay error lo imprime y lo envia como respuesta
                 if (err) {
@@ -156,9 +156,8 @@ class ModuloVentas {
 
     actualizarVta = async (req, res) => {
 
-        await pool.query("CALL actualizarEncVenta(?,?,?,?,?,?,?,?)",
+        await pool.query("CALL actualizarEncVenta(?,?,?,?,?,?,?)",
             [req.body.tituloVenta,
-                req.body.fecha,
                 req.body.metPago,
                 req.body.dto,
                 req.body.vrTotal,
@@ -188,7 +187,7 @@ class ModuloVentas {
                                                 res.write(err);
                                                 res.end();
                                             } else {
-                                                res.write("Venta actualizada correcatamente");
+                                                res.write("Venta actualizada correctamente");
                                                 res.end();
                                             }
                                         })

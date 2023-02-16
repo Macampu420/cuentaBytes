@@ -243,8 +243,10 @@ const actualizarUnidVend = (disparador, vector_) => {
 
 const registrarVenta = () => {
 
+    let now = new Date();
+    let fecha = now.toISOString();
+
     let tituloVenta = document.getElementById("inpTitulo").value;
-    let fecha = document.getElementById("inpFecha").value;
     let metPago = document.getElementById("inpMetPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let dto = parseInt(document.getElementById("inpDto").value);
@@ -408,6 +410,7 @@ const modalEditar = async event => {
     //cambia el valor del btn actualizar
     document.getElementById('btnGuardar').innerHTML = "Actualizar";
     document.getElementById('btnFactura').classList.remove("d-none");
+    document.getElementById('inpFecha').setAttribute('type', 'date');
 
     let idVenta = event.target.getAttribute("idventa");
 
@@ -484,6 +487,8 @@ const modalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
+    let date = new Date();
+
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
     document.getElementById('divAcciones').classList.add("d-none");
@@ -493,7 +498,7 @@ const modalRegistrar = () => {
     document.getElementById('inpMetPago').value = "";
     document.getElementById('inpTitulo').value = "";
     document.getElementById('slcClientes').value = 0;
-    document.getElementById('inpFecha').value = 0;
+    document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDto').value = 0;
     document.getElementById('inpVrIva').value = 0;

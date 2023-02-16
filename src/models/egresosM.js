@@ -16,7 +16,7 @@ class ModuloEgresos {
 
 
         //se inserta el encabezado de la venta con los campos que vienen del formilario
-        await pool.query("CALL insertarEncEgreso(?, ?, ?, ?, ?)", [this.idUltimoEgreso, req.body.fecha, req.body.tituloEgreso, req.body.vrTotalEgreso, req.body.idTipoEgreso],
+        await pool.query("CALL insertarEncEgreso(?, ?, ?, ?)", [this.idUltimoEgreso, req.body.tituloEgreso, req.body.vrTotalEgreso, req.body.idTipoEgreso],
             (err, rows) => {
                 //si hay error lo imprime y lo envia como respuesta
                 if (err) {
@@ -39,7 +39,7 @@ class ModuloEgresos {
                                         res.end();
                                     } else {
                                         //si no hay error envia el texto y termina la peticion
-                                        res.write("El egreso fue registrada correctamente");
+                                        res.write("El egreso fue registrado correctamente");
                                         res.end();
                                     }
 
@@ -53,7 +53,7 @@ class ModuloEgresos {
 
     actualizarEgreso = async (req, res) => {
 
-        await pool.query("CALL actualizarEgreso(?, ?, ?, ?, ?)", [req.body.idEgreso, req.body.fecha, req.body.tituloEgreso, req.body.vrTotalEgreso, req.body.idTipoEgreso],
+        await pool.query("CALL actualizarEgreso(?, ?, ?, ?)", [req.body.idEgreso, req.body.tituloEgreso, req.body.vrTotalEgreso, req.body.idTipoEgreso],
             (err, rows) => {
                 //si hay error lo imprime y lo envia como respuesta
                 if (err) {

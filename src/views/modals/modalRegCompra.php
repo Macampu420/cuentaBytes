@@ -26,7 +26,7 @@
                     <div class="row p-2 mb-5">
                         <div class="col-6 mx-auto col-lg-3">
                             <label for="fechaCompra" class="form-label quicksand">Fecha:</label>
-                            <input required type="date" class="form-control" id="fechaCompra" aria-describedby="basic-addon3">
+                            <input disabled type="date" class="form-control" id="fechaCompra" aria-describedby="basic-addon3">
                         </div>
                         <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-5">
                             <label for="conceptoCompra" class="form-label quicksand">Concepto:</label>

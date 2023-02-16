@@ -97,8 +97,10 @@ document.getElementById('btnEliminar').addEventListener("click", async () => {
 
         await fetch(`http://localhost:3000/eliminarCompra${idCompra}`)
             .then(res => res.text())
-            .then(data => alert(data));
-
+            .then(data => {
+                alert(data);
+                location.reload();
+            });
 
     }
 })

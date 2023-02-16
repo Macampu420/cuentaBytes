@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const pool = require('./conexion');
+const rutasGraficos = require('./routes/graficos');
 const morgan = require('morgan');
-var  corsOptions = { origin: 'http://localhost'}
+let  corsOptions = { origin: 'http://localhost'}
 
 const app = express();
 
@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 //rutas
+app.use(rutasGraficos);
 app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
 app.use(require('./routes/compras'));

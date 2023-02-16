@@ -1,7 +1,7 @@
 
 const traerProductos = async productos => {
 
-    await fetch('http://localhost/inventario/src/controllers/apiProductos.php')
+    await fetch('http://localhost/cuentabytes/src/controllers/productos/apiProductos.php')
     .then(res => res.json())
     .then(data => {
         if(!data.mensaje){
