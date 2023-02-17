@@ -3,13 +3,13 @@
 </div>
 <div class="text-white">
 <ul>
-    <li class><a class="nav-link" href="./balances.php">Inicio</a></li>
-    <li class><a class="nav-link" href="./productos.php">Inventario</a></li>
-    <li class><a class="nav-link" href="./egresos.php">Egresos</a></li>
-    <li class><a class="nav-link" href="./ventas.php">Ventas</a></li>
-    <li class><a class="nav-link" href="./compras.php">Compras</a></li>
-    <li class><a class="nav-link" href="./clientes.php">Clientes</a></li>
-    <li class><a class="nav-link" href="./proveedores.php">Proveedores</a></li>
+    <li class="nav-li"><a class="nav-link" href="./balances.php">Inicio</a></li>
+    <li class="nav-li"><a class="nav-link" href="./productos.php">Inventario</a></li>
+    <li class="nav-li"><a class="nav-link" href="./egresos.php">Egresos</a></li>
+    <li class="nav-li"><a class="nav-link" href="./ventas.php">Ventas</a></li>
+    <li class="nav-li"><a class="nav-link" href="./compras.php">Compras</a></li>
+    <li class="nav-li"><a class="nav-link" href="./clientes.php">Clientes</a></li>
+    <li class="nav-li"><a class="nav-link" href="./proveedores.php">Proveedores</a></li>
 </ul>
 </div>
 <style>
@@ -22,7 +22,7 @@
     background: #218DA3;
 }
 
-li{
+.nav-li{
     font-size: 35px;
     margin-bottom: 10px;
     font-weight: 500;
@@ -43,7 +43,7 @@ li{
     color: #fff !important;
 }
 
-li:hover{
+.nav-li:hover{
     border-bottom: solid 3px #1CB3D3;
     animation: desplazar-rigth 1s;
     transition: 1s ease;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2023 at 05:50 PM
+-- Generation Time: Feb 17, 2023 at 08:52 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -257,6 +257,13 @@ CREATE TABLE `detalleventa` (
   `idProducto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `detalleventa`
+--
+
+INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
+(59, 1, 50000, 13, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -327,6 +334,13 @@ CREATE TABLE `encventas` (
   `idCliente` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `encventas`
+--
+
+INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `idCliente`) VALUES
+(13, 'Vino tinto', '2023-02-16 19:37:41', 'Efectivo', 0, 50000, 10500, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -380,7 +394,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 10, 9),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 9, 9),
 (2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 10, 9),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 32, 9),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 32, 9),
@@ -410,11 +424,12 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`, `telefonoProveedor`) VALUES
-(8, 'pollos S.A', 'Cra 420', '363'),
-(9, 'Carnes vacalola', 'calle 12', '124'),
+(9, 'Licores de cundinamarca S.A', 'calle 12', '124'),
 (11, 'Variedades S.A', 'Cll Sa', '36588912'),
-(12, 'Variedades S.A', 'Cll Sa', '36588912'),
-(13, 'Variedades S.A', 'Cll Sa', '36588912');
+(12, 'FLA', 'Cll Santo tequila', '52424788'),
+(14, 'Bavaria', 'Calle Elm', '555 666 4548'),
+(15, 'Licores el gallo', 'avenida central', '3169874503'),
+(16, 'Rones el pistolero', '...', '9561059878');
 
 -- --------------------------------------------------------
 
@@ -575,7 +590,7 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`
@@ -605,7 +620,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tipoegreso`

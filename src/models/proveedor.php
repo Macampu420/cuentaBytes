@@ -10,7 +10,7 @@
             echo "todo melo papa";
         }
 
-        header("Location: http://localhost/apiphp/src/views/proveedores.php");
+        header("Location: http://localhost/cuentabytes/src/views/proveedores.php");
         
     }
 
@@ -21,7 +21,7 @@
         if(!$resEliminar){
             echo "ha ocurrido un error al eliminar el proveedor";
         } else {
-            echo "todo melo papa";
+            echo "El proveedor fue eliminado correctamente";
         }
     }
     
@@ -43,6 +43,6 @@
             echo "todo melo papa";
         }
     
-        header("Location: http://localhost/apiphp/src/views/proveedores.php");
+        header("Location: http://localhost/cuentabytes/src/views/proveedores.php");
     }
 ?>
