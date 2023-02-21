@@ -428,6 +428,8 @@ const modalEditar = async event => {
     //da un formato legible a la fecha de la venta
     vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
 
+    if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
+
     //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpMetPago').value = vItemsEditar[0].metodoPagoVenta;
@@ -435,7 +437,7 @@ const modalEditar = async event => {
     document.getElementById('slcClientes').value = vItemsEditar[0].idCliente;
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
-    document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
+    document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
     document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
 
 

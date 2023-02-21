@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2023 at 08:52 PM
+-- Generation Time: Feb 21, 2023 at 07:53 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -36,7 +36,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEgreso` (IN `_idEgreso` I
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEncVenta` (IN `titVenta` VARCHAR(35), IN `metodoPagoVenta_` VARCHAR(20), IN `descuentoVenta_` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT(11), IN `idCliente_` INT(11), IN `idVenta_` INT)  BEGIN
 UPDATE `encventas` SET `tituloVenta`=titVenta,`metodoPagoVenta`=metodoPagoVenta_,`descuentoVenta`=descuentoVenta_
-,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
+,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`editado`= 1,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto` (IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))  UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`porcentajeIva`=_porcentajeIva,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
@@ -85,7 +85,7 @@ VALUES (_idCompra,_conceptoCompra, now(),_idProveedor,_vrTotalCompra,_vrTotalIva
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))  INSERT INTO `encegreso`(`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES (_idEgreso, now(),_tituloEgreso,_vrTotalEgreso,_idTipoEgreso)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncVenta` (IN `_idVenta` INT, IN `_tituloVta` VARCHAR(35), IN `_metPago` VARCHAR(20), IN `dto` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT, IN `_idCliente` INT(11))  BEGIN
-INSERT INTO `encventas`(`idVenta`,`tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `idCliente`) VALUES (_idVenta,_tituloVta, now(), _metPago, dto, vrTotal, vrIva, _idCliente);                                         
+INSERT INTO `encventas`(`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES (_idVenta,_tituloVta, now(), _metPago, dto, vrTotal, vrIva, 0, _idCliente);                                         
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))  INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_porcentajeIva,_costoProducto,_precioVenta,_stockProducto,_idImagen)$$
@@ -127,7 +127,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()  select * fro
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()  SELECT * FROM tipoegreso$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta` (IN `idVenta_` INT(11))  BEGIN
-SELECT encventas.idVenta, encventas.tituloVenta, encventas.fechaVenta, encventas.metodoPagoVenta, encventas.descuentoVenta, encventas.vrTotalVta, encventas.vrtotalIva, clientes.idCliente, clientes.nombresCliente, detalleventa.idDetVenta, detalleventa.uniVendidas, detalleventa.precioUnitario, detalleventa.idProducto, productos.nombreProducto, productos.stockProducto, productos.porcentajeIva FROM encventas INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta INNER JOIN productos ON detalleventa.idProducto = productos.idProducto INNER JOIN clientes on clientes.idCliente = encventas.idCliente WHERE encventas.idVenta = idVenta_; 
+SELECT encventas.idVenta, encventas.tituloVenta, encventas.fechaVenta, encventas.metodoPagoVenta, encventas.descuentoVenta, encventas.vrTotalVta, encventas.vrtotalIva, encventas.editado, clientes.idCliente, clientes.nombresCliente, detalleventa.idDetVenta, detalleventa.uniVendidas, detalleventa.precioUnitario, detalleventa.idProducto, productos.nombreProducto, productos.stockProducto, productos.porcentajeIva FROM encventas INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta INNER JOIN productos ON detalleventa.idProducto = productos.idProducto INNER JOIN clientes on clientes.idCliente = encventas.idCliente WHERE encventas.idVenta = idVenta_; 
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVentas` ()  BEGIN
@@ -241,7 +241,8 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 (46, 7900000, 'Pc', 3),
 (63, 12345678, 'Uwu', 3),
 (69, 500000, 'Juan', 5),
-(70, 2222, ' asasd', 6);
+(70, 2222, ' asasd', 6),
+(71, 24333, 'jjjj', 7);
 
 -- --------------------------------------------------------
 
@@ -262,7 +263,13 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
-(59, 1, 50000, 13, 1);
+(63, 5, 6000, 1, 7),
+(64, 2, 55000, 1, 10),
+(65, 2, 36000, 1, 8),
+(66, 2, 50000, 2, 1),
+(67, 1, 36000, 2, 8),
+(69, 1, 20000, 3, 5),
+(70, 5, 42000, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -315,7 +322,8 @@ INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgre
 (2, '2022-11-21 05:00:00', 'LE PAGUE  A JUAN', 15000, 2),
 (3, '2022-11-22 05:00:00', 'PC GAMER  UwU', 20245678, 6),
 (5, '2022-12-14 05:00:00', 'Pago a juan', 500000, 2),
-(6, '2023-02-16 15:57:27', 'juasjuasjuas', 2222, 1);
+(6, '2023-02-16 15:57:27', 'juasjuasjuas', 2222, 1),
+(7, '2023-02-21 18:05:50', 'ñ@ndú', 24333, 2);
 
 -- --------------------------------------------------------
 
@@ -331,6 +339,7 @@ CREATE TABLE `encventas` (
   `descuentoVenta` int(11) NOT NULL,
   `vrTotalVta` int(11) NOT NULL,
   `vrtotalIva` int(11) NOT NULL,
+  `editado` int(10) NOT NULL,
   `idCliente` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -338,8 +347,10 @@ CREATE TABLE `encventas` (
 -- Dumping data for table `encventas`
 --
 
-INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `idCliente`) VALUES
-(13, 'Vino tinto', '2023-02-16 19:37:41', 'Efectivo', 0, 50000, 10500, 4);
+INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
+(1, 'Cerveza, ginebra y merlot', '2023-02-21 18:38:17', 'Efectivo', 0, 212000, 42720, 1, 4),
+(2, 'Vino', '2023-02-21 18:49:33', 'Nequi', 1000, 135000, 28560, 0, 4),
+(3, '5 crema whiskey y media de guaro', '2023-02-21 18:53:06', 'Efectivo', 0, 230000, 48300, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -394,16 +405,16 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 9, 9),
-(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 10, 9),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 7, 9),
+(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 9, 9),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 32, 9),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 32, 9),
 (5, 'Media de guaro', 'Media de guaro tapa roja', 21, 10000, 20000, 10, 9),
 (6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 7, 9),
-(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 32, 9),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 10, 9),
+(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 31, 9),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 8, 9),
 (9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 10, 9),
-(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 5, 9),
+(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 4, 9),
 (11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 1800, 3500, 50, 9);
 
 -- --------------------------------------------------------
@@ -584,13 +595,13 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
-  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`

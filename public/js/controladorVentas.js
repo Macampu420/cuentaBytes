@@ -121,7 +121,12 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    divModal.getAttribute("editar") == "false" ? registrarVenta() : actualizarVenta(event);
+    if(divModal.getAttribute("editar") == "false")
+        registrarVenta()
+   else{
+    let confirmacion = confirm("Solo podrás editar la venta una unica vez");
+    if(confirmacion) actualizarVenta(event);
+   }
 });
 
 document.getElementById("contItems").addEventListener("click", (event) => {
