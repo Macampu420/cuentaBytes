@@ -24,14 +24,15 @@ function registrarImg() {
 
             // Movemos el archivo de su ubicación temporal a la carpeta destino
             move_uploaded_file($ruta_temporal, $ruta_destino.$nombreimg);
-            $resultado = $connection -> query('call registrarImagen("'.$ruta_destino.'", "'.$nombreimg.'")');
+            $resultado = mysqli_query($connection, 'call registrarImagen("'.$ruta_destino.'", "'.$nombreimg.'")');
 
-            if ($resultado === TRUE) {
-                // Obtener el ID del registro insertado
-                $id_insertado = $connection->insert_id;
-                return $id_insertado;
+            $resultado = mysqli_query($connection, 'call idUltimaImg()');
+            $idUltimaImg = mysqli_fetch_assoc($resultado);
+
+            if($idUltimaImg){
+                return $idUltimaImg["idImagen"];
             } else {
-                echo "Error al insertar el registro: " . $connection->error;
+                return null;
             }
         }
 
@@ -84,4 +85,3 @@ function actualizarProducto($sqlActualizar, $conn) {
 
     header("Location: http://localhost/cuentabytes/src/views/productos.php");
 } 
-?>

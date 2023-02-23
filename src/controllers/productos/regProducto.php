@@ -10,9 +10,9 @@ $precioVenta = $_REQUEST['precioVenta'];
 $stockProducto = $_REQUEST['stockProducto'];
 $idImagen = registrarImg();
 
+var_dump($idImagen); 
 
 $sqlReg = "CALL insertarProducto('$nombreProducto','$descripcionProducto',$porcentajeIva,$costoProducto,$precioVenta,$stockProducto,$idImagen)";
-
 
 registrar($sqlReg, $connection);
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2023 at 07:53 PM
+-- Generation Time: Feb 23, 2023 at 09:17 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -68,6 +68,8 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarVta` (`idVenta_` INT)  BEGIN
 	DELETE FROM encventas WHERE encventas.idVenta = idVenta_;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `idUltimaImg` ()  SELECT imagen.idImagen FROM `imagen` order by idImagen DESC LIMIT 1$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCliente` (IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))  INSERT INTO `clientes`(`nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES (_nombresCliente,_apellidosCliente,_telefonoCliente,_cedulaCliente)$$
 
@@ -176,6 +178,8 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(20))  INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))  INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()  BEGIN
 select productos.nombreProducto,max((productos.precioVenta- productos.costoProducto)/productos.costoProducto)as rentabilidad from productos group by productos.nombreProducto;
 END$$
@@ -216,7 +220,13 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES
-(4, 'Andrei', 'Peña', '31548792', 1111111111);
+(4, 'Andrei', 'Peña', '31548792', 1111111111),
+(6, 'Keanu', 'Reeves', '555693987', 101099853),
+(7, 'Antonio', 'Alvarez', '78642211', 1010994788),
+(8, 'Manuela', 'gomez orozco', '4789621', 1010998789),
+(9, 'Denis Mariana ', 'Castaño Orozco', '3198752016', 1010998789),
+(10, 'Rodolfo', 'Hernandez', '312498652', 1010998654),
+(11, 'Pancho', 'Sansa', '0', 1010948769);
 
 -- --------------------------------------------------------
 
@@ -263,13 +273,20 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
-(63, 5, 6000, 1, 7),
-(64, 2, 55000, 1, 10),
-(65, 2, 36000, 1, 8),
-(66, 2, 50000, 2, 1),
-(67, 1, 36000, 2, 8),
-(69, 1, 20000, 3, 5),
-(70, 5, 42000, 3, 2);
+(3, 3, 50000, 4, 9),
+(4, 2, 42000, 4, 2),
+(9, 1, 55000, 5, 10),
+(10, 1, 5000, 5, 4),
+(11, 3, 50000, 5, 1),
+(12, 2, 42000, 5, 2),
+(13, 4, 42000, 6, 2),
+(14, 2, 3500, 7, 11),
+(15, 1, 42000, 8, 2),
+(17, 1, 36000, 9, 8),
+(18, 10, 3500, 10, 11),
+(19, 7, 6000, 10, 7),
+(20, 2, 50000, 11, 6),
+(21, 16, 3500, 12, 11);
 
 -- --------------------------------------------------------
 
@@ -348,9 +365,15 @@ CREATE TABLE `encventas` (
 --
 
 INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
-(1, 'Cerveza, ginebra y merlot', '2023-02-21 18:38:17', 'Efectivo', 0, 212000, 42720, 1, 4),
-(2, 'Vino', '2023-02-21 18:49:33', 'Nequi', 1000, 135000, 28560, 0, 4),
-(3, '5 crema whiskey y media de guaro', '2023-02-21 18:53:06', 'Efectivo', 0, 230000, 48300, 1, 4);
+(4, '2 cremas de whiskey y 3 botellas de', '2023-02-23 12:30:33', 'Transferencia', 5000, 229000, 49140, 1, 4),
+(5, '1 botella de gin,  un pilsenon 750,', '2023-02-23 12:36:38', 'Efectivo', 10000, 284000, 61440, 1, 9),
+(6, '4 cremas de whiskey', '2023-02-23 12:37:47', 'Transferencia', 8000, 160000, 35280, 0, 7),
+(7, 'Dos aguila lata', '2023-02-23 12:38:57', 'Efectivo', 0, 7000, 1470, 0, 4),
+(8, '1 crema de whiskey', '2023-02-23 12:42:05', 'Efectivo', 0, 42000, 8820, 0, 8),
+(9, 'Un vino vientos del sur', '2023-02-23 12:58:42', 'Tarjeta de crédito', 0, 36000, 7560, 0, 11),
+(10, '10 aguila lata y 7 aguilones litro', '2023-02-23 13:01:54', 'Efectivo', 7000, 70000, 13650, 0, 10),
+(11, '2 litros de ron caldas', '2023-02-23 13:04:53', 'Efectivo', 8500, 91500, 21000, 0, 6),
+(12, '16 aguilas en lata', '2023-02-23 13:06:46', 'Transferencia', 0, 56000, 11760, 0, 7);
 
 -- --------------------------------------------------------
 
@@ -405,17 +428,17 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 7, 9),
-(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 9, 9),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 4, 9),
+(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 0, 9),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 32, 9),
-(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 32, 9),
+(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 31, 9),
 (5, 'Media de guaro', 'Media de guaro tapa roja', 21, 10000, 20000, 10, 9),
-(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 7, 9),
-(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 31, 9),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 8, 9),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 10, 9),
-(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 4, 9),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 1800, 3500, 50, 9);
+(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 5, 9),
+(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 23, 9),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 7, 9),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 7, 9),
+(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 3, 9),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 1800, 3500, 22, 9);
 
 -- --------------------------------------------------------
 
@@ -440,7 +463,8 @@ INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`,
 (12, 'FLA', 'Cll Santo tequila', '52424788'),
 (14, 'Bavaria', 'Calle Elm', '555 666 4548'),
 (15, 'Licores el gallo', 'avenida central', '3169874503'),
-(16, 'Rones el pistolero', '...', '9561059878');
+(16, 'Rones el pistolero', '...', '9561059878'),
+(17, 'tqeuila es mescal', 'calle banano', '2225487');
 
 -- --------------------------------------------------------
 
@@ -589,7 +613,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `detalleegreso`
@@ -601,7 +625,7 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`
@@ -613,7 +637,7 @@ ALTER TABLE `detcompraproducto`
 -- AUTO_INCREMENT for table `imagen`
 --
 ALTER TABLE `imagen`
-  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `notas`
@@ -631,7 +655,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `tipoegreso`
