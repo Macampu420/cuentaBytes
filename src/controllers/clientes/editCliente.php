@@ -8,6 +8,7 @@ $apellidosCliente = $_REQUEST['apellidosCliente'];
 $telefonoCliente = $_REQUEST['telefonoCliente'];
 $idCliente=$_REQUEST["idCliente"];
 
+
 //falta procedimiento almacenado
 $sqlEdit = "CALL actualizarCliente($idCliente,'$nombresCliente','$apellidosCliente','$telefonoCliente',$cedulaCliente)";
 
