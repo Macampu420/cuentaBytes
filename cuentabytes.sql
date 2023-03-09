@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2023 at 09:17 PM
+-- Generation Time: Mar 10, 2023 at 12:39 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -226,7 +226,8 @@ INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `tele
 (8, 'Manuela', 'gomez orozco', '4789621', 1010998789),
 (9, 'Denis Mariana ', 'Castaño Orozco', '3198752016', 1010998789),
 (10, 'Rodolfo', 'Hernandez', '312498652', 1010998654),
-(11, 'Pancho', 'Sansa', '0', 1010948769);
+(11, 'Pancho', 'Sansa', '0', 1010948769),
+(13, 'gfdgfadga', 'fgfadag', '123213', 123123);
 
 -- --------------------------------------------------------
 
@@ -246,13 +247,28 @@ CREATE TABLE `detalleegreso` (
 --
 
 INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgreso`) VALUES
-(44, 5000, 'Juan', 2),
-(45, 10000, 'Manuel', 2),
-(46, 7900000, 'Pc', 3),
-(63, 12345678, 'Uwu', 3),
-(69, 500000, 'Juan', 5),
-(70, 2222, ' asasd', 6),
-(71, 24333, 'jjjj', 7);
+(1, 200000, 'Juan', 1),
+(2, 120000, 'Maria', 1),
+(3, 190000, 'Pablo', 1),
+(4, 230000, 'Alcantarilla', 2),
+(5, 12000, 'Viaje a la notaría', 2),
+(6, 120000, 'vasos', 3),
+(7, 80000, 'copas aguardiente', 3),
+(8, 115000, 'Vasos cerveceros', 3),
+(9, 15000, 'sacacorchos', 3),
+(10, 12000, 'destapador de bebidas', 3),
+(11, 2000000, 'Arriendo del Local', 4),
+(12, 20000, 'Barniz', 5),
+(13, 210000, 'Refacciones varias', 5),
+(14, 150000, 'Carpintero', 5),
+(15, 80500, 'Madera', 5),
+(16, 100000, 'Juan', 6),
+(17, 100000, 'Maria', 6),
+(18, 100000, 'Pablo', 6),
+(19, 240000, 'Juan', 7),
+(20, 201400, 'Maria', 7),
+(21, 120000, 'Pablo', 7),
+(22, 240000, 'Curso manejo y conservación de vinos', 8);
 
 -- --------------------------------------------------------
 
@@ -302,6 +318,25 @@ CREATE TABLE `detcompraproducto` (
   `idProducto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `detcompraproducto`
+--
+
+INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) VALUES
+(58, 20, 2000, 1, 11),
+(59, 14, 5000, 1, 7),
+(60, 10, 40000, 2, 10),
+(61, 10, 25000, 3, 5),
+(62, 17, 42000, 4, 1),
+(63, 11, 25000, 4, 8),
+(64, 16, 2500, 5, 4),
+(65, 12, 3000, 5, 3),
+(66, 5, 5000, 5, 7),
+(67, 5, 30000, 6, 9),
+(68, 8, 30000, 7, 2),
+(69, 9, 40000, 7, 6),
+(70, 5, 30000, 8, 9);
+
 -- --------------------------------------------------------
 
 --
@@ -316,6 +351,20 @@ CREATE TABLE `enccompraproducto` (
   `vrTotalCompra` int(11) NOT NULL,
   `vrTotalIva` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `enccompraproducto`
+--
+
+INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `idProveedor`, `vrTotalCompra`, `vrTotalIva`) VALUES
+(1, 'Cervezas', '2023-03-08 17:26:14', 15, 110000, 18900),
+(2, 'licor fuerte', '2023-03-08 17:27:17', 17, 400000, 84000),
+(3, 'Guaro', '2023-03-08 17:28:20', 14, 250000, 52500),
+(4, 'Vino', '2023-03-08 17:28:50', 11, 989000, 207690),
+(5, 'Cerveza', '2023-03-08 17:29:38', 12, 101000, 10830),
+(6, 'Champaña', '2023-03-08 17:30:07', 11, 150000, 31500),
+(7, 'Trago fuerte', '2023-03-08 17:31:04', 11, 600000, 126000),
+(8, 'Champaña', '2023-03-08 17:32:14', 15, 150000, 31500);
 
 -- --------------------------------------------------------
 
@@ -336,11 +385,14 @@ CREATE TABLE `encegreso` (
 --
 
 INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES
-(2, '2022-11-21 05:00:00', 'LE PAGUE  A JUAN', 15000, 2),
-(3, '2022-11-22 05:00:00', 'PC GAMER  UwU', 20245678, 6),
-(5, '2022-12-14 05:00:00', 'Pago a juan', 500000, 2),
-(6, '2023-02-16 15:57:27', 'juasjuasjuas', 2222, 1),
-(7, '2023-02-21 18:05:50', 'ñ@ndú', 24333, 2);
+(1, '2023-02-23 23:38:43', 'Pago a Personal', 510000, 3),
+(2, '2023-02-23 23:40:41', 'Pago Alcantarillado', 242000, 0),
+(3, '2023-02-23 23:44:44', 'Compra de utilería', 342000, 6),
+(4, '2023-02-23 23:45:45', 'Arriendo Local', 2000000, 1),
+(5, '2023-02-23 23:48:23', 'Barriles Vino', 460500, 5),
+(6, '2023-02-23 23:49:14', 'Subsidio Transporte', 300000, 4),
+(7, '2023-02-23 23:50:34', 'Nomina 2023', 561400, 2),
+(8, '2023-02-23 23:52:22', 'Curso Empleados', 240000, 3);
 
 -- --------------------------------------------------------
 
@@ -428,17 +480,17 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 4, 9),
-(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 0, 9),
-(3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 32, 9),
-(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 31, 9),
-(5, 'Media de guaro', 'Media de guaro tapa roja', 21, 10000, 20000, 10, 9),
-(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 5, 9),
-(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 23, 9),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 7, 9),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 7, 9),
-(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 3, 9),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 1800, 3500, 22, 9);
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 21, 9),
+(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 8, 9),
+(3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 44, 9),
+(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 47, 9),
+(5, 'Media de guaro', 'Media de guaro tapa roja', 21, 25000, 20000, 20, 9),
+(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 14, 9),
+(7, 'Aguilon litro', 'Aguilon litro', 15, 5000, 6000, 42, 9),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 18, 9),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 17, 9),
+(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 13, 9),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 2000, 3500, 42, 9);
 
 -- --------------------------------------------------------
 
@@ -613,13 +665,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
-  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `detalleventa`
@@ -631,7 +683,7 @@ ALTER TABLE `detalleventa`
 -- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
-  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `imagen`
