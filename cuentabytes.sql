@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2023 at 12:39 AM
+-- Generation Time: Mar 10, 2023 at 01:47 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -120,10 +120,6 @@ tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso
 FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()  BEGIN
-SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY nombreProducto ASC;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()  select * from proveedor order by idProveedor desc$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()  SELECT * FROM tipoegreso$$
@@ -149,13 +145,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()  BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()  BEGIN
-SELECT * FROM productos ORDER BY nombreProducto ASC;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()  SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
+FROM productos INNER JOIN imagen
+ON productos.idImagen = imagen.idImagen$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))  BEGIN
-SELECT * FROM productos WHERE idProducto = _idProducto;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))  SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen
+FROM productos INNER JOIN imagen
+ON productos.idImagen = imagen.idImagen$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()  BEGIN
 SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor DESC LIMIT 1;
@@ -444,7 +440,8 @@ CREATE TABLE `imagen` (
 --
 
 INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
-(9, '/public/img/productos', 'bimbo.png');
+(9, '/public/img/productos', 'bimbo.png'),
+(11, './../../../public/img/productos/', '20230310011457.jpg');
 
 -- --------------------------------------------------------
 
@@ -490,7 +487,8 @@ INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, 
 (8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 18, 9),
 (9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 17, 9),
 (10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 13, 9),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 2000, 3500, 42, 9);
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 2000, 3500, 42, 9),
+(12, 'Botella de vodka', 'botella de vodka smirnoff', 21, 40000, 50000, 10, 11);
 
 -- --------------------------------------------------------
 
@@ -689,7 +687,7 @@ ALTER TABLE `detcompraproducto`
 -- AUTO_INCREMENT for table `imagen`
 --
 ALTER TABLE `imagen`
-  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `notas`
@@ -701,7 +699,7 @@ ALTER TABLE `notas`
 -- AUTO_INCREMENT for table `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `proveedor`
