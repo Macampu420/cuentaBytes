@@ -15,12 +15,17 @@ function mejoresClientes($sql, $conn){
             array_push($clientes, $cliente);
     
         }
+
+        if ($auxClientes) {
+            mysqli_free_result($auxClientes);
+        }
+        
         return json_encode($clientes);
     } else {
         return json_encode(array("mensaje" => "No hay productos registrados"));
         }
 
-        }
+}
 
         
 function productosMasVendidos($sql, $conn){
@@ -40,7 +45,8 @@ function productosMasVendidos($sql, $conn){
             } else {
                 return json_encode(array("mensaje" => "No hay productos registrados"));
             }
-            }
+}
+
 
 function productosMenosVendidos($sql, $conn){
     $productos = array();
