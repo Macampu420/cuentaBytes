@@ -168,8 +168,8 @@ document.getElementById("btnEliminar").addEventListener("click", async () => {
 
 document.getElementById("buscadorVtas").addEventListener("change", () => {
 
-    var ventas = document.querySelectorAll("[cartaItem]");
-    let swNoCoinc = true;
+    let ventas = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
     var alert = document.getElementById("alert");
 
     console.log(alert);
@@ -178,37 +178,27 @@ document.getElementById("buscadorVtas").addEventListener("change", () => {
 
         let tituloVta = element.firstElementChild.innerHTML.toLowerCase();
 
-        if (!tituloVta.includes(document.getElementById("buscadorVtas").value)) {
+        if (!tituloVta.includes(document.getElementById("buscadorVtas").value.toLowerCase())) {
             element.classList.add("d-none");
-            swNoCoinc = false;
-        } else if (tituloVta.includes(document.getElementById("buscadorVtas").value)) {
-
-            if (alert != null) {
-                alert.remove()
-            }
+            
+        } else {
+            
             swNoCoinc = true;
             element.classList.remove("d-none");
         }
 
     })
 
-    if (!swNoCoinc && alert != null) {
+    console.log(ventas);
 
-        alert.remove()
+    if (swNoCoinc == false) {
 
-        document.getElementById("filaVentas").insertAdjacentHTML('afterbegin', `
-                        <div id="alert" class="alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `)
-    } else if (!swNoCoinc) {
-        document.getElementById("filaVentas").insertAdjacentHTML('afterbegin', `
-                        <div id="alert" class="alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `)
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
     }
 })
 
