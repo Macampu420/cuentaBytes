@@ -67,6 +67,44 @@ document.getElementById("btnEliminar").addEventListener("click", async event => 
 
 })
 
+document.getElementById("buscadorClientes").addEventListener("change", () => {
+
+    let clientes = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alert");
+
+    console.log(alert);
+
+    clientes.forEach(element => {
+
+        let nombreCliente = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!nombreCliente.includes(document.getElementById("buscadorClientes").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(clientes);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
+    }
+})
+
+
 document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false);
 
 let clientes = [];

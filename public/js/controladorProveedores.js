@@ -17,7 +17,8 @@ document.getElementById("btnAñadirProvee").addEventListener("click", () => {
 
 });
 
-document.getElementById("filaProveedores").addEventListener("click", async event => {
+document.getElementById("filaProvee").addEventListener("click", async event => 
+{
 
     if (event.target.hasAttribute("btnAcciones")) {
         //Le damos valor al atributo
@@ -59,8 +60,44 @@ document.getElementById("btnEliminar").addEventListener("click", async event => 
             alert(data);
             location.reload();
         });
-    }
+    }}
+)
 
+document.getElementById("buscadorProvee").addEventListener("change", () => {
+
+    let proveedores = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alert");
+
+    console.log(alert);
+
+    proveedores.forEach(element => {
+
+        let nombreProvee = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!nombreProvee.includes(document.getElementById("buscadorProvee").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(proveedores);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
+    }
 })
 
 document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false);

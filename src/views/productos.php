@@ -39,7 +39,7 @@
 
                     <h2 class="text-center fs-2 mt-5">Inventario</h2>
 
-                    <input id="buscadorProduc" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar producto">
+                    <input id="buscadorProd" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar producto">
 
                 </div>
 
@@ -49,7 +49,7 @@
                     <!-- btn añadir -->
                     <div class="row mt-5 mb-2 text-center">
                         <div class="col-12 col-lg-5 mx-auto">
-                            <h3 id="btnAnadirProduc" class="quicksand mx-5"><img src="../../public/img/iconoMas.png"
+                            <h3 id="btnAnadirProd" class="quicksand mx-5"><img src="../../public/img/iconoMas.png"
                                     class="mx-2">Añadir</h3>
                         </div>
                     </div>
@@ -59,6 +59,10 @@
 
                         <div id="filaProductos" class="row">
 
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
                         </div>
 

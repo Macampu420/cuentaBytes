@@ -39,7 +39,7 @@
 
                     <h2 class="text-center fs-2 mt-5">Compras</h2>
 
-                    <input id="buscadorVtas" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar compra">
+                    <input id="buscadorCompras" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar compra">
 
                 </div>
 
@@ -58,6 +58,10 @@
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaCompras" class="row">
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         </div>
 
                     </div>
@@ -71,9 +75,6 @@
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/compras.js"></script>
         <script src="./../../public/js/controladorCompras.js"></script>
-        <script>
-            
-
 
         </script>
 </body>

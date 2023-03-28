@@ -19,7 +19,7 @@ renderProveedores = async proveedores => {
     if(proveedores.length > 0) {
         proveedores.forEach(element => {
 
-            document.getElementById("filaProveedores").insertAdjacentHTML('beforeend', `
+            document.getElementById("filaProvee").insertAdjacentHTML('beforeend', `
             
             <div id="${element.idProveedor}" idproveedor="${element.idProveedor}" cartaItem="true"
             class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
@@ -36,7 +36,7 @@ renderProveedores = async proveedores => {
     
         );
     } else {
-        document.getElementById("filaProveedores").innerHTML = "<h2 class='text-center'>No hay proveedores registrados puedes registrarlos clickando el boton de 'Añadir'.</h2/>"
+        document.getElementById("filaProvee").innerHTML = "<h2 class='text-center'>No hay proveedores registrados puedes registrarlos clickando el boton de 'Añadir'.</h2/>"
     }
 
 }
