@@ -41,7 +41,7 @@
 
                 </div>
 
-                <!-- btn añadir item y cartas con las ventas -->
+                <!-- btn añadir item y cartas con cliente -->
                 <div class="row col-12 mx-auto pt-5">
 
                     <!-- btn añadir -->
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <!-- cartas con todas las ventas registradas -->
+                    <!-- cartas con todas los clientes registradas -->
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaClientes" class="row">

@@ -1,7 +1,7 @@
 
 const traerClientes = async clientes => {
 
-    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiVentas.php')
+    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
     .then(res => res.json())
     .then(data => {
         if(!data.mensaje){
