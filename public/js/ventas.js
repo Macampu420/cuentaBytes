@@ -11,6 +11,7 @@ let vItemsElim = [];
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 
+
 const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
     fetch("http://localhost:3000/listarProductos")
@@ -129,7 +130,7 @@ const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item" + numeroItem}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
         <div class="containerBtn">
           <div id="dlt${numeroItem}" class="btnEliminar"></div>
         </div>
@@ -243,10 +244,8 @@ const actualizarUnidVend = (disparador, vector_) => {
 
 const registrarVenta = () => {
 
-    let now = new Date();
-    let fecha = now.toISOString();
-
     let tituloVenta = document.getElementById("inpTitulo").value;
+    let fecha = document.getElementById("inpFecha").value;
     let metPago = document.getElementById("inpMetPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let dto = parseInt(document.getElementById("inpDto").value);
@@ -276,13 +275,13 @@ const registrarVenta = () => {
 const enviarRegVenta = async (ventaActual_) => {
 
     await fetch('http://localhost:3000/guardarVta', {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ventaActual_)
-        })
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ventaActual_)
+    })
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
@@ -367,7 +366,7 @@ const renderVentas = async () => {
                 <div id="${element.idVenta}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
                         <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
-                        <h5>Concepto: ${element.tituloVenta}</h5>
+                        <h5>Titulo: ${element.tituloVenta}</h5>
                         <h5>Valor Total: ${conversorColombia.format(element.vrTotalVta)}</h5>
                         <h5>Fecha: ${element.fechaVenta}</h5>
                         <h5>Vendido a: ${element.nombresCliente + " " + element.apellidosCliente}</h5>
@@ -410,7 +409,6 @@ const modalEditar = async event => {
     //cambia el valor del btn actualizar
     document.getElementById('btnGuardar').innerHTML = "Actualizar";
     document.getElementById('btnFactura').classList.remove("d-none");
-    document.getElementById('inpFecha').setAttribute('type', 'date');
 
     let idVenta = event.target.getAttribute("idventa");
 
@@ -428,8 +426,6 @@ const modalEditar = async event => {
     //da un formato legible a la fecha de la venta
     vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
 
-    if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
-
     //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpMetPago').value = vItemsEditar[0].metodoPagoVenta;
@@ -437,7 +433,7 @@ const modalEditar = async event => {
     document.getElementById('slcClientes').value = vItemsEditar[0].idCliente;
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
-    document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
+    document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
     document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
 
 
@@ -482,6 +478,8 @@ const modalEditar = async event => {
 
     document.getElementById('btnEliminar').setAttribute("idVenta", vItemsEditar[0].idVenta)
 
+    console.log(vItemsEditar);
+
 
 }
 
@@ -489,8 +487,6 @@ const modalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
-    let date = new Date();
-
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
     document.getElementById('divAcciones').classList.add("d-none");
@@ -500,7 +496,7 @@ const modalRegistrar = () => {
     document.getElementById('inpMetPago').value = "";
     document.getElementById('inpTitulo').value = "";
     document.getElementById('slcClientes').value = 0;
-    document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
+    document.getElementById('inpFecha').value = 0;
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDto').value = 0;
     document.getElementById('inpVrIva').value = 0;
@@ -536,13 +532,13 @@ const actualizarVenta = async (event) => {
         };
 
         await fetch('http://localhost:3000/actualizarVta' + idVenta, {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(ventaActualizar)
-            })
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ventaActualizar)
+        })
             .then(response => response.text())
             .then(data => {
                 alert(data);
@@ -555,7 +551,134 @@ const actualizarVenta = async (event) => {
     }
 }
 
-const generarPdf = props_ => {
-    var pdfObject = jsPDFInvoiceTemplate.default(props_);
-    console.log("Nose ", pdfObject);
+const generarPdf = () => {
+    vItemsEditar.forEach(element => {
+        subtotal = element.vrTotalVta + element.descuentoVenta;
+        total = element.vrTotalVta + element.vrtotalIva;
+        // crea un nuevo objeto `Date`
+        let fecha = new Date();
+
+        // obtener la fecha y la hora
+        let fechaAhora = fecha.toLocaleString();
+        props = {
+            outputType: jsPDFInvoiceTemplate.OutputType.Save,
+            returnJsPDFDocObject: true,
+            fileName: "Invoice 2021",
+            orientationLandscape: false,
+            compress: true,
+            logo: {
+                src: "./../../public/img/CuentaBytes.png",
+                type: 'PNG', //optional, when src= data:uri (nodejs case)
+                width: 53.33, //aspect ratio = width/height
+                height: 53.33,
+                margin: {
+                    top: -15, //negative or positive num, from the current position
+                    left: 0 //negative or positive num, from the current position
+                }
+            },
+            // stamp: {
+            //     inAllPages: true, //by default = false, just in the last page
+            //     src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
+            //     type: 'JPG', //optional, when src= data:uri (nodejs case)
+            //     width: 20, //aspect ratio = width/height
+            //     height: 20,
+            //     margin: {
+            //         top: 0, //negative or positive num, from the current position
+            //         left: 0 //negative or positive num, from the current position
+            //     }
+            // },
+            business: {
+                name: "CuentaBytes",
+                address: "Albania, Tirane ish-Dogana, Durres 2001",
+                phone: "(+355) 069 11 11 111",
+                email: "email@example.com",
+                email_1: "info@example.al",
+                website: "www.example.al",
+            },
+            contact: {
+                label: "Factura venta",
+                name: "Cliente: " + element.nombresCliente + " " + element.apellidosCliente,
+                phone: "Telefono: " + element.telefonoCliente,
+                otherInfo: "Cedula: " + element.cedulaCliente,
+            },
+            invoice: {
+                label: "Invoice #: ",
+                num: 19,
+                invDate: "Fecha Venta: " + element.fechaVenta,
+                invGenDate: "Fecha Factura: " + fechaAhora,
+                headerBorder: false,
+                tableBodyBorder: false,
+                header: [{
+                    title: "Codigo",
+                    style: {
+                        width: 20
+                    }
+                },
+                {
+                    title: "Producto",
+                    style: {
+                        width: 50,
+
+                    }
+                },
+                {
+                    title: "Precio"
+                },
+                {
+                    title: "Cantidad"
+                },
+                {
+                    title: "Total"
+                }
+                ],
+                table: Array.from(Array(vItemsEditar.length), (item, index) => ([
+                    parseInt(vItemsEditar[index].idProducto),
+                    vItemsEditar[index].nombreProducto,
+                    parseInt(vItemsEditar[index].precioUnitario),
+                    parseInt(vItemsEditar[index].uniVendidas),
+                    parseInt(vItemsEditar[index].precioUnitario) * parseInt(vItemsEditar[index].uniVendidas)
+                ])),
+                additionalRows: [{
+                    col1: 'Subtotal:',
+                    col2: subtotal.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'IVA:',
+                    col2: element.vrtotalIva.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Descuento:',
+                    col2: element.descuentoVenta.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Total:',
+                    col2: total.toString(),
+                    style: {
+                        fontSize: 14 //optional, default 12
+                    }
+                }
+                ],
+                // invDescLabel: "Invoice Note",
+                // invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+            },
+            footer: {
+                text: "The invoice is created on a computer and is valid without the signature and stamp.",
+            },
+            pageEnable: true,
+            pageLabel: "Page ",
+        };
+    })
+
+
+    var pdfObject = jsPDFInvoiceTemplate.default(props);
+    console.log("Factura ", pdfObject);
 }
