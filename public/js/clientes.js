@@ -1,7 +1,11 @@
 
 const traerClientes = async clientes => {
 
+<<<<<<< HEAD
     await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiVentas.php')
+=======
+    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
+>>>>>>> Jota
     .then(res => res.json())
     .then(data => {
         if(!data.mensaje){

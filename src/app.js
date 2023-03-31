@@ -28,9 +28,12 @@ app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
 app.use(require('./routes/compras'));
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 app.use(require('./routes/mailer'));
 >>>>>>> sebas
+=======
+>>>>>>> Jota
 
 
 //inicializacion del servidor

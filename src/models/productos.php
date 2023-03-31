@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 
 function registrarImg() {
@@ -87,6 +88,8 @@ function actualizarProducto($sqlActualizar, $conn) {
     header("Location: http://localhost/cuentabytes/src/views/productos.php");
 } 
 =======
+=======
+>>>>>>> Jota
 <?php 
 
     function registrar($sqlRegProduc, $conn){
@@ -134,5 +137,9 @@ function actualizarProducto($sqlActualizar, $conn) {
     
         header("Location: http://localhost/cuentabytes/src/views/productos.php");
     }
+<<<<<<< HEAD
 ?>
 >>>>>>> sebas
+=======
+?>
+>>>>>>> Jota

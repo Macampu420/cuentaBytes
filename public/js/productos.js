@@ -10,9 +10,12 @@ const traerProductos = async productos => {
             productos.length = 0;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         console.log(data);
 =======
 >>>>>>> sebas
+=======
+>>>>>>> Jota
     });
 
 }
@@ -34,10 +37,14 @@ renderProductos = async productos => {
                 <h5>Precio: ${element.precioVenta}</h5>
                 <h5>Stock:     ${element.stockProducto}</h5>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <img src="./../../public/img/productos/${element.nombreImagen}">
 =======
                 <h5>Imagen: ${element.idImagen}</h5>
 >>>>>>> sebas
+=======
+                <h5>Imagen: ${element.idImagen}</h5>
+>>>>>>> Jota
             </div>
             </div>
     

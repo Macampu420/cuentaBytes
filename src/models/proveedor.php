@@ -8,6 +8,10 @@
             echo "error en el registro";
         } else {
             echo "todo melo papa";
+<<<<<<< HEAD
+=======
+            
+>>>>>>> Jota
         }
 
         header("Location: http://localhost/cuentabytes/src/views/proveedores.php");

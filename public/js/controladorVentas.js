@@ -122,6 +122,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
     event.preventDefault();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if(divModal.getAttribute("editar") == "false")
         registrarVenta()
    else{
@@ -133,6 +134,9 @@ document.querySelector("form").addEventListener("submit", (event) => {
 
     divModal.getAttribute("editar") == "false" ? registrarVenta() : actualizarVenta(event);
 >>>>>>> sebas
+=======
+    divModal.getAttribute("editar") == "false" ? registrarVenta() : actualizarVenta(event);
+>>>>>>> Jota
 });
 
 document.getElementById("contItems").addEventListener("click", (event) => {
@@ -224,6 +228,9 @@ document.getElementById("btnFactura").addEventListener("click", (event) => {
 
     if (confirm("¿Deseas generar la factura de esta venta? Al hacerlo no la podrás volver a editar") == true) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Jota
         let props = {
             outputType: jsPDFInvoiceTemplate.OutputType.Save,
             returnJsPDFDocObject: true,
@@ -350,9 +357,12 @@ document.getElementById("btnFactura").addEventListener("click", (event) => {
         };
 
         generarPdf(props);   
+<<<<<<< HEAD
 =======
 
         generarPdf();   
 >>>>>>> sebas
+=======
+>>>>>>> Jota
     }
 });

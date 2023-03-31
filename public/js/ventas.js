@@ -12,9 +12,12 @@ const conversorColombia = new Intl.NumberFormat('en-CO');
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> sebas
+=======
+>>>>>>> Jota
 const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
     fetch("http://localhost:3000/listarProductos")
@@ -134,10 +137,14 @@ const renderItem = () => {
 
     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
 =======
         <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item" + numeroItem}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
 >>>>>>> sebas
+=======
+        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+>>>>>>> Jota
         <div class="containerBtn">
           <div id="dlt${numeroItem}" class="btnEliminar"></div>
         </div>
@@ -252,14 +259,20 @@ const actualizarUnidVend = (disparador, vector_) => {
 const registrarVenta = () => {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Jota
     let now = new Date();
     let fecha = now.toISOString();
 
     let tituloVenta = document.getElementById("inpTitulo").value;
+<<<<<<< HEAD
 =======
     let tituloVenta = document.getElementById("inpTitulo").value;
     let fecha = document.getElementById("inpFecha").value;
 >>>>>>> sebas
+=======
+>>>>>>> Jota
     let metPago = document.getElementById("inpMetPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let dto = parseInt(document.getElementById("inpDto").value);
@@ -290,6 +303,9 @@ const enviarRegVenta = async (ventaActual_) => {
 
     await fetch('http://localhost:3000/guardarVta', {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Jota
             method: "POST",
             credentials: "same-origin",
             headers: {
@@ -297,6 +313,7 @@ const enviarRegVenta = async (ventaActual_) => {
             },
             body: JSON.stringify(ventaActual_)
         })
+<<<<<<< HEAD
 =======
         method: "POST",
         credentials: "same-origin",
@@ -306,6 +323,8 @@ const enviarRegVenta = async (ventaActual_) => {
         body: JSON.stringify(ventaActual_)
     })
 >>>>>>> sebas
+=======
+>>>>>>> Jota
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
@@ -391,10 +410,14 @@ const renderVentas = async () => {
                     <div class="card-body mt-2 mx-auto">
                         <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <h5>Concepto: ${element.tituloVenta}</h5>
 =======
                         <h5>Titulo: ${element.tituloVenta}</h5>
 >>>>>>> sebas
+=======
+                        <h5>Concepto: ${element.tituloVenta}</h5>
+>>>>>>> Jota
                         <h5>Valor Total: ${conversorColombia.format(element.vrTotalVta)}</h5>
                         <h5>Fecha: ${element.fechaVenta}</h5>
                         <h5>Vendido a: ${element.nombresCliente + " " + element.apellidosCliente}</h5>
@@ -438,9 +461,13 @@ const modalEditar = async event => {
     document.getElementById('btnGuardar').innerHTML = "Actualizar";
     document.getElementById('btnFactura').classList.remove("d-none");
 <<<<<<< HEAD
+<<<<<<< HEAD
     document.getElementById('inpFecha').setAttribute('type', 'date');
 =======
 >>>>>>> sebas
+=======
+    document.getElementById('inpFecha').setAttribute('type', 'date');
+>>>>>>> Jota
 
     let idVenta = event.target.getAttribute("idventa");
 
@@ -459,10 +486,13 @@ const modalEditar = async event => {
     vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
 
 =======
 >>>>>>> sebas
+=======
+>>>>>>> Jota
     //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpMetPago').value = vItemsEditar[0].metodoPagoVenta;
@@ -471,10 +501,14 @@ const modalEditar = async event => {
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
 <<<<<<< HEAD
+<<<<<<< HEAD
     document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
 =======
     document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
 >>>>>>> sebas
+=======
+    document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
+>>>>>>> Jota
     document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
 
 
@@ -520,10 +554,13 @@ const modalEditar = async event => {
     document.getElementById('btnEliminar').setAttribute("idVenta", vItemsEditar[0].idVenta)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     console.log(vItemsEditar);
 
 >>>>>>> sebas
+=======
+>>>>>>> Jota
 
 }
 
@@ -532,10 +569,15 @@ const modalRegistrar = () => {
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
     let date = new Date();
 
 =======
 >>>>>>> sebas
+=======
+    let date = new Date();
+
+>>>>>>> Jota
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
     document.getElementById('divAcciones').classList.add("d-none");
@@ -546,10 +588,14 @@ const modalRegistrar = () => {
     document.getElementById('inpTitulo').value = "";
     document.getElementById('slcClientes').value = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
 =======
     document.getElementById('inpFecha').value = 0;
 >>>>>>> sebas
+=======
+    document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
+>>>>>>> Jota
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDto').value = 0;
     document.getElementById('inpVrIva').value = 0;
@@ -586,6 +632,9 @@ const actualizarVenta = async (event) => {
 
         await fetch('http://localhost:3000/actualizarVta' + idVenta, {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Jota
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
@@ -593,6 +642,7 @@ const actualizarVenta = async (event) => {
                 },
                 body: JSON.stringify(ventaActualizar)
             })
+<<<<<<< HEAD
 =======
             method: "POST",
             credentials: "same-origin",
@@ -602,6 +652,8 @@ const actualizarVenta = async (event) => {
             body: JSON.stringify(ventaActualizar)
         })
 >>>>>>> sebas
+=======
+>>>>>>> Jota
             .then(response => response.text())
             .then(data => {
                 alert(data);
@@ -614,6 +666,7 @@ const actualizarVenta = async (event) => {
     }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const generarPdf = props_ => {
     var pdfObject = jsPDFInvoiceTemplate.default(props_);
@@ -752,3 +805,9 @@ const generarPdf = () => {
     console.log("Factura ", pdfObject);
 }
 >>>>>>> sebas
+=======
+const generarPdf = props_ => {
+    var pdfObject = jsPDFInvoiceTemplate.default(props_);
+    console.log("Nose ", pdfObject);
+}
+>>>>>>> Jota

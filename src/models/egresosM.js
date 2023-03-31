@@ -12,6 +12,10 @@ class ModuloEgresos {
 
     registrarEgreso = async (req, res) => {
 
+        if(this.idUltimoEgreso == null){
+            this.idUltimoEgreso = 0;
+        }
+
         this.idUltimoEgreso++;
 
 
