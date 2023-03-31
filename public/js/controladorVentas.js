@@ -121,12 +121,18 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
+<<<<<<< HEAD
     if(divModal.getAttribute("editar") == "false")
         registrarVenta()
    else{
     let confirmacion = confirm("Solo podrás editar la venta una unica vez");
     if(confirmacion) actualizarVenta(event);
    }
+=======
+    console.log(event.target);
+
+    divModal.getAttribute("editar") == "false" ? registrarVenta() : actualizarVenta(event);
+>>>>>>> sebas
 });
 
 document.getElementById("contItems").addEventListener("click", (event) => {
@@ -217,6 +223,7 @@ document.getElementById("btnFactura").addEventListener("click", (event) => {
     event.preventDefault();
 
     if (confirm("¿Deseas generar la factura de esta venta? Al hacerlo no la podrás volver a editar") == true) {
+<<<<<<< HEAD
         let props = {
             outputType: jsPDFInvoiceTemplate.OutputType.Save,
             returnJsPDFDocObject: true,
@@ -343,5 +350,9 @@ document.getElementById("btnFactura").addEventListener("click", (event) => {
         };
 
         generarPdf(props);   
+=======
+
+        generarPdf();   
+>>>>>>> sebas
     }
 });

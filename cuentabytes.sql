@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Mar 10, 2023 at 01:47 AM
+=======
+-- Generation Time: Feb 21, 2023 at 07:53 PM
+>>>>>>> sebas
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -69,8 +73,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarVta` (`idVenta_` INT)  BEGI
 	DELETE FROM encventas WHERE encventas.idVenta = idVenta_;
 END$$
 
+<<<<<<< HEAD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `idUltimaImg` ()  SELECT imagen.idImagen FROM `imagen` order by idImagen DESC LIMIT 1$$
 
+=======
+>>>>>>> sebas
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCliente` (IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))  INSERT INTO `clientes`(`nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES (_nombresCliente,_apellidosCliente,_telefonoCliente,_cedulaCliente)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetCompra` (IN `_cantidadCompra` INT(11), IN `_precioUnitario` INT(8), IN `_idCompra` INT(11), IN `_idProducto` INT(11))  INSERT INTO `detcompraproducto`(`cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) 
@@ -120,6 +127,13 @@ tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso
 FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC$$
 
+<<<<<<< HEAD
+=======
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()  BEGIN
+SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY nombreProducto ASC;
+END$$
+
+>>>>>>> sebas
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()  select * from proveedor order by idProveedor desc$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()  SELECT * FROM tipoegreso$$
@@ -145,6 +159,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()  BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END$$
 
+<<<<<<< HEAD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()  SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen$$
@@ -152,6 +167,15 @@ ON productos.idImagen = imagen.idImagen$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))  SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen$$
+=======
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()  BEGIN
+SELECT * FROM productos ORDER BY nombreProducto ASC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))  BEGIN
+SELECT * FROM productos WHERE idProducto = _idProducto;
+END$$
+>>>>>>> sebas
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()  BEGIN
 SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor DESC LIMIT 1;
@@ -174,8 +198,11 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(20))  INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
+<<<<<<< HEAD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))  INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
 
+=======
+>>>>>>> sebas
 CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()  BEGIN
 select productos.nombreProducto,max((productos.precioVenta- productos.costoProducto)/productos.costoProducto)as rentabilidad from productos group by productos.nombreProducto;
 END$$
@@ -216,6 +243,7 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES
+<<<<<<< HEAD
 (4, 'Andrei', 'Peña', '31548792', 1111111111),
 (6, 'Keanu', 'Reeves', '555693987', 101099853),
 (7, 'Antonio', 'Alvarez', '78642211', 1010994788),
@@ -224,6 +252,9 @@ INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `tele
 (10, 'Rodolfo', 'Hernandez', '312498652', 1010998654),
 (11, 'Pancho', 'Sansa', '0', 1010948769),
 (13, 'gfdgfadga', 'fgfadag', '123213', 123123);
+=======
+(4, 'Andrei', 'Peña', '31548792', 1111111111);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -243,6 +274,7 @@ CREATE TABLE `detalleegreso` (
 --
 
 INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgreso`) VALUES
+<<<<<<< HEAD
 (1, 200000, 'Juan', 1),
 (2, 120000, 'Maria', 1),
 (3, 190000, 'Pablo', 1),
@@ -265,6 +297,15 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 (20, 201400, 'Maria', 7),
 (21, 120000, 'Pablo', 7),
 (22, 240000, 'Curso manejo y conservación de vinos', 8);
+=======
+(44, 5000, 'Juan', 2),
+(45, 10000, 'Manuel', 2),
+(46, 7900000, 'Pc', 3),
+(63, 12345678, 'Uwu', 3),
+(69, 500000, 'Juan', 5),
+(70, 2222, ' asasd', 6),
+(71, 24333, 'jjjj', 7);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -285,6 +326,7 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
+<<<<<<< HEAD
 (3, 3, 50000, 4, 9),
 (4, 2, 42000, 4, 2),
 (9, 1, 55000, 5, 10),
@@ -299,6 +341,15 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (19, 7, 6000, 10, 7),
 (20, 2, 50000, 11, 6),
 (21, 16, 3500, 12, 11);
+=======
+(63, 5, 6000, 1, 7),
+(64, 2, 55000, 1, 10),
+(65, 2, 36000, 1, 8),
+(66, 2, 50000, 2, 1),
+(67, 1, 36000, 2, 8),
+(69, 1, 20000, 3, 5),
+(70, 5, 42000, 3, 2);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -314,6 +365,7 @@ CREATE TABLE `detcompraproducto` (
   `idProducto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+<<<<<<< HEAD
 --
 -- Dumping data for table `detcompraproducto`
 --
@@ -333,6 +385,8 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 (69, 9, 40000, 7, 6),
 (70, 5, 30000, 8, 9);
 
+=======
+>>>>>>> sebas
 -- --------------------------------------------------------
 
 --
@@ -348,6 +402,7 @@ CREATE TABLE `enccompraproducto` (
   `vrTotalIva` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+<<<<<<< HEAD
 --
 -- Dumping data for table `enccompraproducto`
 --
@@ -362,6 +417,8 @@ INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `i
 (7, 'Trago fuerte', '2023-03-08 17:31:04', 11, 600000, 126000),
 (8, 'Champaña', '2023-03-08 17:32:14', 15, 150000, 31500);
 
+=======
+>>>>>>> sebas
 -- --------------------------------------------------------
 
 --
@@ -381,6 +438,7 @@ CREATE TABLE `encegreso` (
 --
 
 INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES
+<<<<<<< HEAD
 (1, '2023-02-23 23:38:43', 'Pago a Personal', 510000, 3),
 (2, '2023-02-23 23:40:41', 'Pago Alcantarillado', 242000, 0),
 (3, '2023-02-23 23:44:44', 'Compra de utilería', 342000, 6),
@@ -389,6 +447,13 @@ INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgre
 (6, '2023-02-23 23:49:14', 'Subsidio Transporte', 300000, 4),
 (7, '2023-02-23 23:50:34', 'Nomina 2023', 561400, 2),
 (8, '2023-02-23 23:52:22', 'Curso Empleados', 240000, 3);
+=======
+(2, '2022-11-21 05:00:00', 'LE PAGUE  A JUAN', 15000, 2),
+(3, '2022-11-22 05:00:00', 'PC GAMER  UwU', 20245678, 6),
+(5, '2022-12-14 05:00:00', 'Pago a juan', 500000, 2),
+(6, '2023-02-16 15:57:27', 'juasjuasjuas', 2222, 1),
+(7, '2023-02-21 18:05:50', 'ñ@ndú', 24333, 2);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -413,6 +478,7 @@ CREATE TABLE `encventas` (
 --
 
 INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
+<<<<<<< HEAD
 (4, '2 cremas de whiskey y 3 botellas de', '2023-02-23 12:30:33', 'Transferencia', 5000, 229000, 49140, 1, 4),
 (5, '1 botella de gin,  un pilsenon 750,', '2023-02-23 12:36:38', 'Efectivo', 10000, 284000, 61440, 1, 9),
 (6, '4 cremas de whiskey', '2023-02-23 12:37:47', 'Transferencia', 8000, 160000, 35280, 0, 7),
@@ -422,6 +488,11 @@ INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVent
 (10, '10 aguila lata y 7 aguilones litro', '2023-02-23 13:01:54', 'Efectivo', 7000, 70000, 13650, 0, 10),
 (11, '2 litros de ron caldas', '2023-02-23 13:04:53', 'Efectivo', 8500, 91500, 21000, 0, 6),
 (12, '16 aguilas en lata', '2023-02-23 13:06:46', 'Transferencia', 0, 56000, 11760, 0, 7);
+=======
+(1, 'Cerveza, ginebra y merlot', '2023-02-21 18:38:17', 'Efectivo', 0, 212000, 42720, 1, 4),
+(2, 'Vino', '2023-02-21 18:49:33', 'Nequi', 1000, 135000, 28560, 0, 4),
+(3, '5 crema whiskey y media de guaro', '2023-02-21 18:53:06', 'Efectivo', 0, 230000, 48300, 1, 4);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -440,8 +511,12 @@ CREATE TABLE `imagen` (
 --
 
 INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
+<<<<<<< HEAD
 (9, '/public/img/productos', 'bimbo.png'),
 (11, './../../../public/img/productos/', '20230310011457.jpg');
+=======
+(9, '/public/img/productos', 'bimbo.png');
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -477,6 +552,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
+<<<<<<< HEAD
 (1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 21, 9),
 (2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 8, 9),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 44, 9),
@@ -489,6 +565,19 @@ INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, 
 (10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 13, 9),
 (11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 2000, 3500, 42, 9),
 (12, 'Botella de vodka', 'botella de vodka smirnoff', 21, 40000, 50000, 10, 11);
+=======
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 7, 9),
+(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 9, 9),
+(3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 32, 9),
+(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 32, 9),
+(5, 'Media de guaro', 'Media de guaro tapa roja', 21, 10000, 20000, 10, 9),
+(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 7, 9),
+(7, 'Aguilon litro', 'Aguilon litro', 15, 4000, 6000, 31, 9),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 8, 9),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 10, 9),
+(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 4, 9),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 1800, 3500, 50, 9);
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -513,8 +602,12 @@ INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`,
 (12, 'FLA', 'Cll Santo tequila', '52424788'),
 (14, 'Bavaria', 'Calle Elm', '555 666 4548'),
 (15, 'Licores el gallo', 'avenida central', '3169874503'),
+<<<<<<< HEAD
 (16, 'Rones el pistolero', '...', '9561059878'),
 (17, 'tqeuila es mescal', 'calle banano', '2225487');
+=======
+(16, 'Rones el pistolero', '...', '9561059878');
+>>>>>>> sebas
 
 -- --------------------------------------------------------
 
@@ -663,31 +756,51 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
+<<<<<<< HEAD
   MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+=======
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
+<<<<<<< HEAD
   MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+=======
+  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
+<<<<<<< HEAD
   MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+=======
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
+<<<<<<< HEAD
   MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+=======
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `imagen`
 --
 ALTER TABLE `imagen`
+<<<<<<< HEAD
   MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+=======
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `notas`
@@ -699,13 +812,21 @@ ALTER TABLE `notas`
 -- AUTO_INCREMENT for table `productos`
 --
 ALTER TABLE `productos`
+<<<<<<< HEAD
   MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+=======
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
+<<<<<<< HEAD
   MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+=======
+  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+>>>>>>> sebas
 
 --
 -- AUTO_INCREMENT for table `tipoegreso`

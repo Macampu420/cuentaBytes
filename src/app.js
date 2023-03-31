@@ -27,6 +27,10 @@ app.use(rutasGraficos);
 app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
 app.use(require('./routes/compras'));
+<<<<<<< HEAD
+=======
+app.use(require('./routes/mailer'));
+>>>>>>> sebas
 
 
 //inicializacion del servidor
