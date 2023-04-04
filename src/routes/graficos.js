@@ -5,10 +5,13 @@ const router = express.Router();
 const objGraficos = new Graficos();
 
 router.post('/graficos:tiempo', async (req, res) => {
-    let datosGrafica = [];
 
     if (req.params.tiempo == "horas") {
-        objGraficos.obtenerComprasPorHora(req);
+
+        datosGraficos = {
+            ventas: await objGraficos.servirComprasPorHora(req)
+        }
+
     } else if (req.params.tiempo == "dias"){
 
         console.log("traer resultados por dias", req.body);
