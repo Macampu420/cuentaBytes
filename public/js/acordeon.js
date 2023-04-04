@@ -64,3 +64,16 @@ secciones.forEach((elemento, i) => {
         `);
    }
 });
+
+//consumir API
+let datosAcordeon; // declarar una variable global para guardar los datos
+
+async function traerDatosAcordeon () {
+    let resDatosAcordeon = await fetch('http://localhost:3000/acordeon');
+    let datos = await resDatosAcordeon.json();
+    datosAcordeon = datos; // asignar los datos obtenidos a la variable global
+}
+
+traerDatosAcordeon(); // llamar la función para obtener los datos
+
+// Ahora puedes usar la variable datosAcordeon en cualquier parte de tu código
