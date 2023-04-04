@@ -11,7 +11,6 @@ let vItemsElim = [];
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 
-
 const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
     fetch("http://localhost:3000/listarProductos")
@@ -130,15 +129,7 @@ const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-<<<<<<< HEAD
-<<<<<<< HEAD
         <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-=======
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item" + numeroItem}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
->>>>>>> sebas
-=======
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
->>>>>>> Jota
         <div class="containerBtn">
           <div id="dlt${numeroItem}" class="btnEliminar"></div>
         </div>
@@ -256,10 +247,6 @@ const registrarVenta = () => {
     let fecha = now.toISOString();
 
     let tituloVenta = document.getElementById("inpTitulo").value;
-
-    let tituloVenta = document.getElementById("inpTitulo").value;
-    let fecha = document.getElementById("inpFecha").value;
-
     let metPago = document.getElementById("inpMetPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let dto = parseInt(document.getElementById("inpDto").value);
@@ -289,7 +276,6 @@ const registrarVenta = () => {
 const enviarRegVenta = async (ventaActual_) => {
 
     await fetch('http://localhost:3000/guardarVta', {
-
             method: "POST",
             credentials: "same-origin",
             headers: {
@@ -297,15 +283,6 @@ const enviarRegVenta = async (ventaActual_) => {
             },
             body: JSON.stringify(ventaActual_)
         })
-
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(ventaActual_)
-    })
-
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
@@ -390,15 +367,7 @@ const renderVentas = async () => {
                 <div id="${element.idVenta}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
                         <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
-<<<<<<< HEAD
-<<<<<<< HEAD
                         <h5>Concepto: ${element.tituloVenta}</h5>
-=======
-                        <h5>Titulo: ${element.tituloVenta}</h5>
->>>>>>> sebas
-=======
-                        <h5>Concepto: ${element.tituloVenta}</h5>
->>>>>>> Jota
                         <h5>Valor Total: ${conversorColombia.format(element.vrTotalVta)}</h5>
                         <h5>Fecha: ${element.fechaVenta}</h5>
                         <h5>Vendido a: ${element.nombresCliente + " " + element.apellidosCliente}</h5>
@@ -441,11 +410,7 @@ const modalEditar = async event => {
     //cambia el valor del btn actualizar
     document.getElementById('btnGuardar').innerHTML = "Actualizar";
     document.getElementById('btnFactura').classList.remove("d-none");
-
     document.getElementById('inpFecha').setAttribute('type', 'date');
-
-    document.getElementById('inpFecha').setAttribute('type', 'date');
-
 
     let idVenta = event.target.getAttribute("idventa");
 
@@ -463,9 +428,7 @@ const modalEditar = async event => {
     //da un formato legible a la fecha de la venta
     vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
 
-
     if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
-
 
     //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
@@ -474,11 +437,7 @@ const modalEditar = async event => {
     document.getElementById('slcClientes').value = vItemsEditar[0].idCliente;
     document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
     document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
-
     document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
-
-    document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
-    document.getElementById('inpDto').value = conversorColombia.format(vItemsEditar[0].descuentoVenta);
     document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
 
 
@@ -523,8 +482,6 @@ const modalEditar = async event => {
 
     document.getElementById('btnEliminar').setAttribute("idVenta", vItemsEditar[0].idVenta)
 
-    console.log(vItemsEditar);
-
 
 }
 
@@ -532,7 +489,6 @@ const modalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
-
     let date = new Date();
 
     document.getElementById('btnGuardar').disabled = false;
@@ -544,15 +500,7 @@ const modalRegistrar = () => {
     document.getElementById('inpMetPago').value = "";
     document.getElementById('inpTitulo').value = "";
     document.getElementById('slcClientes').value = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
-=======
-    document.getElementById('inpFecha').value = 0;
->>>>>>> sebas
-=======
-    document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
->>>>>>> Jota
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDto').value = 0;
     document.getElementById('inpVrIva').value = 0;
@@ -588,10 +536,6 @@ const actualizarVenta = async (event) => {
         };
 
         await fetch('http://localhost:3000/actualizarVta' + idVenta, {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Jota
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
@@ -599,18 +543,6 @@ const actualizarVenta = async (event) => {
                 },
                 body: JSON.stringify(ventaActualizar)
             })
-<<<<<<< HEAD
-=======
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ventaActualizar)
-        })
->>>>>>> sebas
-=======
->>>>>>> Jota
             .then(response => response.text())
             .then(data => {
                 alert(data);
@@ -623,13 +555,6 @@ const actualizarVenta = async (event) => {
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-const generarPdf = props_ => {
-    var pdfObject = jsPDFInvoiceTemplate.default(props_);
-    console.log("Nose ", pdfObject);
-}
-=======
 const generarPdf = () => {
     vItemsEditar.forEach(element => {
         subtotal = element.vrTotalVta + element.descuentoVenta;
@@ -761,10 +686,3 @@ const generarPdf = () => {
     var pdfObject = jsPDFInvoiceTemplate.default(props);
     console.log("Factura ", pdfObject);
 }
->>>>>>> sebas
-=======
-const generarPdf = props_ => {
-    var pdfObject = jsPDFInvoiceTemplate.default(props_);
-    console.log("Nose ", pdfObject);
-}
->>>>>>> Jota
