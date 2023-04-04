@@ -66,9 +66,9 @@ $(function () {
             console.log(chart.data.datasets[2]);
     }
 
-
-    let actualizarGrafico = async (inicio, fin) => {
-        await fetch('http://localhost:3000/graficos', {
+    let actualizarGrafico = async (inicio, fin, tiempo) => {
+        
+        let resGraficos = await await fetch(`http://localhost:3000/graficos${tiempo}`, {
             method: "POST",
             credentials: "same-origin",
             headers: {
@@ -78,24 +78,40 @@ $(function () {
                 inicio,
                 fin
             })
-        })
-        .then(response => response.json())
-        .then(datos => {
-            dias = datos.datosGrafica;
-            console.log(dias);
+        });
+
+        let datosGraficos = await resGraficos.json();
+
+        console.log(datosGraficos);
+        
+        // await fetch('http://localhost:3000/graficos', {
+        //     method: "POST",
+        //     credentials: "same-origin",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //         inicio,
+        //         fin
+        //     })
+        // })
+        // .then(response => response.json())
+        // .then(datos => {
+        //     dias = datos.datosGrafica;
+        //     console.log(dias);
             
 
-            mostrarCompras(dias);
-            mostrarVentas(dias);
-            // mostrarEgresos(dias);
+        //     mostrarCompras(dias);
+        //     mostrarVentas(dias);
+        //     // mostrarEgresos(dias);
 
-            chart.update();
-        })
-        .catch(err => {
-            console.log(err);
-            alert("Ha ocurrido un error, por favor intentalo mas tarde");
-            location.reload();
-        });
+        //     chart.update();
+        // })
+        // .catch(err => {
+        //     console.log(err);
+        //     alert("Ha ocurrido un error, por favor intentalo mas tarde");
+        //     location.reload();
+        // });
     }
 
     let mostrarRango = (start, end) => {
@@ -123,7 +139,16 @@ $(function () {
         inicio = start.format('YYYY-MM-DD');
         fin = end.format('YYYY-MM-DD');
 
-        actualizarGrafico(inicio, fin);
+        let hoy = moment();
+        let ayer = moment().subtract(1, 'days');
+        let fechaSeleccionada = start.clone().startOf('day');
+        
+        // Compara la fecha seleccionada con las fechas de hoy y ayer
+        if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+            actualizarGrafico(inicio, fin, "horas");
+        } else {
+            actualizarGrafico(inicio, fin, "dias");
+        }
         mostrarRango(inicio, fin);
     });
 });

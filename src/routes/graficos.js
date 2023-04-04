@@ -4,47 +4,18 @@ const router = express.Router();
 
 const objGraficos = new Graficos();
 
-router.post('/graficos', async (req, res) => {
+router.post('/graficos:tiempo', async (req, res) => {
     let datosGrafica = [];
 
-    // Llamar a la función y manejar los resultados
-    objGraficos.obtenerDatosCompras(req)
-        .then((datos) => {
-            datosGrafica[0] = (datos);
-            objGraficos.obtenerDatosEgresos(req)
-                .then((datos) => {
-                    datosGrafica[1] = datos;
-                    // Llamar a la función y manejar los resultados
-                    objGraficos.obtenerDatosVentas(req)
-                        .then((datos) => {
-                            datosGrafica[2] = datos;
-                            // Hacer algo con los datos obtenidos
+    if (req.params.tiempo == "horas") {
+        objGraficos.obtenerComprasPorHora(req);
+    } else if (req.params.tiempo == "dias"){
 
-                            res.status(200).send(JSON.stringify({datosGrafica}));
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                            res.status(500).send(JSON.stringify({
-                                mensaje: 'Ha ocurrido un error al acceder a la base de datos'
-                            }));
-                            // Manejar el error de la consulta
-                        });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).send(JSON.stringify({
-                        mensaje: 'Ha ocurrido un error al acceder a la base de datos'
-                    }));
-                    // Manejar el error de la consulta
-                });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).send(JSON.stringify({
-                mensaje: 'Ha ocurrido un error al acceder a la base de datos'
-            }));
-            // Manejar el error de la consulta
-        });
+        console.log("traer resultados por dias", req.body);
+   
+    }
+
+   
 })
 
 module.exports = router;
