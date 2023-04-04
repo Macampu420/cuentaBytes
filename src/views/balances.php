@@ -93,7 +93,6 @@
                                                 class="col-7 col-lg-3 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-2 rounded-pill">
                                                 Juanito Alimaña</div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
