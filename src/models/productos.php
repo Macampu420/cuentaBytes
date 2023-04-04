@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 <?php
 
 function registrarImg() {
@@ -87,59 +86,56 @@ function actualizarProducto($sqlActualizar, $conn) {
 
     header("Location: http://localhost/cuentabytes/src/views/productos.php");
 } 
-=======
-=======
->>>>>>> Jota
-<?php 
 
-    function registrar($sqlRegProduc, $conn){
+// <?php 
 
-        $registro = $conn -> query("$sqlRegProduc");
+//     function registrar($sqlRegProduc, $conn){
 
-        if(!$registro){
-            echo "error en el registro";
-        } else {
-            echo "Registro exitoso";
-        }
+//         $registro = $conn -> query("$sqlRegProduc");
 
-        header("Location: http://localhost/cuentabytes/src/views/productos.php");
+//         if(!$registro){
+//             echo "error en el registro";
+//         } else {
+//             echo "Registro exitoso";
+//         }
+
+//         header("Location: http://localhost/cuentabytes/src/views/productos.php");
         
-    }
+//     }
 
-    function eliminarProducto($sqlEliminar, $conn){
+//     function eliminarProducto($sqlEliminar, $conn){
 
-        $resEliminar = $conn -> query($sqlEliminar);
+//         $resEliminar = $conn -> query($sqlEliminar);
     
-        if(!$resEliminar){
-            echo "ha ocurrido un error al eliminar el producto";
-        } else {
-            echo "Producto eliminado correctamente";
-        }
-    }
+//         if(!$resEliminar){
+//             echo "ha ocurrido un error al eliminar el producto";
+//         } else {
+//             echo "Producto eliminado correctamente";
+//         }
+//     }
     
-    function listarUnProducto($sqlListar, $conn){
+//     function listarUnProducto($sqlListar, $conn){
     
-        $producto = $conn->query($sqlListar);
+//         $producto = $conn->query($sqlListar);
     
-        return $producto;
+//         return $producto;
     
-    }
+//     }
     
-    function actualizarProducto($sqlActualizar, $conn){
+//     function actualizarProducto($sqlActualizar, $conn){
     
-        $resActualizar = $conn->query($sqlActualizar);
+//         $resActualizar = $conn->query($sqlActualizar);
     
-        if(!$resActualizar){
-            echo "ha ocurrido un error al actualizar el producto";
-        } else {
-            echo "Producto actualizado correctamente";
-        }
+//         if(!$resActualizar){
+//             echo "ha ocurrido un error al actualizar el producto";
+//         } else {
+//             echo "Producto actualizado correctamente";
+//         }
     
-        header("Location: http://localhost/cuentabytes/src/views/productos.php");
-    }
-<<<<<<< HEAD
-?>
->>>>>>> sebas
-=======
-?>
->>>>>>> Jota
+//         header("Location: http://localhost/cuentabytes/src/views/productos.php");
+//     }
+
+// ?>
+
+
+

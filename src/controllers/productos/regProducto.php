@@ -2,36 +2,24 @@
 include "./../../conexion.php";
 include "./../../models/productos.php";
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> Jota
 $idProducto = $connection -> query("SELECT idProducto from productos order by idProducto desc limit 1");
 
 // $idProducto = mysqli_fetch_assoc($idProducto);
 // $idProducto = $idProducto["idProducto"];
-<<<<<<< HEAD
->>>>>>> sebas
-=======
->>>>>>> Jota
+
 $nombreProducto = $_REQUEST['nombreProducto'];
 $descripcionProducto = $_REQUEST['descripcionProducto'];
 $porcentajeIva = $_REQUEST['porcentajeIva'];
 $costoProducto = $_REQUEST['costoProducto'];
 $precioVenta = $_REQUEST['precioVenta'];
 $stockProducto = $_REQUEST['stockProducto'];
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 $idImagen = registrarImg();
 
 var_dump($idImagen); 
 
 $sqlReg = "CALL insertarProducto('$nombreProducto','$descripcionProducto',$porcentajeIva,$costoProducto,$precioVenta,$stockProducto,$idImagen)";
 
-=======
-=======
->>>>>>> Jota
 $idImagen = $_REQUEST['idImagen'];
 $idImagen = '9';
 // $idImagen = addslashes(file_get_contents($_FILES['idImagen']['tmp_name']));
@@ -45,11 +33,6 @@ $idImagen = '9';
 // $sqlReg = "INSERT INTO `productos`(`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `imagen`) VALUES ($idProducto, '$nombreProducto', '$descripcionProducto', '$porcentajeIva', $costoProducto, $precioVenta, $stockProducto, $idImagen)";
 $sqlReg = "CALL insertarProducto('$nombreProducto','$descripcionProducto',$porcentajeIva,$costoProducto,$precioVenta,$stockProducto,$idImagen)";
 
-
-<<<<<<< HEAD
->>>>>>> sebas
-=======
->>>>>>> Jota
 registrar($sqlReg, $connection);
 
 
