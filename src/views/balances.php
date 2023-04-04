@@ -70,8 +70,8 @@
                     <div class="row">
 
 
-                        <div class="accordion mx-auto col-lg-9 col-11 p-4 my-4" id="acordeonBalances">
-                            <div class="accordion-item">
+                        <div id="acordeonBalances" class="accordion mx-auto col-lg-9 col-11 p-4 my-4">
+                            <!-- <div class="accordion-item">
                                 <h2 class="accordion-header" id="titulo${i}">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#item${i}" aria-expanded="true" aria-controls="item${i}">
@@ -173,7 +173,7 @@
                                     </div>
                                 </div>
 
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
