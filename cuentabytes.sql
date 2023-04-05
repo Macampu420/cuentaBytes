@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2023 at 01:47 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 7.4.27
+-- Generation Time: Apr 05, 2023 at 09:05 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,78 +25,78 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCliente` (IN `_idCliente` INT(11), IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))  UPDATE `clientes` SET `idCliente`=_idCliente,`nombresCliente`=_nombresCliente,`apellidosCliente`=_apellidosCliente,`telefonoCliente`=_telefonoCliente,`cedulaCliente`=_cedulaCliente WHERE idCliente = _idCliente$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCliente` (IN `_idCliente` INT(11), IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))   UPDATE `clientes` SET `idCliente`=_idCliente,`nombresCliente`=_nombresCliente,`apellidosCliente`=_apellidosCliente,`telefonoCliente`=_telefonoCliente,`cedulaCliente`=_cedulaCliente WHERE idCliente = _idCliente$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_idProducto` INT)  UPDATE productos SET stockProducto = stockProducto + _stockProducto, costoProducto = _costoProducto WHERE idProducto = _idProducto$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_idProducto` INT)   UPDATE productos SET stockProducto = stockProducto + _stockProducto, costoProducto = _costoProducto WHERE idProducto = _idProducto$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarDetEgreso` (IN `_idDetEgreso` INT(11), IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100))  UPDATE `detalleegreso` SET `idDetEgreso`=_idDetEgreso,`valorEgreso`=_valorEgreso,`descripcion`=_descripcion WHERE idDetEgreso = _idDetEgreso$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarDetEgreso` (IN `_idDetEgreso` INT(11), IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100))   UPDATE `detalleegreso` SET `idDetEgreso`=_idDetEgreso,`valorEgreso`=_valorEgreso,`descripcion`=_descripcion WHERE idDetEgreso = _idDetEgreso$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))  UPDATE `encegreso` SET 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))   UPDATE `encegreso` SET 
 `idEgreso`=_idEgreso,`tituloEgreso`=_tituloEgreso,`vrTotalEgreso`=_vrTotalEgreso,`idTipoEgreso`=_idTipoEgreso WHERE idEgreso = _idEgreso$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEncVenta` (IN `titVenta` VARCHAR(35), IN `metodoPagoVenta_` VARCHAR(20), IN `descuentoVenta_` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT(11), IN `idCliente_` INT(11), IN `idVenta_` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEncVenta` (IN `titVenta` VARCHAR(35), IN `metodoPagoVenta_` VARCHAR(20), IN `descuentoVenta_` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT(11), IN `idCliente_` INT(11), IN `idVenta_` INT)   BEGIN
 UPDATE `encventas` SET `tituloVenta`=titVenta,`metodoPagoVenta`=metodoPagoVenta_,`descuentoVenta`=descuentoVenta_
 ,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`editado`= 1,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto` (IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))  UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`porcentajeIva`=_porcentajeIva,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto` (IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))   UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`porcentajeIva`=_porcentajeIva,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
 `stockProducto`=_stockProducto,`idImagen`=_idImagen WHERE idProducto = _idProducto$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProveedor` (IN `_idProveedor` INT(11), IN `_nombreProveedor` VARCHAR(40), IN `_direccionProveedor` VARCHAR(30), IN `_telefonoProveedor` VARCHAR(15))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProveedor` (IN `_idProveedor` INT(11), IN `_nombreProveedor` VARCHAR(40), IN `_direccionProveedor` VARCHAR(30), IN `_telefonoProveedor` VARCHAR(15))   BEGIN
 UPDATE `proveedor` SET `nombreProveedor`=_nombreProveedor,`direccionProveedor`=_direccionProveedor,`telefonoProveedor`=_telefonoProveedor WHERE idProveedor = _idProveedor;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarStock` (IN `unidVend` INT(11), IN `_idProducto` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarStock` (IN `unidVend` INT(11), IN `_idProducto` INT(11))   BEGIN
 UPDATE productos SET stockProducto = stockProducto - unidVend WHERE idProducto = _idProducto;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarCliente` (IN `_idCliente` INT(11))  DELETE FROM `clientes` WHERE idCliente = _idCliente$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarCliente` (IN `_idCliente` INT(11))   DELETE FROM `clientes` WHERE idCliente = _idCliente$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarCompra` (IN `_idCompra` INT)  DELETE FROM `enccompraproducto` WHERE idCompra = _idCompra$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarCompra` (IN `_idCompra` INT)   DELETE FROM `enccompraproducto` WHERE idCompra = _idCompra$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarEgreso` (IN `_idEgreso` INT(11))  DELETE FROM `encegreso` WHERE idEgreso = _idEgreso$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarEgreso` (IN `_idEgreso` INT(11))   DELETE FROM `encegreso` WHERE idEgreso = _idEgreso$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProducto` (IN `_idProducto` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProducto` (IN `_idProducto` INT(11))   BEGIN
 DELETE FROM productos
 WHERE idProducto = _idProducto;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProvee` (IN `_idProveedor` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProvee` (IN `_idProveedor` INT(11))   BEGIN
 	DELETE FROM proveedor WHERE proveedor.idProveedor = _idProveedor;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarVta` (`idVenta_` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarVta` (`idVenta_` INT)   BEGIN
 	DELETE FROM encventas WHERE encventas.idVenta = idVenta_;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `idUltimaImg` ()  SELECT imagen.idImagen FROM `imagen` order by idImagen DESC LIMIT 1$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `idUltimaImg` ()   SELECT imagen.idImagen FROM `imagen` order by idImagen DESC LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCliente` (IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))  INSERT INTO `clientes`(`nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES (_nombresCliente,_apellidosCliente,_telefonoCliente,_cedulaCliente)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCliente` (IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))   INSERT INTO `clientes`(`nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES (_nombresCliente,_apellidosCliente,_telefonoCliente,_cedulaCliente)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetCompra` (IN `_cantidadCompra` INT(11), IN `_precioUnitario` INT(8), IN `_idCompra` INT(11), IN `_idProducto` INT(11))  INSERT INTO `detcompraproducto`(`cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetCompra` (IN `_cantidadCompra` INT(11), IN `_precioUnitario` INT(8), IN `_idCompra` INT(11), IN `_idProducto` INT(11))   INSERT INTO `detcompraproducto`(`cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) 
 VALUES (_cantidadCompra,_precioUnitario,_idCompra,_idProducto)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetEgreso` (IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100), IN `_idEgreso` INT(11))  INSERT INTO `detalleegreso`(`valorEgreso`, `descripcion`, `idEgreso`) VALUES (_valorEgreso,_descripcion,_idEgreso)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetEgreso` (IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100), IN `_idEgreso` INT(11))   INSERT INTO `detalleegreso`(`valorEgreso`, `descripcion`, `idEgreso`) VALUES (_valorEgreso,_descripcion,_idEgreso)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetVenta` (IN `_uniVendidas` INT(8), IN `precioUnit` INT(11), IN `_idVenta` INT(11), IN `idProducto` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetVenta` (IN `_uniVendidas` INT(8), IN `precioUnit` INT(11), IN `_idVenta` INT(11), IN `idProducto` INT(11))   BEGIN
 INSERT INTO `detalleventa` (`uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES (_uniVendidas, precioUnit, _idVenta, idProducto); END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncCompra` (IN `_idCompra` INT(11), IN `_conceptoCompra` VARCHAR(50), IN `_idProveedor` INT(11), IN `_vrTotalCompra` INT(11), IN `_vrTotalIva` INT(11))  INSERT INTO enccompraproducto(idCompra, conceptoCompra, fechaCompra, idProveedor, vrTotalCompra, vrTotalIva) 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncCompra` (IN `_idCompra` INT(11), IN `_conceptoCompra` VARCHAR(50), IN `_idProveedor` INT(11), IN `_vrTotalCompra` INT(11), IN `_vrTotalIva` INT(11))   INSERT INTO enccompraproducto(idCompra, conceptoCompra, fechaCompra, idProveedor, vrTotalCompra, vrTotalIva) 
 VALUES (_idCompra,_conceptoCompra, now(),_idProveedor,_vrTotalCompra,_vrTotalIva)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))  INSERT INTO `encegreso`(`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES (_idEgreso, now(),_tituloEgreso,_vrTotalEgreso,_idTipoEgreso)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))   INSERT INTO `encegreso`(`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES (_idEgreso, now(),_tituloEgreso,_vrTotalEgreso,_idTipoEgreso)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncVenta` (IN `_idVenta` INT, IN `_tituloVta` VARCHAR(35), IN `_metPago` VARCHAR(20), IN `dto` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT, IN `_idCliente` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncVenta` (IN `_idVenta` INT, IN `_tituloVta` VARCHAR(35), IN `_metPago` VARCHAR(20), IN `dto` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT, IN `_idCliente` INT(11))   BEGIN
 INSERT INTO `encventas`(`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES (_idVenta,_tituloVta, now(), _metPago, dto, vrTotal, vrIva, 0, _idCliente);                                         
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))  INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_porcentajeIva,_costoProducto,_precioVenta,_stockProducto,_idImagen)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))   INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_porcentajeIva,_costoProducto,_precioVenta,_stockProducto,_idImagen)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
 SELECT nombresCliente, idCliente FROM clientes;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))  SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
 proveedor.nombreProveedor, proveedor.idProveedor,
 detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
 productos.nombreProducto, productos.idProducto
@@ -106,93 +106,101 @@ INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.i
 INNER JOIN productos ON productos.idProducto = detcompraproducto.idProducto
 WHERE enccompraproducto.idCompra = _idCompra$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompras` ()  SELECT enccompraproducto.*, proveedor.nombreProveedor FROM enccompraproducto INNER JOIN proveedor on proveedor.idProveedor = enccompraproducto.idProveedor ORDER BY enccompraproducto.idCompra DESC$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompras` ()   SELECT enccompraproducto.*, proveedor.nombreProveedor FROM enccompraproducto INNER JOIN proveedor on proveedor.idProveedor = enccompraproducto.idProveedor ORDER BY enccompraproducto.idCompra DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgreso` (IN `_idEgreso` INT(11))  SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgreso` (IN `_idEgreso` INT(11))   SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
 detalleegreso.idDetEgreso ,detalleegreso.valorEgreso, detalleegreso.descripcion, detalleegreso.idEgreso,
 tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso
 INNER JOIN detalleegreso ON detalleegreso.idEgreso = encegreso.idEgreso
 WHERE encegreso.idEgreso = _idEgreso$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgresos` ()  SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgresos` ()   SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
 tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso 
 FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()  select * from proveedor order by idProveedor desc$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()   BEGIN
+SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY nombreProducto ASC;
+END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()  SELECT * FROM tipoegreso$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()   select * from proveedor order by idProveedor desc$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta` (IN `idVenta_` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()   SELECT * FROM tipoegreso$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta` (IN `idVenta_` INT(11))   BEGIN
 SELECT encventas.idVenta, encventas.tituloVenta, encventas.fechaVenta, encventas.metodoPagoVenta, encventas.descuentoVenta, encventas.vrTotalVta, encventas.vrtotalIva, encventas.editado, clientes.idCliente, clientes.nombresCliente, detalleventa.idDetVenta, detalleventa.uniVendidas, detalleventa.precioUnitario, detalleventa.idProducto, productos.nombreProducto, productos.stockProducto, productos.porcentajeIva FROM encventas INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta INNER JOIN productos ON detalleventa.idProducto = productos.idProducto INNER JOIN clientes on clientes.idCliente = encventas.idCliente WHERE encventas.idVenta = idVenta_; 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVentas` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVentas` ()   BEGIN
 SELECT idVenta, tituloVenta, fechaVenta, metodoPagoVenta, descuentoVenta, vrTotalVta, nombresCliente, apellidosCliente FROM encventas INNER JOIN clientes ON encventas.idCliente = clientes.idCliente order by idVenta DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor DESC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientes` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientes` ()   BEGIN
 SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente FROM encventas INNER
 JOIN clientes on encventas.idCliente = clientes.idCliente GROUP BY encventas.idCliente ORDER BY nroFacturas desc limit 3;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()  SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()   SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))  SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))   SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()   BEGIN
 SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor DESC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasVend` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasVend` ()   BEGIN
 SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto FROM detalleventa INNER JOIN productos ON
 productos.idProducto = detalleventa.idProducto group by detalleventa.idProducto ORDER by nroFacturas desc limit 3;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock` ()   BEGIN
 SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor ASC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenVend` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenVend` ()   BEGIN
 SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto FROM detalleventa INNER JOIN productos ON
 productos.idProducto = detalleventa.idProducto group by detalleventa.idProducto ORDER by nroFacturas asc limit 3;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(20))  INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(20))   INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))  INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))   INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()   BEGIN
 select productos.nombreProducto,max((productos.precioVenta- productos.costoProducto)/productos.costoProducto)as rentabilidad from productos group by productos.nombreProducto;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenCompras` (IN `fecha1_` DATE, IN `fecha2_` DATE)  SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
+CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenCompras` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
 enccompraproducto.fechaCompra >= fecha1_ AND enccompraproducto.fechaCompra <= fecha2_ GROUP BY enccompraproducto.idCompra ORDER BY enccompraproducto.fechaCompra ASC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenEgreso` (IN `fecha1_` DATE, IN `fecha2_` DATE)  SELECT encegreso.vrTotalEgreso as total, encegreso.tituloEgreso, encegreso.fechaEgreso FROM encegreso WHERE
+CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenEgreso` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT encegreso.vrTotalEgreso as total, encegreso.tituloEgreso, encegreso.fechaEgreso FROM encegreso WHERE
 encegreso.fechaEgreso >= fecha1_ AND encegreso.fechaEgreso <= fecha2_ GROUP BY encegreso.idEgreso ORDER BY encegreso.fechaEgreso ASC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta` (IN `fecha1_` DATE, IN `fecha2_` DATE)  SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
+CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
 encventas.fechaVenta >= fecha1_ AND encventas.fechaVenta <= fecha2_ GROUP BY encventas.idVenta ORDER BY encventas.fechaVenta ASC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_productoRentable` (OUT `_Rentabilidad` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_productoRentable` (OUT `_Rentabilidad` INT(11))   BEGIN
 SELECT productos.nombreProducto, 
 MAX((productos.precioVenta- productos.costoProducto)/productos.costoProducto)AS Rentabilidad
 FROM productos INTO _Rentabilidad;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ventasPorHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, SUM(encventas.vrTotalVta) as vrTotalHora FROM `encventas` WHERE fechaVenta >= inicio AND fechaVenta <= fin GROUP BY HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s'));
 END$$
 
 DELIMITER ;
@@ -209,7 +217,7 @@ CREATE TABLE `clientes` (
   `apellidosCliente` varchar(30) DEFAULT NULL,
   `telefonoCliente` varchar(15) DEFAULT NULL,
   `cedulaCliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `clientes`
@@ -219,8 +227,8 @@ INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `tele
 (4, 'Andrei', 'Peña', '31548792', 1111111111),
 (6, 'Keanu', 'Reeves', '555693987', 101099853),
 (7, 'Antonio', 'Alvarez', '78642211', 1010994788),
-(8, 'Manuela', 'gomez orozco', '4789621', 1010998789),
-(9, 'Denis Mariana ', 'Castaño Orozco', '3198752016', 1010998789),
+(8, 'Manuela', 'gomez orozco', '4789621', 1),
+(9, 'Juana', 'Peña', '3198752016', 1010998789),
 (10, 'Rodolfo', 'Hernandez', '312498652', 1010998654),
 (11, 'Pancho', 'Sansa', '0', 1010948769),
 (13, 'gfdgfadga', 'fgfadag', '123213', 123123);
@@ -236,7 +244,7 @@ CREATE TABLE `detalleegreso` (
   `valorEgreso` int(8) NOT NULL,
   `descripcion` varchar(100) DEFAULT NULL,
   `idEgreso` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detalleegreso`
@@ -278,7 +286,7 @@ CREATE TABLE `detalleventa` (
   `precioUnitario` int(11) DEFAULT NULL,
   `idVenta` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detalleventa`
@@ -312,7 +320,7 @@ CREATE TABLE `detcompraproducto` (
   `precioUnitario` int(11) NOT NULL,
   `idCompra` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detcompraproducto`
@@ -346,7 +354,7 @@ CREATE TABLE `enccompraproducto` (
   `idProveedor` int(11) DEFAULT NULL,
   `vrTotalCompra` int(11) NOT NULL,
   `vrTotalIva` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `enccompraproducto`
@@ -374,7 +382,7 @@ CREATE TABLE `encegreso` (
   `tituloEgreso` varchar(80) DEFAULT NULL,
   `vrTotalEgreso` int(8) NOT NULL,
   `idTipoEgreso` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `encegreso`
@@ -406,7 +414,7 @@ CREATE TABLE `encventas` (
   `vrtotalIva` int(11) NOT NULL,
   `editado` int(10) NOT NULL,
   `idCliente` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `encventas`
@@ -421,7 +429,34 @@ INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVent
 (9, 'Un vino vientos del sur', '2023-02-23 12:58:42', 'Tarjeta de crédito', 0, 36000, 7560, 0, 11),
 (10, '10 aguila lata y 7 aguilones litro', '2023-02-23 13:01:54', 'Efectivo', 7000, 70000, 13650, 0, 10),
 (11, '2 litros de ron caldas', '2023-02-23 13:04:53', 'Efectivo', 8500, 91500, 21000, 0, 6),
-(12, '16 aguilas en lata', '2023-02-23 13:06:46', 'Transferencia', 0, 56000, 11760, 0, 7);
+(12, '16 aguilas en lata', '2023-02-23 13:06:46', 'Transferencia', 0, 56000, 11760, 0, 7),
+(20, 'Bxazfxsuomq', '2022-06-19 19:05:39', 'Vpsklpezmcz', 884817, 198223, 19750, 0, 4),
+(21, 'Otgrmwpzifk', '2023-03-10 16:41:41', 'Dtabfzllstt', 242877, 613094, 359463, 0, 4),
+(22, 'Hdoiyqxugfc', '2022-09-26 03:05:46', 'Wrhtitintjq', 747722, 720652, 122230, 0, 4),
+(23, 'Usayfdtwyhf', '2022-09-04 16:43:50', 'Oepzkwnzsmy', 132260, 471249, 634268, 1, 4),
+(24, 'Zmzmjhnwkqj', '2022-12-04 08:23:41', 'Djzfoqzjjdw', 683605, 87804, 355644, 0, 4),
+(25, 'Szrjacbbgtk', '2023-01-28 05:35:33', 'Zekvxoiuyzs', 41447, 641379, 725555, 0, 4),
+(26, 'Tvebvuignox', '2023-03-11 11:48:02', 'Ewujtiwalmq', 171777, 774039, 580730, 1, 4),
+(27, 'Ttfprchbpfr', '2022-05-31 06:54:18', 'Ifprobgvinl', 751380, 484892, 390355, 1, 4),
+(28, 'Xlrjqdzhwhm', '2022-11-04 10:31:40', 'Moqoktpobwi', 666445, 600883, 27114, 1, 4),
+(29, 'Hgdygnvrffz', '2022-04-12 04:36:39', 'Ocvlosekgev', 863168, 968472, 976900, 0, 4),
+(30, 'Hkrokfznsyj', '2022-09-11 16:47:48', 'Flnnaevbovu', 181872, 477093, 708527, 1, 4),
+(31, 'Kbpwhiyufcf', '2022-12-02 22:20:50', 'Mimkcmnolkt', 21851, 404439, 305409, 0, 4),
+(32, 'Ccrbxdcqitd', '2022-12-30 05:09:00', 'Jzmztnrbtvb', 217043, 368445, 961241, 1, 4),
+(33, 'Efawvkmwbhh', '2023-02-18 05:54:53', 'Occpywpurph', 541383, 514600, 518127, 0, 4),
+(34, 'Onlvgnqoinz', '2022-04-09 07:16:53', 'Objeicclybp', 691653, 54484, 943696, 0, 4),
+(35, 'Ujwtozicmoj', '2023-04-04 01:52:05', 'Mhdeejatmot', 630198, 965233, 409087, 0, 4),
+(36, 'Ibactwaueeq', '2022-04-14 17:27:48', 'Dtpkmudjpph', 936293, 70607, 870754, 1, 4),
+(37, 'Klhlvnukiua', '2023-02-25 14:02:59', 'Nwtxwcyoblv', 560613, 30556, 504281, 0, 4),
+(38, 'Xnidmvnqvxy', '2022-10-21 22:29:47', 'Zwsfxwuveav', 257024, 516841, 830304, 1, 4),
+(39, 'Bqnqdebjuvz', '2023-01-07 10:14:58', 'Fqrnngicvmf', 901724, 218925, 406509, 0, 4),
+(40, '2 cremas de whiskey y 3 botellas de', '2023-04-03 17:30:33', 'Transferencia', 5000, 229000, 49140, 1, 4),
+(41, '1 botella de gin,  un pilsenon 750,', '2023-04-03 17:36:38', 'Efectivo', 10000, 284000, 61440, 1, 9),
+(42, '2 botellas de ron y 3 cervezas', '2023-04-04 14:30:00', 'Efectivo', 2000, 123000, 26610, 1, 4),
+(43, '3 botellas de vino y 1 paquete de', '2023-04-04 19:20:15', 'Transferencia', 0, 135000, 29160, 1, 4),
+(46, '2 botellas de ron y 3 cervezas', '2023-04-04 14:03:00', 'Efectivo', 2000, 123000, 26610, 1, 4),
+(47, '3 botellas de vino y 1 paquete de', '2023-04-04 19:25:15', 'Transferencia', 0, 135000, 29160, 1, 4),
+(48, '2 botellas de ron y 3 cervezas', '2023-04-04 18:30:00', 'Efectivo', 2000, 123000, 26610, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -433,7 +468,7 @@ CREATE TABLE `imagen` (
   `idImagen` int(11) NOT NULL,
   `rutaImagen` varchar(100) NOT NULL,
   `nombreImagen` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `imagen`
@@ -453,7 +488,7 @@ CREATE TABLE `notas` (
   `idNota` int(11) NOT NULL,
   `tituloNota` varchar(20) DEFAULT NULL,
   `contenidoNota` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -470,7 +505,7 @@ CREATE TABLE `productos` (
   `precioVenta` int(8) NOT NULL,
   `stockProducto` int(7) NOT NULL,
   `idImagen` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `productos`
@@ -501,7 +536,7 @@ CREATE TABLE `proveedor` (
   `nombreProveedor` varchar(40) NOT NULL,
   `direccionProveedor` varchar(30) DEFAULT NULL,
   `telefonoProveedor` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `proveedor`
@@ -525,7 +560,7 @@ INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`,
 CREATE TABLE `tipoegreso` (
   `idTipoEgreso` int(11) NOT NULL,
   `nombreTipoEgreso` varchar(40) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tipoegreso`
@@ -551,7 +586,7 @@ CREATE TABLE `usuarios` (
   `nombreUsuario` varchar(40) NOT NULL,
   `correoUsuario` varchar(40) NOT NULL,
   `contrasenaUsuario` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `usuarios`
