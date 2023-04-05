@@ -41,9 +41,11 @@ secciones.forEach((elemento, i) => {
             </button>
             </h2>
             <div id="${elemento.idSeccion}" class="accordion-collapse collapse show" aria-labelledby="titulo${elemento.idSeccion}" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+                <div class="accordion-body">
+                    <div id="cuerpo${elemento.idSeccion}" class="row">
 
-            </div>
+                    </div>
+                </div>
             </div>
         </div>
         `);
@@ -57,8 +59,10 @@ secciones.forEach((elemento, i) => {
             </h2>
             <div id="${elemento.idSeccion}" class="accordion-collapse collapse" aria-labelledby="titulo${elemento.idSeccion}" data-bs-parent="#accordionExample">
             <div class="accordion-body">
+                    <div id="cuerpo${elemento.idSeccion}" class="row">
 
-            </div>
+                    </div>
+                </div>
             </div>
         </div>
         `);
@@ -68,12 +72,24 @@ secciones.forEach((elemento, i) => {
 //consumir API
 let datosAcordeon; // declarar una variable global para guardar los datos
 
-async function traerDatosAcordeon () {
+function renderMejoresClientes() {
+    let mejoresClientes = JSON.parse(datosAcordeon.mejoresClientes);
+    mejoresClientes.forEach(cliente => {
+        document.getElementById('cuerpomejoresClientes').insertAdjacentHTML('beforeend', `
+        <div class="col-7 col-lg-3 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-2 rounded-pill">
+          ${cliente.nombresCliente}
+        </div>        
+        `);
+    });
+}
+
+async function traerDatosAcordeon() {
     let resDatosAcordeon = await fetch('http://localhost:3000/acordeon');
     let datos = await resDatosAcordeon.json();
     datosAcordeon = datos; // asignar los datos obtenidos a la variable global
+    renderMejoresClientes();
 }
 
 traerDatosAcordeon(); // llamar la función para obtener los datos
 
-// Ahora puedes usar la variable datosAcordeon en cualquier parte de tu código
+
