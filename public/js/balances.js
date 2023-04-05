@@ -55,20 +55,26 @@ $(function () {
             chart.data.datasets[1].conceptos = vector[1].map(elemento => elemento.tituloVenta)
     }
 
-    let mostrarVentas = (vector) => {
-            let vAux = vector[2].map(elemento => elemento.fechaVenta.slice(0, 10));
+    let mostrarVentas = (vectorDatos) => {
 
-            chart.data.labels = chart.data.labels.concat(vAux);
-            console.log(chart.data.labels);
-            chart.data.datasets[2].data = vector[2].map(elemento => elemento.total);
+            console.log(vectorDatos.ventas.map(elemento => elemento));
+
+            chart.data.labels = vectorDatos.ventas.map(elemento => elemento.hora);
+
+            chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
+            chart.data.datasets[0].label = 'Compras';
+            chart.data.datasets[0].conceptos = vectorDatos.compras.map(elemento => elemento.hora)
+
+            chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
             chart.data.datasets[2].label = 'Ventas';
-            chart.data.datasets[2].conceptos = vector[2].map(elemento => elemento.tituloVenta)
+            chart.data.datasets[2].conceptos = vectorDatos.ventas.map(elemento => elemento.hora);
+
             console.log(chart.data.datasets[2]);
     }
 
     let actualizarGrafico = async (inicio, fin, tiempo) => {
         
-        let resGraficos = await await fetch(`http://localhost:3000/graficos${tiempo}`, {
+        let resGraficos = await fetch(`http://localhost:3000/graficos${tiempo}`, {
             method: "POST",
             credentials: "same-origin",
             headers: {
@@ -82,36 +88,10 @@ $(function () {
 
         let datosGraficos = await resGraficos.json();
 
-        console.log(datosGraficos);
+        mostrarVentas(datosGraficos);
         
-        // await fetch('http://localhost:3000/graficos', {
-        //     method: "POST",
-        //     credentials: "same-origin",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //         inicio,
-        //         fin
-        //     })
-        // })
-        // .then(response => response.json())
-        // .then(datos => {
-        //     dias = datos.datosGrafica;
-        //     console.log(dias);
-            
+        chart.update();
 
-        //     mostrarCompras(dias);
-        //     mostrarVentas(dias);
-        //     // mostrarEgresos(dias);
-
-        //     chart.update();
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        //     alert("Ha ocurrido un error, por favor intentalo mas tarde");
-        //     location.reload();
-        // });
     }
 
     let mostrarRango = (start, end) => {

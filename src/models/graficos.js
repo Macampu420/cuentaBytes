@@ -1,9 +1,8 @@
 const pool = require('./../conexion');
-const moment = require('moment-timezone');
-moment.tz.setDefault('America/Bogota');
 
 class Graficos {
 
+    //metodo para indicar el total de horas a servir (24 o las horas del dia de hoy)
     llenarVectorHoras(vHoras, datos) {
         //itera sobre el arreglo con el total de horas a mostrar y si encuentra una coincidencia con
         //alguna de las horas arrojadas por la bd la reempleza con los datos
@@ -15,7 +14,7 @@ class Graficos {
         });
     }
 
-    async traerDatosComprasHoras(tiempo, nroHoras) {
+    async traerDatosVentasHoras(tiempo, nroHoras) {
         try {
             // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
             let [results] = await pool.query(`CALL ventasPorHoras('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
@@ -28,7 +27,7 @@ class Graficos {
             for (let i = 1; i <= nroHoras; i++) {
                 vHoras.push({
                     hora: i,
-                    VrTotalHora: 0
+                    vrTotalHora: 0
                 });
             }
 
@@ -39,67 +38,45 @@ class Graficos {
                 throw new Error("No hay horas por mostrar");
             }
 
-            console.log(vHoras);
+            return vHoras;
+
+        } catch (error) {
+            throw error;
+        }
+    }  
+
+    async traerDatosComprasHoras(tiempo, nroHoras) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(`CALL comprasPorHoras('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
+
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroHoras; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
+
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.llenarVectorHoras(vHoras, datos);
+
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
 
             return vHoras;
 
         } catch (error) {
             throw error;
         }
-    }
+    }  
 
-    async servirComprasPorHora(req) {
-        try {
-            let { inicio } = req.body;
-    
-            // Obtener la fecha de hoy
-            const hoy = moment().tz('America/Bogota').format('YYYY-MM-DD');
-            // Obtener la fecha de ayer
-            const ayer = moment().tz('America/Bogota').subtract(1, 'days').format('YYYY-MM-DD');
-    
-            // Si el inicio es la fecha de hoy trae los datos de hoy sino pregunta y trae los de ayer
-            if (inicio == hoy) {
-                let horaActual = moment().tz('America/Bogota').format('HH:mm:ss').slice(0, 2);
-                return this.traerDatosComprasHoras(hoy, horaActual);
-            } else if (inicio == ayer) {
-                return this.traerDatosComprasHoras(ayer, 24);
-            }
-        } catch (error) {
-            throw error;
-        }
-    }    
-
-    obtenerDatosCompras = (req) => {
-        return new Promise((resolve, reject) => {
-            // Hacer la consulta a varias tablas
-            pool.query('CALL resumenCompras(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-                if (error) reject(error);
-
-                // Guardar los resultados en una variable
-                let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
-
-                // Resolver la promesa con los resultados
-                resolve(datos);
-            });
-        });
-    }
-
-    obtenerDatosVentas = (req) => {
-        return new Promise((resolve, reject) => {
-            // Hacer la consulta a varias tablas
-            pool.query('CALL resumenVenta(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-                if (error) reject(error);
-
-                // Guardar los resultados en una variable
-                let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
-
-                // Resolver la promesa con los resultados
-                resolve(datos);
-            });
-        });
-    }
-
-    obtenerDatosEgresos = (req) => {
+    traerDatosEgresos = (req) => {
         return new Promise((resolve, reject) => {
             // Hacer la consulta a varias tablas
             pool.query('CALL resumenEgreso(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
