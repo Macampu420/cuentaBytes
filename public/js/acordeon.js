@@ -83,13 +83,26 @@ function renderMejoresClientes() {
     });
 }
 
+// function renderProductosMasVend() {
+//     let productosMasVend = JSON.parse(datosAcordeon.productosMasVend);
+//     productosMasVend.forEach(producto => {
+//         document.getElementById('cuerpoprodMasVend').insertAdjacentHTML('beforeend', `
+//         <div class="card border-0 col-4 mx-auto" style="width: 18rem;">
+//             <img src="./../../public/img/${producto.idImagen}"
+//                 class="border border-2 card-img-top" alt="...">
+//             <div class="card-body">
+//                 <p class="card-text text-center fs-4">${producto.prodMasVend}</p>
+//         </div>     
+//         `);
+//     });
+// }
+
 async function traerDatosAcordeon() {
     let resDatosAcordeon = await fetch('http://localhost:3000/acordeon');
     let datos = await resDatosAcordeon.json();
     datosAcordeon = datos; // asignar los datos obtenidos a la variable global
     renderMejoresClientes();
+    // renderProductosMasVend();
 }
 
 traerDatosAcordeon(); // llamar la función para obtener los datos
-
-
