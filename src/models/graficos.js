@@ -107,6 +107,36 @@ class Graficos {
         }
     } 
 
+    async traerDatosDias(nroDias, procedimiento) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(procedimiento);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
+
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroDias; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
+
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.llenarVectorHoras(vHoras, datos);
+
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
+
+            return vHoras;
+
+        } catch (error) {
+            throw error;
+        }
+    }  
 
 }
 

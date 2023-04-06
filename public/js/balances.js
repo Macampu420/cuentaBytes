@@ -9,16 +9,13 @@ let chart = new Chart(ctx, {
     data: {
         labels: [],
         datasets: [{
-                data: [],
-                borderWidth: 5
+                data: []
             },
             {
-                data: [],
-                borderWidth: 5
+                data: []
             },
             {
-                data: [],
-                borderWidth: 5
+                data: []
             },
         ]
     },
@@ -35,6 +32,17 @@ let chart = new Chart(ctx, {
                         return tooltipItem[0].dataset.conceptos[tooltipItem[0].dataIndex];
                     }
                 }
+            }
+        },
+        elements: {
+            line: {
+                tension: 0.4,
+                borderWidth: 3
+            },
+            point: {
+                radius: 7.3,
+                pointStyle: 'circle',
+                borderWidth: 2
             }
         }
     }
@@ -105,33 +113,37 @@ let actualizarGrafico = async (inicio, fin, tiempo) => {
 // muestra desde hasta cuando se hara el PyG
 let mostrarRango = (inicio, fin) => document.querySelector('#spanFechaGrafico').innerHTML = ('Generar Estado PyG desde: ' + inicio + '. Hasta: ' + fin);
 
+//jquery necesario para el funcionamiento del date picker
 $(function () {
     mostrarRango(hoy.format('YYYY-MM-DD'), hoy.format('YYYY-MM-DD'));
     actualizarGrafico(hoy.format('YYYY-MM-DD'), hoy.format('YYYY-MM-DD'), 'horas');
 
+    //creacion y configuracion del rangepicker sobre el elemento #reportrange
     $('#reportrange').daterangepicker({
-        locale: {
-            format: "YYYY-MM-DD"
+            locale: {
+                format: "YYYY-MM-DD"
+            },
+            ranges: {
+                'Hoy': [moment(), moment()],
+                'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
         },
-        ranges: {
-            'Hoy': [moment(), moment()],
-            'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-    }, async function (pInicio, pFin) {
-        inicio = pInicio.format('YYYY-MM-DD');
-        fin = pFin.format('YYYY-MM-DD');
+        //callback para cada vez que se ejecute  un cambio de fecha
+        async function (pInicio, pFin) {
+            inicio = pInicio.format('YYYY-MM-DD');
+            fin = pFin.format('YYYY-MM-DD');
 
-        let fechaSeleccionada = pInicio.clone().startOf('day');
+            let fechaSeleccionada = pInicio.clone().startOf('day');
 
-        // Compara la fecha seleccionada con las fechas de hoy y ayer
-        if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-            actualizarGrafico(inicio, fin, "horas");
-        } else {
-            actualizarGrafico(inicio, fin, "dias");
-        }
-        mostrarRango(inicio, fin);
-    });
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                actualizarGrafico(inicio, fin, "horas");
+            } else {
+                actualizarGrafico(inicio, fin, "dias");
+            }
+            mostrarRango(inicio, fin);
+        });
 });
