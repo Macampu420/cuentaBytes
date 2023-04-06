@@ -1,10 +1,6 @@
 <div class="modal" id="modalCl" tabindex="-1" editar="false">
     <div class="modal-dialog modal-lg">
-<<<<<<< HEAD
-        <div class="modal-content bg-dark text-white">
-=======
         <div class="modal-content text-white">
->>>>>>> Jota
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
                 <form action="../../controllers/clientes.php" method="post">
                     <div class="row">
@@ -59,12 +55,9 @@
 </div>
 
 <style>
-<<<<<<< HEAD
-=======
     .modal-content {
     background: #A0D2D8;
 }
->>>>>>> Jota
     * {
         box-sizing: border-box !important;
         margin: 0;

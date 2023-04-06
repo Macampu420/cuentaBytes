@@ -9,13 +9,9 @@ const traerProductos = async productos => {
         } else {
             productos.length = 0;
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         console.log(data);
-=======
->>>>>>> sebas
-=======
->>>>>>> Jota
+
     });
 
 }

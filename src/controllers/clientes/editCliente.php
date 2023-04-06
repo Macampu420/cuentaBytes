@@ -7,11 +7,7 @@ $nombresCliente = $_REQUEST['nombresCliente'];
 $apellidosCliente = $_REQUEST['apellidosCliente'];
 $telefonoCliente = $_REQUEST['telefonoCliente'];
 $idCliente=$_REQUEST["idCliente"];
-<<<<<<< HEAD
 
-//falta procedimiento almacenado
-=======
->>>>>>> Jota
 $sqlEdit = "CALL actualizarCliente($idCliente,'$nombresCliente','$apellidosCliente','$telefonoCliente',$cedulaCliente)";
 
 actualizarCliente($sqlEdit, $connection);

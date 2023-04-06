@@ -54,12 +54,8 @@ document.getElementById('rowItems').addEventListener('input', event => {
 
         if (disparador.id.includes('inpunidCompslc')) {
             actualizarUnidCompradas(vector, item, numeroItem);
-<<<<<<< HEAD
-            // mostrarNuevoStock(disparador);
-=======
-            //campu hp
             mostrarNuevoStock(disparador);
->>>>>>> Jota
+
         } else if (disparador.id.includes('inpPrecioUnitslc')) {
             actualizarCostoProducto(vector, item, numeroItem);
         }
