@@ -60,7 +60,7 @@ let convertirHora12 = (horas24) => {
     });
 }
 
-let mostrarDatosGrafico = (vectorDatos) => {
+let mostrarDatosGraficoHora = (vectorDatos) => {
 
     //se obtienen todos los valores de las horas correspondientes
     let horasCompras = vectorDatos.compras.map(elemento => elemento.hora);
@@ -86,6 +86,27 @@ let mostrarDatosGrafico = (vectorDatos) => {
     chart.data.datasets[2].conceptos = convertirHora12(horasVentas);
 }
 
+let mostrarDatosGraficoDia = (vectorDatos) => {
+
+    //se le dice al grafico que use las dias (convertidas a formato de 12 por el metodo) como etiquetas
+    chart.data.labels = vectorDatos.compras.map(elemento => elemento.Dia);
+
+    //se llenan y muestran los datos correspondientes a las compras
+    chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.VrTotalDia);
+    chart.data.datasets[0].label = 'Compras';
+    chart.data.datasets[0].conceptos = vectorDatos.compras.map(elemento => elemento.Dia);
+
+    //se llenan y muestran los datos correspondientes a los egresos
+    chart.data.datasets[1].data = vectorDatos.egresos.map(elemento => elemento.VrTotalDia);
+    chart.data.datasets[1].label = 'Egresos';
+    chart.data.datasets[1].conceptos = vectorDatos.egresos.map(elemento => elemento.Dia);
+
+    //se llenan y muestran los datos correspondientes a las ventas
+    chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.VrTotalDia);
+    chart.data.datasets[2].label = 'Ventas';
+    chart.data.datasets[2].conceptos = vectorDatos.ventas.map(elemento => elemento.Dia);
+}
+
 let actualizarGrafico = async (inicio, fin, tiempo) => {
 
     // se consumen los datos de la API y se le pasan al metodo para que los setee,
@@ -104,7 +125,11 @@ let actualizarGrafico = async (inicio, fin, tiempo) => {
 
     let datosGraficos = await resGraficos.json();
 
-    mostrarDatosGrafico(datosGraficos);
+    if(tiempo == 'horas'){
+        mostrarDatosGraficoHora(datosGraficos);
+    } else {
+        mostrarDatosGraficoDia(datosGraficos);
+    }
 
     chart.update();
 
