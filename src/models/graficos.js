@@ -76,20 +76,36 @@ class Graficos {
         }
     }  
 
-    traerDatosEgresos = (req) => {
-        return new Promise((resolve, reject) => {
-            // Hacer la consulta a varias tablas
-            pool.query('CALL resumenEgreso(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-                if (error) reject(error);
+    async traerDatosEgresosHoras(tiempo, nroHoras) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(`CALL egresosPorHora('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
 
-                // Guardar los resultados en una variable
-                let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroHoras; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
 
-                // Resolver la promesa con los resultados
-                resolve(datos);
-            });
-        });
-    }
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.llenarVectorHoras(vHoras, datos);
+
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
+
+            return vHoras;
+
+        } catch (error) {
+            throw error;
+        }
+    } 
 
 
 }

@@ -6,17 +6,18 @@ let chart = new Chart(ctx, {
     data: {
         labels: [],
         datasets: [{
-            data: [],
-            borderWidth: 1
-        }, 
-        {
-            data: [],
-            borderWidth: 1
-        },
-        {
-            data: [],
-            borderWidth: 1
-        },]
+                data: [],
+                borderWidth: 5
+            },
+            {
+                data: [],
+                borderWidth: 5
+            },
+            {
+                data: [],
+                borderWidth: 5
+            },
+        ]
     },
     options: {
         scales: {
@@ -40,40 +41,40 @@ $(function () {
 
     let start = moment().subtract(29, 'days');
     let end = moment();
-    let mostrarCompras = (vector) => {
-        let vAux = vector[0].map(elemento => elemento.fechaCompra.slice(0, 10));
-            chart.data.labels = chart.data.labels.concat(vAux);
-            chart.data.datasets[0].data = vector[0].map(elemento => elemento.total);
-            chart.data.datasets[0].label = 'Compra materia prima';
-            chart.data.datasets[0].conceptos = vector[0].map(elemento => elemento.conceptoCompra)
+
+    let convertirHora12 = (horas24) => {
+        return horas24.map(hora => {
+            let hora12 = (hora % 12) || 12;
+            let ampm = hora < 12 ? 'am' : 'pm';
+            return `${hora12}${ampm}`;
+        });
     }
 
-    let mostrarEgresos = (vector) => {
-            chart.data.datasets[1].labels = vector[1].map(elemento => elemento.fechaEgreso.slice(0, 10));
-            chart.data.datasets[1].data = vector[1].map(elemento => elemento.total);
-            chart.data.datasets[1].label = 'Egresos';
-            chart.data.datasets[1].conceptos = vector[1].map(elemento => elemento.tituloVenta)
-    }
 
-    let mostrarVentas = (vectorDatos) => {
+    let mostrarDatosGrafico = (vectorDatos) => {
 
-            console.log(vectorDatos.ventas.map(elemento => elemento));
 
-            chart.data.labels = vectorDatos.ventas.map(elemento => elemento.hora);
+        let horasCompras = vectorDatos.compras.map(elemento => elemento.hora);
+        let horasEgresos = vectorDatos.egresos.map(elemento => elemento.hora);
+        let horasVentas = vectorDatos.ventas.map(elemento => elemento.hora);
 
-            chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
-            chart.data.datasets[0].label = 'Compras';
-            chart.data.datasets[0].conceptos = vectorDatos.compras.map(elemento => elemento.hora)
+        chart.data.labels = convertirHora12(horasCompras);
 
-            chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
-            chart.data.datasets[2].label = 'Ventas';
-            chart.data.datasets[2].conceptos = vectorDatos.ventas.map(elemento => elemento.hora);
+        chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
+        chart.data.datasets[0].label = 'Compras';
+        chart.data.datasets[0].conceptos = convertirHora12(horasCompras);
 
-            console.log(chart.data.datasets[2]);
+        chart.data.datasets[1].data = vectorDatos.egresos.map(elemento => elemento.vrTotalHora);
+        chart.data.datasets[1].label = 'Egresos';
+        chart.data.datasets[1].conceptos = convertirHora12(horasEgresos);
+
+        chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
+        chart.data.datasets[2].label = 'Ventas';
+        chart.data.datasets[2].conceptos = convertirHora12(horasVentas);
     }
 
     let actualizarGrafico = async (inicio, fin, tiempo) => {
-        
+
         let resGraficos = await fetch(`http://localhost:3000/graficos${tiempo}`, {
             method: "POST",
             credentials: "same-origin",
@@ -88,8 +89,8 @@ $(function () {
 
         let datosGraficos = await resGraficos.json();
 
-        mostrarVentas(datosGraficos);
-        
+        mostrarDatosGrafico(datosGraficos);
+
         chart.update();
 
     }
@@ -122,7 +123,7 @@ $(function () {
         let hoy = moment();
         let ayer = moment().subtract(1, 'days');
         let fechaSeleccionada = start.clone().startOf('day');
-        
+
         // Compara la fecha seleccionada con las fechas de hoy y ayer
         if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
             actualizarGrafico(inicio, fin, "horas");

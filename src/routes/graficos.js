@@ -13,7 +13,7 @@ router.post('/graficos:tiempo', async (req, res, next) => {
         if (req.params.tiempo == "horas") {
 
             let { inicio } = req.body;
-            let ventas, compras;
+            let ventas, compras, egresos;
 
             // Obtener la fecha de hoy
             const hoy = moment().format('YYYY-MM-DD');
@@ -25,14 +25,17 @@ router.post('/graficos:tiempo', async (req, res, next) => {
                 let horaActual = moment().format('HH:mm:ss').slice(0, 2);
                 ventas = await objGraficos.traerDatosVentasHoras(hoy, horaActual);
                 compras = await objGraficos.traerDatosComprasHoras(hoy, horaActual);
+                egresos = await objGraficos.traerDatosEgresosHoras(hoy, horaActual);
             } else if (inicio == ayer) {
                 ventas = await objGraficos.traerDatosVentasHoras(ayer, 24);
                 compras = await objGraficos.traerDatosComprasHoras(ayer, 24);
+                egresos = await objGraficos.traerDatosEgresosHoras(ayer, 24);
             }
 
             datosGraficos = {
                 ventas,
-                compras
+                compras,
+                egresos
             };
 
             console.log(datosGraficos);
