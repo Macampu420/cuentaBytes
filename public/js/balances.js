@@ -1,6 +1,9 @@
 const ctx = document.getElementById('myChart');
-let inicio, fin, dias;
+let inicio, fin;
+let hoy = moment();
+let ayer = moment().subtract(1, 'days');
 
+// inicializacion del grafico, solo estructura a usar, datos vacios
 let chart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -37,74 +40,76 @@ let chart = new Chart(ctx, {
     }
 });
 
+//convierte las horas de formato 24 a 12
+let convertirHora12 = (horas24) => {
+    return horas24.map(hora => {
+        // Para cada hora, calculamos su equivalente en formato 12 horas con "hora % 12"
+        // si esto da 0 quiere decir que son las 12.00
+        let hora12 = (hora % 12) || 12;
+        // Usamos un operador ternario para determinar si es "am" o "pm"
+        let ampm = hora < 12 ? 'am' : 'pm';
+        return `${hora12}${ampm}`;
+    });
+}
+
+let mostrarDatosGrafico = (vectorDatos) => {
+
+    //se obtienen todos los valores de las horas correspondientes
+    let horasCompras = vectorDatos.compras.map(elemento => elemento.hora);
+    let horasEgresos = vectorDatos.egresos.map(elemento => elemento.hora);
+    let horasVentas = vectorDatos.ventas.map(elemento => elemento.hora);
+
+    //se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+    chart.data.labels = convertirHora12(horasCompras);
+
+    //se llenan y muestran los datos correspondientes a las compras
+    chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
+    chart.data.datasets[0].label = 'Compras';
+    chart.data.datasets[0].conceptos = convertirHora12(horasCompras);
+
+    //se llenan y muestran los datos correspondientes a los egresos
+    chart.data.datasets[1].data = vectorDatos.egresos.map(elemento => elemento.vrTotalHora);
+    chart.data.datasets[1].label = 'Egresos';
+    chart.data.datasets[1].conceptos = convertirHora12(horasEgresos);
+
+    //se llenan y muestran los datos correspondientes a las ventas
+    chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
+    chart.data.datasets[2].label = 'Ventas';
+    chart.data.datasets[2].conceptos = convertirHora12(horasVentas);
+}
+
+let actualizarGrafico = async (inicio, fin, tiempo) => {
+
+    // se consumen los datos de la API y se le pasan al metodo para que los setee,
+    //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
+    let resGraficos = await fetch(`http://localhost:3000/graficos${tiempo}`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            inicio,
+            fin
+        })
+    });
+
+    let datosGraficos = await resGraficos.json();
+
+    mostrarDatosGrafico(datosGraficos);
+
+    chart.update();
+
+}
+
+// muestra desde hasta cuando se hara el PyG
+let mostrarRango = (inicio, fin) => document.querySelector('#spanFechaGrafico').innerHTML = ('Generar Estado PyG desde: ' + inicio + '. Hasta: ' + fin);
+
 $(function () {
-
-    let start = moment().subtract(29, 'days');
-    let end = moment();
-
-    let convertirHora12 = (horas24) => {
-        return horas24.map(hora => {
-            let hora12 = (hora % 12) || 12;
-            let ampm = hora < 12 ? 'am' : 'pm';
-            return `${hora12}${ampm}`;
-        });
-    }
-
-
-    let mostrarDatosGrafico = (vectorDatos) => {
-
-
-        let horasCompras = vectorDatos.compras.map(elemento => elemento.hora);
-        let horasEgresos = vectorDatos.egresos.map(elemento => elemento.hora);
-        let horasVentas = vectorDatos.ventas.map(elemento => elemento.hora);
-
-        chart.data.labels = convertirHora12(horasCompras);
-
-        chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
-        chart.data.datasets[0].label = 'Compras';
-        chart.data.datasets[0].conceptos = convertirHora12(horasCompras);
-
-        chart.data.datasets[1].data = vectorDatos.egresos.map(elemento => elemento.vrTotalHora);
-        chart.data.datasets[1].label = 'Egresos';
-        chart.data.datasets[1].conceptos = convertirHora12(horasEgresos);
-
-        chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
-        chart.data.datasets[2].label = 'Ventas';
-        chart.data.datasets[2].conceptos = convertirHora12(horasVentas);
-    }
-
-    let actualizarGrafico = async (inicio, fin, tiempo) => {
-
-        let resGraficos = await fetch(`http://localhost:3000/graficos${tiempo}`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                inicio,
-                fin
-            })
-        });
-
-        let datosGraficos = await resGraficos.json();
-
-        mostrarDatosGrafico(datosGraficos);
-
-        chart.update();
-
-    }
-
-    let mostrarRango = (start, end) => {
-        document.querySelector('#spanFechaGrafico').innerHTML = ('Generar Estado PyG desde: ' + start + '. Hasta: ' + end);
-    }
-
-    mostrarRango(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
-    actualizarGrafico(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    mostrarRango(hoy.format('YYYY-MM-DD'), hoy.format('YYYY-MM-DD'));
+    actualizarGrafico(hoy.format('YYYY-MM-DD'), hoy.format('YYYY-MM-DD'), 'horas');
 
     $('#reportrange').daterangepicker({
-        startDate: start,
-        endDate: end,
         locale: {
             format: "YYYY-MM-DD"
         },
@@ -113,16 +118,13 @@ $(function () {
             'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
             'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mes': [moment().startOf('month'), moment().endOf('month')],
             'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
-    }, async function (start, end) {
-        inicio = start.format('YYYY-MM-DD');
-        fin = end.format('YYYY-MM-DD');
+    }, async function (pInicio, pFin) {
+        inicio = pInicio.format('YYYY-MM-DD');
+        fin = pFin.format('YYYY-MM-DD');
 
-        let hoy = moment();
-        let ayer = moment().subtract(1, 'days');
-        let fechaSeleccionada = start.clone().startOf('day');
+        let fechaSeleccionada = pInicio.clone().startOf('day');
 
         // Compara la fecha seleccionada con las fechas de hoy y ayer
         if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
