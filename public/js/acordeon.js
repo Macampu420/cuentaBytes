@@ -132,9 +132,9 @@ function renderResumenEgresos() {
     mayorEgreso.forEach(producto => {
         document.getElementById('cuerpomayorEgreso').insertAdjacentHTML('beforeend', `
         <p class="card-text text-center fs-4">Mayor Egreso:</p>
-        <div class="col-7 col-lg-4 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-1 rounded-pill" background-color: #73C7DA">
+        <div class="col-7 col-lg-4 p-2 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-1 rounded-pill" background-color: #73C7DA">
             <h4 class="card-title">${producto.tituloEgreso}</h4>
-            <p class="card-text">${producto.mayorValor}</p>
+            <p class="card-text">$${producto.mayorValor}</p>
         </div>
         `);
     });
@@ -142,9 +142,9 @@ function renderResumenEgresos() {
     menorEgreso.forEach(producto => {
         document.getElementById('cuerpomenorEgreso').insertAdjacentHTML('beforeend', `
         <p class="card-text text-center fs-4">Menor Egreso:</p>
-        <div class="col-7 col-lg-4 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-1 rounded-pill">
+        <div class="col-10 col-lg-4 p-2 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-1 rounded-pill">
             <h4 class="card-title">${producto.tituloEgreso}</h4>
-            <p class="card-text">${producto.mayorValor}</p>
+            <p class="card-text">$${producto.mayorValor}</p>
         </div>
         `);
     });
@@ -173,20 +173,19 @@ function renderResumenStock() {
     let productosMenorStock = JSON.parse(datosAcordeon.productosMenorStock);
     productosMenorStock.forEach(producto => {
         document.getElementById('cuerpoprodMenStock').insertAdjacentHTML('beforeend', `
-            <div class="card mx-auto mt-3" style="width: 400px;">
-                <div class="row no-gutters">
-                    <div class="col-md-4">
-                    <img src="./../../public/img/productos/${producto.nombreImagen}" class="border border-2 card-img-top" alt="...">
-                    </div>
-                    <div class="col-md-8">
+        <div class="card mx-auto mt-3" style="width: 400px;">
+            <div class="row no-gutters">
+                <div class="col-md-8">
                     <div class="card-body">
                         <h4 class="card-title">${producto.nombreProducto}</h4>
                         <p class="card-text">${producto.stockMayor} Unidades disponibles</p>
                     </div>
-                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="./../../public/img/productos/${producto.nombreImagen}" class="border border-2 card-img-top" alt="...">
                 </div>
             </div>
-
+        </div>    
         `);
     });
 }
