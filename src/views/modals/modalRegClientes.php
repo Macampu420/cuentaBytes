@@ -122,14 +122,5 @@
         cursor: pointer;
     }
 
-    .btnEliminar {
-        background-image: url(../../public/img/trashIcon.svg);
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: contain;
-        border: none;
-        color: #fff;
-        font-size: 30px;
-        cursor: pointer;
-    }
+   
 </style>
