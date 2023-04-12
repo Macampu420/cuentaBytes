@@ -13,7 +13,7 @@
         rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
-    <title id="pageTitle">Hola sapo</title>
+    <title id="pageTitle">Inicio</title>
     <style>
         .containerA{
             display: flex;
@@ -70,110 +70,8 @@
                     <div class="row">
 
 
-                        <div id="acordeonBalances" class="accordion mx-auto col-lg-9 col-11 p-4 my-4">
-                            <!-- <div class="accordion-item">
-                                <h2 class="accordion-header" id="titulo${i}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#item${i}" aria-expanded="true" aria-controls="item${i}">
-                                        ${elemento}
-                                    </button>
-                                </h2>
-                                <div id="item${i}" class="accordion-collapse collapse show" aria-labelledby="titulo${i}"
-                                    data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
+                    <div id="acordeonBalances" class="accordion mx-auto col-lg-9 col-11 p-4 my-4">
 
-                                        <div class="row">
-                                            <div
-                                                class="col-7 col-lg-3 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-2 rounded-pill">
-                                                Juanito Alimaña</div>
-                                            <div
-                                                class="col-7 col-lg-3 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-2 rounded-pill">
-                                                Juanito Alimaña</div>
-                                            <div
-                                                class="col-7 col-lg-3 p-3 my-2 mx-auto m-lg-auto text-center fs-4 border border-dark border-2 rounded-pill">
-                                                Juanito Alimaña</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="titulo${i}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#item${i}" aria-expanded="true" aria-controls="item${i}">
-                                        ${elemento}
-                                    </button>
-                                </h2>
-
-                                <div id="item${i}" class="accordion-collapse collapse show" aria-labelledby="titulo${i}"
-                                    data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-
-                                        <div class="row">
-                                            <div class="card border-0 col-4 mx-auto" style="width: 18rem;">
-                                                <img src="./../../public/img/edit.png"
-                                                    class="border border-2 card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <p class="card-text text-center fs-4">Producto estrella</p>
-                                                </div>
-                                            </div>
-                                            <div class="card border-0 col-4 mx-auto" style="width: 18rem;">
-                                                <img src="./../../public/img/edit.png"
-                                                    class="border border-2 card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <p class="card-text text-center fs-4">Producto estrella</p>
-                                                </div>
-                                            </div>
-                                            <div class="card border-0 col-4 mx-auto" style="width: 18rem;">
-                                                <img src="./../../public/img/edit.png"
-                                                    class="border border-2 card-img-top" alt="...">
-                                                <div class="card-body">
-                                                    <p class="card-text text-center fs-4">Producto estrella</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="titulo${i}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#item${i}" aria-expanded="true" aria-controls="item${i}">
-                                        ${elemento}
-                                    </button>
-                                </h2>
-
-                                <div id="item${i}" class="accordion-collapse collapse show" aria-labelledby="titulo${i}"
-                                    data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-
-                                        <div class="row">
-                                            <div class="card mb-3" style="max-width: 540px;">
-                                                <div class="row g-0">
-                                                    <div class="col-md-4">
-                                                        <img src="..." class="img-fluid rounded-start" alt="...">
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Card title</h5>
-                                                            <p class="card-text">This is a wider card with supporting
-                                                                text below as a natural lead-in to additional content.
-                                                                This content is a little bit longer.</p>
-                                                            <p class="card-text"><small class="text-muted">Last updated
-                                                                    3 mins ago</small></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div> -->
                         </div>
 
                     </div>
