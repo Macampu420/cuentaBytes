@@ -1,6 +1,6 @@
 <div class="modal" id="modalCl" tabindex="-1" editar="false">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark text-white">
+        <div class="modal-content text-white">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
                 <form action="../../controllers/clientes.php" method="post">
                     <div class="row">
@@ -35,11 +35,14 @@
 
                         <label for="telefonoCliente" class="form-label col-9 mx-auto">Telefono</label>
                         <input type="text" required name="telefonoCliente" class="input col-9 mx-auto" id="telefonoCliente" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10">
+<<<<<<< HEAD
 
 
                         <div class="row d-flex px-4 mt-3">
                             <button id="btnFactura" class="btn-secondary btn col-4 mt-3 ms-0">Factura</button>
 
+=======
+>>>>>>> Jota
                             <div class="row col-8 p-0 m-0 justify-content-end">
                                 <button id="btnGuardar" type="submit" class="btn-secondary btn col-6 mt-3">Guardar</button>
                             </div>
@@ -52,6 +55,9 @@
 </div>
 
 <style>
+    .modal-content {
+    background: #A0D2D8;
+}
     * {
         box-sizing: border-box !important;
         margin: 0;
