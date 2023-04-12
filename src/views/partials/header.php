@@ -30,7 +30,7 @@
 	</div>
 
 	<div class="contenedor">
-		<button class="botonF1">
+		<button id="btnAgregarNota" class="botonF1">
 			<span>+</span>
 		</button>
  	</div>

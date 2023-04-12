@@ -70,9 +70,12 @@
         </div>
 
         <?php include './modals/modalRegVenta.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
+
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ventas.js"></script>
         <script src="./../../public/js/controladorVentas.js"></script>
         <script>
