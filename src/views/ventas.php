@@ -71,6 +71,7 @@
 
         <?php include './modals/modalRegVenta.php' ?>
         <?php include './modals/modalRegNota.php' ?>
+        <?php include './partials/notas.php' ?>
 
 
         <script src="./../../public/js/bootstrap.js"></script>
