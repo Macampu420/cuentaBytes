@@ -1,51 +1,167 @@
 const pool = require('./../conexion');
+const moment = require('moment-timezone');
 
 class Graficos {
 
-  obtenerDatosCompras = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenCompras(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+    //metodo para indicar el total de horas a servir (24 o las horas del dia de hoy)
+    reemplazarHorasDatos(vHoras, datos) {
+        //itera sobre el arreglo con el total de horas a mostrar y si encuentra una coincidencia con
+        //alguna de las horas arrojadas por la bd la reempleza con los datos
+        vHoras.forEach((elemento, index) => {
+            let data = datos.find(dato => dato.hora === elemento.hora);
+            if (data) {
+                vHoras[index] = data;
+            }
+        });
+    }
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+    crearTotalFechas(fechaInicio, fechaFin) {
+        let fechas = [];
+        let inicio = moment(fechaInicio);
+    
+        while (inicio.isBefore(fechaFin)) {
+            fechas.push({
+                Dia: inicio.format('YYYY-MM-DD'),
+                VrTotalDia: 0
+            });
+            inicio.add(1, 'days'); // Agregar un día
+        }
+    
+        fechas.push({
+            Dia: fechaFin,
+            VrTotalDia: 0
+        }); // Agregar la fecha de fin
+    
+        return fechas;
+    }
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+    //metodo para indicar el total de horas a servir (24 o las horas del dia de hoy)
+    reemplazarDiasDatos(vDias, datos) {
+        //itera sobre el arreglo con el total de horas a mostrar y si encuentra una coincidencia con
+        //alguna de las horas arrojadas por la bd la reempleza con los datos
+        vDias.forEach((elemento, index) => {
+            let data = datos.find(dato => dato.Dia === elemento.Dia);
+            if (data) {
+                vDias[index] = data;
+            }
+        });
+    }
 
-  obtenerDatosVentas = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenVenta(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+    async traerDatosVentasHoras(tiempo, nroHoras) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(`CALL ventasPorHoras('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroHoras; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.reemplazarHorasDatos(vHoras, datos);
 
-  obtenerDatosEgresos = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenEgreso(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+            return vHoras;
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+        } catch (error) {
+            throw error;
+        }
+    }  
+
+    async traerDatosComprasHoras(tiempo, nroHoras) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(`CALL comprasPorHoras('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
+
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroHoras; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
+
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.reemplazarHorasDatos(vHoras, datos);
+
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
+
+            return vHoras;
+
+        } catch (error) {
+            throw error;
+        }
+    }  
+
+    async traerDatosEgresosHoras(tiempo, nroHoras) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(`CALL egresosPorHora('${tiempo} 00:00:00', '${tiempo} 23:59:59')`);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            // Obtener la hora actual en formato 24 horas
+            let vHoras = [];
+
+            // Agregar objetos al vector de horas para cada hora del día hasta la hora actual
+            for (let i = 1; i <= nroHoras; i++) {
+                vHoras.push({
+                    hora: i,
+                    vrTotalHora: 0
+                });
+            }
+
+            // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
+            this.reemplazarHorasDatos(vHoras, datos);
+
+            if (vHoras.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }
+
+            return vHoras;
+
+        } catch (error) {
+            throw error;
+        }
+    } 
+
+    async traerDatosDias(fechaInicio, fechaFin, procedimiento) {
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(procedimiento);
+            // Convertir el resultado en un arreglo de objetos
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+
+            // Obtener la hora actual en formato 24 horas
+            let vDias = this.crearTotalFechas(fechaInicio, fechaFin);
+
+            this.reemplazarDiasDatos(vDias, datos)
+
+            if (vDias.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }   
+            
+            return vDias;
+
+        } catch (error) {
+            throw error;
+        }
+    }  
 
 }
 

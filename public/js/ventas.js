@@ -555,7 +555,134 @@ const actualizarVenta = async (event) => {
     }
 }
 
-const generarPdf = props_ => {
-    var pdfObject = jsPDFInvoiceTemplate.default(props_);
-    console.log("Nose ", pdfObject);
+const generarPdf = () => {
+    vItemsEditar.forEach(element => {
+        subtotal = element.vrTotalVta + element.descuentoVenta;
+        total = element.vrTotalVta + element.vrtotalIva;
+        // crea un nuevo objeto `Date`
+        let fecha = new Date();
+
+        // obtener la fecha y la hora
+        let fechaAhora = fecha.toLocaleString();
+        props = {
+            outputType: jsPDFInvoiceTemplate.OutputType.Save,
+            returnJsPDFDocObject: true,
+            fileName: "Invoice 2021",
+            orientationLandscape: false,
+            compress: true,
+            logo: {
+                src: "./../../public/img/CuentaBytes.png",
+                type: 'PNG', //optional, when src= data:uri (nodejs case)
+                width: 53.33, //aspect ratio = width/height
+                height: 53.33,
+                margin: {
+                    top: -15, //negative or positive num, from the current position
+                    left: 0 //negative or positive num, from the current position
+                }
+            },
+            // stamp: {
+            //     inAllPages: true, //by default = false, just in the last page
+            //     src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
+            //     type: 'JPG', //optional, when src= data:uri (nodejs case)
+            //     width: 20, //aspect ratio = width/height
+            //     height: 20,
+            //     margin: {
+            //         top: 0, //negative or positive num, from the current position
+            //         left: 0 //negative or positive num, from the current position
+            //     }
+            // },
+            business: {
+                name: "CuentaBytes",
+                address: "Albania, Tirane ish-Dogana, Durres 2001",
+                phone: "(+355) 069 11 11 111",
+                email: "email@example.com",
+                email_1: "info@example.al",
+                website: "www.example.al",
+            },
+            contact: {
+                label: "Factura venta",
+                name: "Cliente: " + element.nombresCliente + " " + element.apellidosCliente,
+                phone: "Telefono: " + element.telefonoCliente,
+                otherInfo: "Cedula: " + element.cedulaCliente,
+            },
+            invoice: {
+                label: "Invoice #: ",
+                num: 19,
+                invDate: "Fecha Venta: " + element.fechaVenta,
+                invGenDate: "Fecha Factura: " + fechaAhora,
+                headerBorder: false,
+                tableBodyBorder: false,
+                header: [{
+                    title: "Codigo",
+                    style: {
+                        width: 20
+                    }
+                },
+                {
+                    title: "Producto",
+                    style: {
+                        width: 50,
+
+                    }
+                },
+                {
+                    title: "Precio"
+                },
+                {
+                    title: "Cantidad"
+                },
+                {
+                    title: "Total"
+                }
+                ],
+                table: Array.from(Array(vItemsEditar.length), (item, index) => ([
+                    parseInt(vItemsEditar[index].idProducto),
+                    vItemsEditar[index].nombreProducto,
+                    parseInt(vItemsEditar[index].precioUnitario),
+                    parseInt(vItemsEditar[index].uniVendidas),
+                    parseInt(vItemsEditar[index].precioUnitario) * parseInt(vItemsEditar[index].uniVendidas)
+                ])),
+                additionalRows: [{
+                    col1: 'Subtotal:',
+                    col2: subtotal.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'IVA:',
+                    col2: element.vrtotalIva.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Descuento:',
+                    col2: element.descuentoVenta.toString(),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Total:',
+                    col2: total.toString(),
+                    style: {
+                        fontSize: 14 //optional, default 12
+                    }
+                }
+                ],
+                // invDescLabel: "Invoice Note",
+                // invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+            },
+            footer: {
+                text: "The invoice is created on a computer and is valid without the signature and stamp.",
+            },
+            pageEnable: true,
+            pageLabel: "Page ",
+        };
+    })
+
+
+    var pdfObject = jsPDFInvoiceTemplate.default(props);
+    console.log("Factura ", pdfObject);
 }

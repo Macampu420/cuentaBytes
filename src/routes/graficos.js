@@ -1,58 +1,104 @@
 const Graficos = require('../models/graficos');
 const Acordeon = require('../models/acordeon');
 const express = require('express');
+const moment = require('moment-timezone');
 const router = express.Router();
 
 const objGraficos = new Graficos();
-const objAcordeon = new Acordeon();
+moment.tz.setDefault('America/Bogota');
 
-router.post('/graficos', async (req, res) => {
-  let datosGrafica = [];
+router.post('/graficos:tiempo', async (req, res, next) => {
 
-  try {
-    let datosCompras = await objGraficos.obtenerDatosCompras(req);
-    let datosEgresos = await objGraficos.obtenerDatosEgresos(req);
-    let datosVentas = await objGraficos.obtenerDatosVentas(req);
+    try {
+        // bloque para traer los datos de ayer u hoy
+        if (req.params.tiempo == "horas") {
 
-    datosGrafica = [datosCompras, datosEgresos, datosVentas];
+            let { inicio } = req.body;
+            let ventas, compras, egresos;
 
-    res.status(200).send({
-      datosGrafica
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({
-      mensaje: 'Ha ocurrido un error al acceder a la base de datos'
-    });
-  }
+            // Obtener la fecha de hoy
+            const hoy = moment().format('YYYY-MM-DD');
+            // Obtener la fecha de ayer
+            const ayer = moment().subtract(1, 'days').format('YYYY-MM-DD');
+
+            // Si el inicio es la fecha de hoy trae los datos de hoy sino pregunta y trae los de ayer
+
+            try {
+                if (inicio == hoy) {
+                    let horaActual = moment().format('HH:mm:ss').slice(0, 2);
+                    ventas = await objGraficos.traerDatosVentasHoras(hoy, horaActual);
+                    compras = await objGraficos.traerDatosComprasHoras(hoy, horaActual);
+                    egresos = await objGraficos.traerDatosEgresosHoras(hoy, horaActual);
+                } else if (inicio == ayer) {
+                    ventas = await objGraficos.traerDatosVentasHoras(ayer, 24);
+                    compras = await objGraficos.traerDatosComprasHoras(ayer, 24);
+                    egresos = await objGraficos.traerDatosEgresosHoras(ayer, 24);
+                }    
+            } catch (error) {
+                res.status(500).json({error: 'Hubo un problema al traer los datos.'});
+                return;
+            }
+
+            // Validación de datos
+            if (!ventas || !compras || !egresos) {
+                res.status(500).json({error: 'Los datos solicitados no están disponibles.'});
+                return;
+            }
+
+            datosGraficos = {
+                ventas,
+                compras,
+                egresos
+            };
+
+            res.status(200).json(datosGraficos);
+
+        } else if (req.params.tiempo == "dias") {
+
+            let {inicio, fin} = req.body;
+            let ventas, compras, egresos;
+
+            let queryVentas = `CALL ventasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryCompras = `CALL comprasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryEgresos = `CALL egresosPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+
+            try {
+                ventas = await objGraficos.traerDatosDias(inicio, fin, queryVentas);
+                compras = await objGraficos.traerDatosDias(inicio, fin, queryCompras);
+                egresos = await objGraficos.traerDatosDias(inicio, fin, queryEgresos);
+            } catch (error) {
+                res.status(500).json({error: 'Hubo un problema al traer los datos.'});
+                return;
+            }
+            
+            // Validación de datos
+            if (!ventas || !compras || !egresos) {
+                res.status(500).json({error: 'Los datos solicitados no están disponibles.'});
+                return;
+            }
+
+            datosGraficos = {
+                ventas,
+                compras,
+                egresos
+            };
+
+            res.status(200).send(JSON.stringify(datosGraficos));
+        } else {
+            const error = new Error("El parámetro de tiempo no es válido");
+            error.statusCode = 400;
+            throw error;
+        }
+    } catch (error) {
+        next(error);
+    }
 
 })
 
-router.get('/acordeon', async (req, res) => {
-
-  try {
-
-    let datosAcordeon = {
-      mejoresClientes: await objAcordeon.traerMejoresClientes(),
-      productosMasVendidos: await objAcordeon.traerProductosMasVendidos(),
-      productosMenosVendidos: await objAcordeon.traerProductosMenosVendidos(),
-      productosMasRentables: await objAcordeon.traerProductosMasRentables(),
-      mayorEgreso: await objAcordeon.traerMayorEgreso(),
-      menorEgreso: await objAcordeon.traerMenorEgreso(),
-      productosMayorStock: await objAcordeon.traerProducMayorStock(),
-      productosMenorStock: await objAcordeon.traerProducMenorStock()
-    }
-
-    // console.log(datosAcordeon);
-
-    res.send(datosAcordeon).status(200);
-  } catch (error) {
-    console.log(error);
-    res.send(JSON.stringify({
-      error: true
-    })).status(500);
-  }
-
-});
+// Middleware de error
+router.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Error interno del servidor');
+});  
 
 module.exports = router;

@@ -28,6 +28,9 @@ app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
 app.use(require('./routes/compras'));
 
+app.use(require('./routes/mailer'));
+
+
 
 //inicializacion del servidor
 app.listen(app.get('port'), () => console.log("App corriendo bien"));

@@ -16,7 +16,8 @@ if($datos -> num_rows > 0){
             'costoProducto' => $row['costoProducto'],
             'precioVenta' => $row['precioVenta'],
             'stockProducto' => $row['stockProducto'],
-            'nombreImagen' => $row['nombreImagen']
+            'nombreImagen' => $row['nombreImagen'],
+            'idImagen' => $row['idImagen']
         );
 
         array_push($productos['items'], $item);

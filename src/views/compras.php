@@ -71,12 +71,14 @@
         </div>
 
         <?php include './modals/modalRegCompra.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
+        <?php include './partials/notas.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/compras.js"></script>
         <script src="./../../public/js/controladorCompras.js"></script>
-
-        </script>
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
+    
 </body>
 
 </html>

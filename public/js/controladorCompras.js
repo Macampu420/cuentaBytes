@@ -57,7 +57,8 @@ document.getElementById('rowItems').addEventListener('input', event => {
 
         if (disparador.id.includes('inpunidCompslc')) {
             actualizarUnidCompradas(vector, item, numeroItem);
-            // mostrarNuevoStock(disparador);
+            mostrarNuevoStock(disparador);
+
         } else if (disparador.id.includes('inpPrecioUnitslc')) {
             actualizarCostoProducto(vector, item, numeroItem);
         }
