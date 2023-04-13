@@ -54,8 +54,11 @@
                     <!-- cartas con todos los proveedores registrados -->
                     <div class="col-12 col-lg-7 mx-auto p-4 border border-dark divProvee overflow-scroll">
 
-                        <div id="filaProveedores" class="row">
-
+                        <div id="filaProvee" class="row">
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
                         </div>
 
@@ -65,7 +68,7 @@
             </main>
         </div>
 
-        <?php include './modals/modalRegProvee.php' ?>
+        <?php include './modals/modalRegProvee.php' ?>  
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/proveedores.js"></script>

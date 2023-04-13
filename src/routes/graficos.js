@@ -1,4 +1,5 @@
 const Graficos = require('../models/graficos');
+const Acordeon = require('../models/acordeon');
 const express = require('express');
 const moment = require('moment-timezone');
 const router = express.Router();

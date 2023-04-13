@@ -2,6 +2,9 @@ let numeroItem;
 let divModal = document.getElementById("modalCompras");
 let modalCompras = new bootstrap.Modal(divModal);
 
+traerCompras();
+traerProductos();
+traerProveedores();
 mostrarProveedores();
 guardarProductos();
 mostrarCompras();
@@ -103,6 +106,43 @@ document.getElementById('btnEliminar').addEventListener("click", async () => {
                 location.reload();
             });
 
+    }
+})
+
+document.getElementById("buscadorCompras").addEventListener("change", () => {
+
+    let compras = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alert");
+
+    console.log(alert);
+
+    compras.forEach(element => {
+
+        let conceptoCompra = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!conceptoCompra.includes(document.getElementById("buscadorCompras").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(compras);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
     }
 })
 

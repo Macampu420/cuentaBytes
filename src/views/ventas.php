@@ -58,8 +58,11 @@
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaVentas" class="row">
-
-
+                            
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
                         </div>
 

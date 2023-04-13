@@ -1,15 +1,18 @@
 
 const traerClientes = async clientes => {
 
+    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiVentas.php')
+    
     await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
-        .then(res => res.json())
-        .then(data => {
-            if (!data.mensaje) {
-                data['items'].forEach(vta => clientes.push(vta));
-            } else {
-                clientes.length = 0;
-            }
-        });
+
+    .then(res => res.json())
+    .then(data => {
+        if(!data.mensaje){
+            data['items'].forEach(vta => clientes.push(vta));
+        } else {
+            clientes.length = 0;
+        }
+    });
 }
 
 renderClientes = async clientes => {

@@ -1,6 +1,3 @@
-const {
-    query
-} = require('express');
 const pool = require('./../conexion');
 
 class ModuloVentas {

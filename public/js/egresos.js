@@ -248,11 +248,11 @@ const renderEgresos = async () => {
 
     if (vObjsEncEgreso.length > 0) {
 
-        let filaVentas = document.getElementById('filaVentas');
+        let filaEgresos = document.getElementById('filaEgresos');
 
         vObjsEncEgreso.forEach((element) => {
 
-            filaVentas.insertAdjacentHTML('beforeend', `
+            filaEgresos.insertAdjacentHTML('beforeend', `
                 
                 <div id="${element.idEgreso}" idventa="${element.idEgreso}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
@@ -267,7 +267,7 @@ const renderEgresos = async () => {
                 `);
         });
     } else {
-        filaVentas.insertAdjacentHTML('beforeend', `
+        filaEgresos.insertAdjacentHTML('beforeend', `
                 
             <h3 class="text-center mt-lg-5 col-12">Aún no has registrado egresos, presiona el boton de arriba para hacerlo</h3>
         

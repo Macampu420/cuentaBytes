@@ -2,7 +2,7 @@ let modalReg = new bootstrap.Modal(document.getElementById("modalReg"));
 const divModal = document.getElementById("modalReg");
 const urlBase = "http://localhost/cuentabytes/src/controllers/productos/";
 
-document.getElementById("btnAnadirProduc").addEventListener("click", () => {
+document.getElementById("btnAnadirProd").addEventListener("click", () => {
 
     divModal.setAttribute("editar", "false");
    if(divModal.getAttribute("editar") == "false"){
@@ -64,6 +64,43 @@ document.getElementById("btnEliminar").addEventListener("click", async event => 
         });
     }
 
+})
+
+document.getElementById("buscadorProd").addEventListener("change", () => {
+
+    let productos = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alert");
+
+    console.log(alert);
+
+    productos.forEach(element => {
+
+        let nombreProducto = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!nombreProducto.includes(document.getElementById("buscadorProd").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(productos);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
+    }
 })
 
 document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false);

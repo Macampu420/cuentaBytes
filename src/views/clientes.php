@@ -37,9 +37,11 @@
 
                     <h2 class="text-center fs-2 mt-5">Clientes</h2>
 
-                    <input id="buscadorVtas" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar venta">
-
+                    <input id="buscadorClientes" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar Cliente">                  
+                   
                 </div>
+                
+
 
 <<<<<<< HEAD
                 <!-- btn añadir item y cartas con las ventas -->
@@ -63,8 +65,11 @@
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaClientes" class="row">
-
-
+                            
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
                         </div>
 
@@ -77,6 +82,7 @@
         <?php include './modals/modalRegClientes.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
+        <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
         <script src="./../../public/js/clientes.js"></script>
         <script src="./../../public/js/controladorClientes.js"></script>
 </body>

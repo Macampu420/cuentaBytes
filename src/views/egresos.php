@@ -37,7 +37,7 @@
 
                     <h2 class="text-center fs-2 mt-5">Egresos</h2>
 
-                    <input id="buscadorVtas" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
+                    <input id="buscadorCompras" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
 
                 </div>
 
@@ -54,10 +54,11 @@
                     <!-- cartas con todas las ventas registradas -->
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
-                        <div id="filaVentas" class="row">
-
-
-
+                        <div id="filaEgresos" class="row">
+                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                            No se encontraron coincidencias
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         </div>
 
                     </div>
@@ -70,160 +71,9 @@
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/egresos.js"></script>
+        <script src="./../../public/js/controladorEgresos.js"></script>
         <script>
-            const modalBootstrap = new bootstrap.Modal(document.getElementById('modalEgresos'));
-            const divModal = document.getElementById('modalEgresos');
-
-            traerTipoEgreso();
-            renderEgresos();
-
-            document.getElementById('btnAnadirVta').addEventListener('click', event => {
-
-                if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-
-                    divModal.setAttribute('editar', false);
-
-                    desplegarModal(divModal);
-                }
-
-            });
-
-            document.getElementById('btnAnadir').addEventListener('click', event => {
-
-                if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-                    renderItem();
-                }
-
-            });
-
-            document.getElementById("contItems").addEventListener("change", (event) => {
-
-                var disparador = event.target;
-
-                if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "false") {
-
-                    let item = vItemsEgreso.find(
-                        //busca en los elementos de la venta actual uno que coincida con el item modificado
-                        //si no existe se define como undefined
-                        element => element.idItem == disparador.parentElement.id
-                    );
-                    actualizarCrearItem(item, event.target, vItemsEgreso);
-
-
-                } else if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "true") {
-
-                    let item = vItemsEditar.find(
-                        //busca en los elementos de la venta actual uno que coincida con el item modificado
-                        //si no existe se define como undefined
-                        element => element.idItem == disparador.parentElement.id
-                    );
-
-                    actualizarCrearItem(item, event.target, vItemsEgreso);
-
-
-                }
-
-            });
-            document.getElementById('rowItems').addEventListener('change', event => {
-                vrTotalRegistar();
-            })
-
-
-            document.querySelector("form").addEventListener("submit", (event) => {
-
-                //evita que la pagina se recargue
-                event.preventDefault();
-
-                detalleVenta(vItemsEditar);
-
-
-                divModal.getAttribute("editar") == "false" ? registrarEgreso(vItemsEgreso) : console.log("me tengo que actualizar");
-                divModal.getAttribute("editar") == "true" ? actualizarEgreso(vItemsEgreso, vItemsEditar) : console.log("me tengo que actualizar");
-
-            });
-
-            document.getElementById("contItems").addEventListener("click", (event) => {
-
-                if (event.target.id.includes("dlt")) {
-
-                    divModal.getAttribute("editar") == "true" ? eliminarItem(event.target, vItemsEditar) : eliminarItem(event.target, vItemsEgreso);
-
-                }
-            });
-
-            document.getElementById("filaVentas").addEventListener("click", async event => {
-
-                if (event.target.hasAttribute("btnAcciones")) {
-
-                    divModal.setAttribute('editar', true);
-
-                    desplegarModal(divModal, event);
-
-                }
-            })
-
-            document.getElementById("btnEditar").addEventListener("click", () => document.getElementById('btnGuardar').disabled = false)
-
-            document.getElementById("btnEliminar").addEventListener("click", async () => {
-
-                idVenta = document.getElementById("btnEliminar").getAttribute("idventa");
-
-                if (confirm("¿Deseas eliminar el egreso?") == true) {
-
-                    await fetch(`http://localhost:3000/eliminarEgreso${idVenta}`)
-                        .then(res => res.text())
-                        .then(data => console.log(data));
-
-                    location.reload();
-
-                }
-            })
-
-            document.getElementById("buscadorVtas").addEventListener("change", () => {
-
-                var ventas = document.querySelectorAll("[cartaItem]");
-                let swNoCoinc = true;
-                var alert = document.getElementById("alert");
-
-                console.log(alert);
-
-                ventas.forEach(element => {
-
-                    let tituloVta = element.firstElementChild.innerHTML.toLowerCase();
-
-                    if (!tituloVta.includes(document.getElementById("buscadorVtas").value)) {
-                        element.classList.add("d-none");
-                        swNoCoinc = false;
-                    } else if (tituloVta.includes(document.getElementById("buscadorVtas").value)) {
-
-                        if (alert != null) {
-                            alert.remove()
-                        }
-                        swNoCoinc = true;
-                        element.classList.remove("d-none");
-                    }
-
-                })
-
-                if (!swNoCoinc && alert != null) {
-
-                    alert.remove()
-
-                    document.getElementById("filaVentas").insertAdjacentHTML('afterbegin', `
-                        <div id="alert" class="alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `)
-                } else if (!swNoCoinc) {
-                    document.getElementById("filaVentas").insertAdjacentHTML('afterbegin', `
-                        <div id="alert" class="alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `)
-                }
-            })
+            
         </script>
 </body>
 
