@@ -146,6 +146,9 @@
             </main>
         </div>
 
+        <?php include './partials/notas.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
+
         
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -153,6 +156,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <script src="./../../public/js/balances.js"></script>
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
 
 </body>
 
