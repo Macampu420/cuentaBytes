@@ -4,6 +4,7 @@ const express = require('express');
 const moment = require('moment-timezone');
 const router = express.Router();
 
+const objAcordeon = new Acordeon();
 const objGraficos = new Graficos();
 moment.tz.setDefault('America/Bogota');
 
