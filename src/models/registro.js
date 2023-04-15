@@ -1,6 +1,7 @@
 const { query } = require('express');
 const pool = require('../conexion');
 const nodemailer = require("nodemailer");
+const CryptoJS = require('crypto-js');
 
 
 class moduloRegistro {
@@ -50,8 +51,10 @@ class moduloRegistro {
 
 
         if (codigo == this.codigoEnv) {
+
+        const contrasena = CryptoJS.SHA256(this.contrasena).toString(CryptoJS.enc.Hex);
             
-            await pool.query("CALL registrarEmpresa(?, ?, ?)",[this.nombreEmpresa, this.email, this.contrasena],
+            await pool.query("CALL registrarEmpresa(?, ?, ?)",[this.nombreEmpresa, this.email, contrasena],
             (err, rows) => {
                 //si hay error lo imprime y lo envia como respuesta
                 if (err) {
