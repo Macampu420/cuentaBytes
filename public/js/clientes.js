@@ -1,7 +1,5 @@
 
 const traerClientes = async clientes => {
-
-    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiVentas.php')
     
     await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
 
