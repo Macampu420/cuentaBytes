@@ -28,14 +28,13 @@
 		</div>
 
 	</div>
+</header>
 
-	<div class="contenedor">
+<div class="contenedor">
 		<button id="btnAgregarNota" class="botonF1">
 			<span>+</span>
 		</button>
  	</div>
-
-</header>
 
 <style>
     @media (min-width: 992px) {
@@ -44,12 +43,14 @@
     		background: #218DA3;
     	}
     }
+
 	.contenedor {
 		width: 90px;
 		height: 240px;
-		position: absolute;
+		position: fixed;
 		right: 0px;
 		bottom: 0px;
+		z-index: 1;
 	}
 
 	.botonF1 {

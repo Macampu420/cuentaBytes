@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="./../../public/css/ventas.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@100;300;700;900&family=Questrial&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@100;300;700;900&family=Questrial&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
     <title>Ventas</title>
@@ -22,7 +20,7 @@
 
             <!-- navbar  -->
             <div class="col-2 d-none d-xl-block nav vh-100 py-5 overflow-hidden">
-                <?php include 'partials/navbar.php'?>
+                <?php include 'partials/navbar.php' ?>
             </div>
 
             <!-- contenido principal -->
@@ -30,7 +28,7 @@
 
                 <div class="row">
                     <!-- importacion del header -->
-                    <?php include 'partials/header.php'?>
+                    <?php include 'partials/header.php' ?>
 
                 </div>
 
@@ -49,8 +47,7 @@
                     <!-- btn añadir -->
                     <div class="row mt-5 mb-2 text-center">
                         <div class="col-12 col-lg-5 mx-auto">
-                            <h3 id="btnAnadirVta" class="quicksand mx-5"><img src="../../public/img/iconoMas.png"
-                                    class="mx-2">Añadir</h3>
+                            <h3 id="btnAnadirVta" class="quicksand mx-5"><img src="../../public/img/iconoMas.png" class="mx-2">Añadir</h3>
                         </div>
                     </div>
 
@@ -58,11 +55,11 @@
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaVentas" class="row">
-                            
-                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+
+                            <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                                No se encontraron coincidencias
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
                         </div>
 
@@ -76,16 +73,13 @@
         <?php include './modals/modalRegNota.php' ?>
         <?php include './partials/notas.php' ?>
 
-
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
-        <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ventas.js"></script>
         <script src="./../../public/js/controladorVentas.js"></script>
-        <script>
-            
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
 
-        </script>
 </body>
 
 </html>

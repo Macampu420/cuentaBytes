@@ -3,7 +3,7 @@
         <div class="modal-content text-dark" style="background-color: #A0D2D8;">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
 
-                <form action="../../controllers/clientes.php" method="post">
+                <form id="formNotas">
                     <div class="row">
 
                         <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -45,6 +45,8 @@
         </div>
     </div>
 </div>
+
+<script src="./../../../public/js/notas/notas.js"></script>
 
 <style>
     * {

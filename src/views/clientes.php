@@ -37,17 +37,9 @@
 
                     <h2 class="text-center fs-2 mt-5">Clientes</h2>
 
-                    <input id="buscadorClientes" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar Cliente">                  
-                   
+                    <input id="buscadorClientes" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar Cliente">
+
                 </div>
-                
-
-
-<<<<<<< HEAD
-                <!-- btn añadir item y cartas con las ventas -->
-=======
-                <!-- btn añadir item y cartas con cliente -->
->>>>>>> Jota
                 <div class="row col-12 mx-auto pt-5">
 
                     <!-- btn añadir -->
@@ -56,20 +48,14 @@
                             <h3 id="btnAnadirVta" class="quicksand mx-5"><img src="../../public/img/iconoMas.png" class="mx-2">Añadir</h3>
                         </div>
                     </div>
-
-<<<<<<< HEAD
-                    <!-- cartas con todas las ventas registradas -->
-=======
-                    <!-- cartas con todas los clientes registradas -->
->>>>>>> Jota
                     <div class="col-12 col-lg-7 mx-auto p-3 border border-dark divVtas overflow-scroll">
 
                         <div id="filaClientes" class="row">
-                            
-                        <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
-                            No se encontraron coincidencias
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+
+                            <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                                No se encontraron coincidencias
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
                         </div>
 
@@ -80,11 +66,17 @@
         </div>
 
         <?php include './modals/modalRegClientes.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
+        <?php include './partials/notas.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
         <script src="./../../public/js/clientes.js"></script>
         <script src="./../../public/js/controladorClientes.js"></script>
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
+
 </body>
 
 </html>
