@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-04-2023 a las 22:27:29
+-- Tiempo de generación: 17-04-2023 a las 00:42:10
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -527,6 +527,14 @@ CREATE TABLE `notas` (
   `contenidoNota` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `notas`
+--
+
+INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
+(6, 'Pagar arriendo', 'El miércoles 19 de Abril a Humberto'),
+(7, 'Keanu Reeves (Debe)', '2 litros de ron');
+
 -- --------------------------------------------------------
 
 --
@@ -765,7 +773,7 @@ ALTER TABLE `imagen`
 -- AUTO_INCREMENT de la tabla `notas`
 --
 ALTER TABLE `notas`
-  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
