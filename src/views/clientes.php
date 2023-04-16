@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color: #E5ECEC">
         <div class="row">
 
             <!-- navbar  -->

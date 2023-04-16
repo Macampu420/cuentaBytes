@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="m-3 mx-auto col-11">
-                                <textarea id="inpCuerpoNota" class="form-control" name="cuerpoNota" cols="30" rows="5">Cuerpo:</textarea>
+                                <textarea id="inpCuerpoNota" class="form-control" name="cuerpoNota" cols="30" rows="5" placeholder="Cuerpo:"></textarea>
                             </div>
                         </div>
 
