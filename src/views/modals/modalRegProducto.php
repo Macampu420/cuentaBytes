@@ -55,15 +55,9 @@
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <div class="form-group">
                         <label for="idImagen" class="form-label">Imagen</label>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                         <input type="file" class="form-control" name="imgProducto" id="idImagen" aria-describedby="basic-addon3">
-=======
-                        <input type="file" class="form-control" name="idImagen" id="idImagen" aria-describedby="basic-addon3">
->>>>>>> sebas
-=======
-                        <input type="file" class="form-control" name="idImagen" id="idImagen" aria-describedby="basic-addon3">
->>>>>>> Jota
+
                     </div>
                 </div>
 
