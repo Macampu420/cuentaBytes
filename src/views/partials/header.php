@@ -31,10 +31,10 @@
 </header>
 
 <div class="contenedor">
-		<button id="btnAgregarNota" class="botonF1">
-			<span>+</span>
-		</button>
- 	</div>
+	<button id="btnAgregarNota" class="botonF1">
+		<span>+</span>
+	</button>
+</div>
 
 <style>
     @media (min-width: 992px) {

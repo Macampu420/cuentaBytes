@@ -73,16 +73,14 @@
         <?php include './modals/modalRegCompra.php' ?>
         <?php include './modals/modalRegNota.php' ?>
         <?php include './partials/notas.php' ?>
+        <?php include './partials/ajustes.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/compras.js"></script>
         <script src="./../../public/js/controladorCompras.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
-        <script>
-            
+        <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
 
-
-        </script>
-</body>
+    </body>
 
 </html>
