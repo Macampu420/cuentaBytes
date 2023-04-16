@@ -18,9 +18,9 @@ function eliminarCliente($sqlEliminar, $conn){
     if(!$resEliminar){
         echo "<script> alert('ha ocurrido un error al eliminar el cliente ')</script>";
     } else {
-        echo "<script> alert('se ha eliminado correctamente')</script>";
-        echo "<script> window.location.href='http://localhost/cuentabytes/src/views/clientes.php';</script>";
+        echo "se ha eliminado correctamente";
     }
+
 
 }
 
@@ -42,7 +42,6 @@ function actualizarCliente($sqlActualizar, $conn){
         echo "<script> window.location.href='http://localhost/cuentabytes/src/views/clientes.php';</script>";
     }
 
-    header("Location: http://localhost/cuentabytes/src/views/clientes.php");
 }
 
 ?>

@@ -2,15 +2,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content text-white" style="background-color: #A0D2D8;">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
-<<<<<<< HEAD
-<<<<<<< HEAD
+
             <form action="./../controllers/regProducto.php" method="post" enctype="multipart/form-data">
-=======
+
             <form action="./../controllers/regProducto.php" method="post">
->>>>>>> sebas
-=======
+
             <form action="./../controllers/regProducto.php" method="post">
->>>>>>> Jota
+
                 <div class="row">
 
                     <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal"
@@ -57,15 +55,9 @@
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <div class="form-group">
                         <label for="idImagen" class="form-label">Imagen</label>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                         <input type="file" class="form-control" name="imgProducto" id="idImagen" aria-describedby="basic-addon3">
-=======
-                        <input type="file" class="form-control" name="idImagen" id="idImagen" aria-describedby="basic-addon3">
->>>>>>> sebas
-=======
-                        <input type="file" class="form-control" name="idImagen" id="idImagen" aria-describedby="basic-addon3">
->>>>>>> Jota
+
                     </div>
                 </div>
 
