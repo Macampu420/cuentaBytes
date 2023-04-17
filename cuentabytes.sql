@@ -2,10 +2,17 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
+<<<<<<< HEAD
 -- Host: 127.0.0.1
 -- Generation Time: Apr 18, 2023 at 12:32 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
+=======
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 17-04-2023 a las 00:42:10
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
+>>>>>>> e031f505c5c4e41e4f8b3b8efff9ae80d30111c4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -177,32 +184,55 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()   BEGIN
-SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor DESC LIMIT 1;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()   SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
+FROM productos 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY stockMayor DESC 
+LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasVend` ()   BEGIN
-SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto FROM detalleventa INNER JOIN productos ON
-productos.idProducto = detalleventa.idProducto group by detalleventa.idProducto ORDER by nroFacturas desc limit 3;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasVend` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto, imagen.nombreImagen 
+FROM detalleventa 
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY detalleventa.idProducto, productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY nroFacturas DESC 
+LIMIT 3$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock` ()   BEGIN
-SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto FROM productos GROUP BY idProducto ORDER BY stockMayor ASC LIMIT 1;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock` ()   SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
+FROM productos 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY stockMayor ASC 
+LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenVend` ()   BEGIN
-SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto FROM detalleventa INNER JOIN productos ON
-productos.idProducto = detalleventa.idProducto group by detalleventa.idProducto ORDER by nroFacturas asc limit 3;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenVend` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto, imagen.nombreImagen 
+FROM detalleventa 
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY detalleventa.idProducto, productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY nroFacturas ASC 
+LIMIT 3$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(20))   INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))   INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()   BEGIN
-select productos.nombreProducto,max((productos.precioVenta- productos.costoProducto)/productos.costoProducto)as rentabilidad from productos group by productos.nombreProducto;
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, 
+productos.idProducto, 
+productos.nombreProducto, 
+imagen.nombreImagen,
+MAX((productos.precioVenta - productos.costoProducto)/productos.costoProducto) as rentabilidad
+FROM detalleventa 
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY detalleventa.idProducto, 
+productos.idProducto, 
+productos.nombreProducto, 
+imagen.nombreImagen
+ORDER BY nroFacturas DESC 
+LIMIT 3$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenCompras` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
 enccompraproducto.fechaCompra >= fecha1_ AND enccompraproducto.fechaCompra <= fecha2_ GROUP BY enccompraproducto.idCompra ORDER BY enccompraproducto.fechaCompra ASC$$
@@ -926,6 +956,14 @@ CREATE TABLE `notas` (
   `contenidoNota` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `notas`
+--
+
+INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
+(6, 'Pagar arriendo', 'El miércoles 19 de Abril a Humberto'),
+(7, 'Keanu Reeves (Debe)', '2 litros de ron');
+
 -- --------------------------------------------------------
 
 --
@@ -1164,7 +1202,11 @@ ALTER TABLE `imagen`
 -- AUTO_INCREMENT for table `notas`
 --
 ALTER TABLE `notas`
+<<<<<<< HEAD
   MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+=======
+  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+>>>>>>> e031f505c5c4e41e4f8b3b8efff9ae80d30111c4
 
 --
 -- AUTO_INCREMENT for table `productos`

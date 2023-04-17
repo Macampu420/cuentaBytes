@@ -55,7 +55,6 @@ class ModuloNotas {
     listarUnaNota = async (req, res) => {
 
         await pool.query("CALL 	mostrarUnaNota(?)", [req.params.id], (err, rows) => {
-
             if (err) {
                 console.log("internal error", err);
                 res.write(err);

@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color: #E5ECEC">
         <div class="row">
 
             <!-- navbar  -->
@@ -37,7 +37,7 @@
 
                     <h2 class="text-center fs-2 mt-5">Egresos</h2>
 
-                    <input id="buscadorCompras" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
+                    <input id="buscadorEgresos" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
 
                 </div>
 

@@ -1,7 +1,7 @@
 let modalReg = new bootstrap.Modal(document.getElementById("modalRegistro"));
 var vDatos = [];
-document.getElementById('reenviar').addEventListener("click", (event) =>{
-    
+document.getElementById('reenviar').addEventListener("click", (event) => {
+
     let email = vDatos[0];
     let nombreEmpresa = vDatos[1];
     let contrasena = vDatos[2]
@@ -9,30 +9,30 @@ document.getElementById('reenviar').addEventListener("click", (event) =>{
 
 
     fetch('http://localhost:3000/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                nombreEmpresa,
-                contrasena,
-                codigo
-            }),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email,
+            nombreEmpresa,
+            contrasena,
+            codigo
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if (data.status == 200) {
+                alert("El Codigo a sido reenviado")
+                localStorage.setItem("email", email);
+            } else {
+                alert(data.messaje);
+            };
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status == 200) {
-                    alert("El Codigo a sido reenviado")
-                    localStorage.setItem("email", email);
-                } else {
-                    alert(data.messaje);
-                };
-            })
 
-            event.preventDefault();
-    
+    event.preventDefault();
+
 })
 
 document.getElementById('formCod').addEventListener("submit", (event) => {
@@ -100,8 +100,10 @@ function MostrarPass() {
 }
 
 function comprobarClave() {
+    var email = document.getElementById("email").value;
     var clave1 = document.getElementById("mostrar1").value;
     var clave2 = document.getElementById("mostrar2").value;
+    var arroba = (email.includes("@"));
     let form = document.querySelector("form");
 
     if ((clave1 == clave2) && (clave1 !== '')) {
@@ -113,7 +115,7 @@ function comprobarClave() {
 
                 document.getElementById('alerta').innerHTML = `
                         <div id="alerta" class="my-3 alert show alert-danger alert-dismissible" role="alert">
-                    <strong>Contraseñas no coinciden.<br></strong> Las contraseñas no tienen un tamaño de 8 caracteres, corrigelas e intentalo nuevamente pikos
+                    <strong>Contraseñas no coinciden.<br></strong> Las contraseñas no tienen un tamaño de 8 caracteres, corrigelas e intentalo nuevamente
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>`;
 
@@ -121,19 +123,33 @@ function comprobarClave() {
             });
         }
 
+    }
+    else if (arroba == false) { 
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            document.getElementById('alerta').innerHTML = `
+                    <div id="alerta" class="my-3 alert show alert-danger alert-dismissible" role="alert">
+                <strong>Falta el Arroba(@)<br></strong> El campo correo no contiene @ por favor ingrese nuevamente su correo
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+
+
+        });
     } else {
         form.addEventListener("submit", event => {
             event.preventDefault();
 
             document.getElementById('alerta').innerHTML = `
                     <div id="alerta" class="my-3 alert show alert-danger alert-dismissible" role="alert">
-                <strong>Contraseñas no coinciden.<br></strong> Las contraseñas que has ingresado no son iguales, corrigelas e intentalo nuevamente pikos
+                <strong>Contraseñas no coinciden.<br></strong> Las contraseñas que has ingresado no son iguales, corrigelas e intentalo nuevamente
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`;
 
 
         });
     }
+
 }
 
 function validarCodigo() {
