@@ -15,14 +15,13 @@ function verificarRegistro() {
         let contrasena = document.getElementById("mostrar1").value;
 
         fetch(`http://localhost:3000/verificarRegistro${email}/${contrasena}`)
-            .then(response => response.text())
-            .then(mensaje => {
-                if (response == 'No existe un usario registrado') {
-                    alert('Bienvenido!');
-                    location.href = 'http://localhost/cuentabytes/src/views/balances.php'
+            .then(response => {
+                if(response.status == 400){
+                    alert("Correo o contraseña incorrectos");
                 }
-                else{
-                    alert('NO')
+                else if(response.status == 200){
+                    alert("Bienvenido!")
+                    location.href = 'http://localhost/cuentabytes/src/views/balances.php'
                 }
             })
             .catch(err => {

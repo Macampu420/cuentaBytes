@@ -19,18 +19,19 @@
         <h2 class="titRegistro">Inicio de Sesión</h2>
         <form action="./../views/balances.php" method="GET" id="inicioSesion">
             <div class="txt_field">
-                <input type="email" type="text" name="email" id="email" maxlength="40" required>
+                <input type="text" name="email" id="email" maxlength="40" required>
                 <span></span>
                 <label>Correo</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar1" name="contrasena" maxlength="256" required>
+                <input type="password" id="mostrar1" name="contrasena" maxlength="100" required>
                 <span></span>
                 <label>Contraseña</label>
                 <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
             <div class="pass">Haz Olvidado tu Contraseña?</div>
             <input type="submit" id="btn" value="Iniciar Sesión" onclick="verificarRegistro()">
+            <div id="alerta"></div>
             <div class="signup_link">
                 ¿No Tienes Cuenta? <a href="./registro.php">Registro</a>
             </div>

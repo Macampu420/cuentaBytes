@@ -24,17 +24,17 @@
                 <label>Nombre de la Empresa</label>
             </div>
             <div class="txt_field">
-                <input type="email" type="text" name="email" id="email" maxlength="40" required>
+                <input type="text" name="email" id="email" maxlength="40" required>
                 <span></span>
                 <label>Correo</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar1" name="contrasena" maxlength="256" required>
+                <input type="password" id="mostrar1" name="contrasena" maxlength="100" required>
                 <span></span>
                 <label>Contraseña</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar2" name="contrasena1" maxlength="256" required>
+                <input type="password" id="mostrar2" name="contrasena1" maxlength="100" required>
                 <label>Confirmar Contraseña</label>
                 <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
