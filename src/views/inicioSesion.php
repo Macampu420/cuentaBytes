@@ -17,25 +17,34 @@
     </div>
     <div class="center my-5">
         <h2 class="titRegistro">Inicio de Sesión</h2>
-        <form action="./../views/modals/codigo.html" method="GET" id="inicioSesion">
+        <form action="./../views/balances.php" method="GET" id="inicioSesion">
             <div class="txt_field">
                 <input type="email" type="text" name="email" id="email" maxlength="40" required>
                 <span></span>
                 <label>Correo</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar1" name="contrasena" maxlength="20" required>
+                <input type="password" id="mostrar1" name="contrasena" maxlength="256" required>
                 <span></span>
                 <label>Contraseña</label>
+                <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
             <div class="pass">Haz Olvidado tu Contraseña?</div>
-            <input type="submit" id="btn" value="Iniciar Sesión" onclick="comprobarUsuario()">
+            <input type="submit" id="btn" value="Iniciar Sesión" onclick="verificarRegistro()">
+            <div class="signup_link">
+                ¿No Tienes Cuenta? <a href="./registro.php">Registro</a>
+            </div>
+            
         </form>
     </div>
     <script src="./../../public/js/bootstrap.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     <?php include './modals/modalCodigo.php' ?>
+    <script src="./../../public/js/inicioSesion.js">    
+    MostrarPass();
+    verificarRegistro();
+    </script>
     
 </body>
 

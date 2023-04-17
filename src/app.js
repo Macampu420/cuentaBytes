@@ -28,7 +28,7 @@ app.use(require('./routes/ventas'));
 app.use(require('./routes/egresos'));
 app.use(require('./routes/compras'));
 app.use(require('./routes/notas'))
-
+app.use(require('./routes/inicioSesion'))
 app.use(require('./routes/mailer'));
 
 

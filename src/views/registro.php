@@ -29,21 +29,20 @@
                 <label>Correo</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar1" name="contrasena" maxlength="20" required>
+                <input type="password" id="mostrar1" name="contrasena" maxlength="256" required>
                 <span></span>
                 <label>Contraseña</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar2" name="contrasena1" maxlength="20" required>
+                <input type="password" id="mostrar2" name="contrasena1" maxlength="256" required>
                 <label>Confirmar Contraseña</label>
                 <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
-            <div class="pass">Contraseña Olvidada?</div>
             <input type="submit" id="btn" value="Registrar" onclick="comprobarClave()">
 
             <div id="alerta"></div>
             <div class="signup_link">
-                ¿Ya tienes cuenta? <a href="./a.html">Inicio Sesion</a>
+                ¿Ya tienes cuenta? <a href="./inicioSesion.php">Inicio Sesion</a>
             </div>
         </form>
     </div>
