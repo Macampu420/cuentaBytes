@@ -89,6 +89,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/balances.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
         <script src="./../../public/js/acordeon.js"></script>
