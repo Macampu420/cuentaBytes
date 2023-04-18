@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-04-2023 a las 04:20:36
+-- Tiempo de generación: 18-04-2023 a las 19:27:52
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -147,7 +147,7 @@ FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()   BEGIN
-SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY nombreProducto ASC;
+SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY idProducto DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()   select * from proveedor order by idProveedor desc$$
@@ -181,15 +181,18 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()   SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
-ON productos.idImagen = imagen.idImagen$$
+ON productos.idImagen = imagen.idImagen
+ORDER BY productos.idProducto DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnaNota` (IN `_idNota` INT(11))   BEGIN
 SELECT * FROM notas WHERE idNota = _idNota;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))   SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen
-FROM productos INNER JOIN imagen
-ON productos.idImagen = imagen.idImagen$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))   SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen, imagen.idImagen
+FROM productos 
+INNER JOIN imagen
+ON productos.idImagen = imagen.idImagen
+WHERE productos.idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()   SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
 FROM productos 
@@ -224,7 +227,7 @@ LIMIT 3$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(255))   INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))   INSERT INTO `imagen`(`idImagen`, `rutaImagen`, `nombreImagen`) VALUES ('', rutaImg_, nombreImg_)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))   INSERT INTO `imagen`( `rutaImagen`, `nombreImagen`) VALUES ( rutaImg_, nombreImg_)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, 
 productos.idProducto, 
@@ -517,7 +520,16 @@ CREATE TABLE `imagen` (
 INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
 (0, './../../../public/img/productos/', '20230417020747.png'),
 (9, '/public/img/productos', 'bimbo.png'),
-(11, './../../../public/img/productos/', '20230310011457.jpg');
+(11, './../../../public/img/productos/', '20230310011457.jpg'),
+(12, '\'.$ruta_destino.\'', '\'.$nombreimg.\''),
+(13, './../../../public/img/productos/', '20230418173928.jpg'),
+(14, './../../../public/img/productos/', '20230418174157.png'),
+(15, './../../../public/img/productos/', '20230418175318.png'),
+(16, './../../../public/img/productos/', '20230418181046.jpg'),
+(17, '', ''),
+(18, '', ''),
+(19, '', ''),
+(20, './../../../public/img/productos/', '20230418185044.jpg');
 
 -- --------------------------------------------------------
 
@@ -561,7 +573,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 21, 9),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 1212, 21, 9),
 (2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 8, 9),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 44, 9),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 47, 9),
@@ -760,7 +772,7 @@ ALTER TABLE `detcompraproducto`
 -- AUTO_INCREMENT de la tabla `imagen`
 --
 ALTER TABLE `imagen`
-  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `notas`
@@ -772,7 +784,7 @@ ALTER TABLE `notas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
