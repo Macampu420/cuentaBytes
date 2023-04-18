@@ -5,7 +5,7 @@
 }
 
 .divProduc{
-    background-color: #1CB3D3;
+    background-color: #218DA3;
     border-radius: 20px;
     height: 25rem;
 }
@@ -24,6 +24,10 @@
 }
 .card{
     cursor: default;
+}
+
+.imagen{
+    width: 150px;
 }
 
 

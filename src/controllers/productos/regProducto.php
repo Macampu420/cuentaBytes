@@ -8,7 +8,14 @@ $porcentajeIva = $_REQUEST['porcentajeIva'];
 $costoProducto = $_REQUEST['costoProducto'];
 $precioVenta = $_REQUEST['precioVenta'];
 $stockProducto = $_REQUEST['stockProducto'];
-$idImagen = registrarImg();
+$idImagenVer = registrarImg();
+
+if($idImagenVer == null){
+    $idImagen = 9;
+}
+else{
+    $idImagen = $idImagenVer;
+}
 
 var_dump($idImagen); 
 

@@ -1,6 +1,6 @@
 <div class="modal" id="modalReg" tabindex="-1" editar="false">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content text-white" style="background-color: #A0D2D8;">
+        <div class="modal-content text-black" style="background-color: #A0D2D8;">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
 
             <form action="./../controllers/regProducto.php" method="post" enctype="multipart/form-data">
@@ -28,18 +28,18 @@
                 <div class="row">
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <label for="nombreProducto" class="form-label">Nombre del producto</label>
-                    <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" placeholder="nombre" aria-describedby="basic-addon3">
+                    <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" placeholder="nombre" aria-describedby="basic-addon3" required>
                 </div>
 
                 
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <label for="costoProducto" class="form-label">Costo del producto</label>
-                    <input type="number" class="form-control" name="costoProducto" id="costoProducto" placeholder="Costo" aria-describedby="basic-addon3">
+                    <input type="number" class="form-control" name="costoProducto" id="costoProducto" placeholder="Costo" aria-describedby="basic-addon3" required>
                 </div>
                 
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <label for="precioVenta" class="form-label">Precio de venta</label>
-                    <input type="number" class="form-control" name="precioVenta" id="precioVenta" placeholder="Precio" aria-describedby="basic-addon3">
+                    <input type="number" class="form-control" name="precioVenta" id="precioVenta" placeholder="Precio" aria-describedby="basic-addon3" required>
                 </div>  
                 
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
@@ -49,14 +49,14 @@
                                     
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <label for="stockProducto" class="form-label">Stock del producto</label>
-                    <input type="number" class="form-control" name="stockProducto" id="stockProducto" placeholder="stock" aria-describedby="basic-addon3">
+                    <input type="number" class="form-control" name="stockProducto" id="stockProducto" placeholder="stock" aria-describedby="basic-addon3" required>
                 </div>
 
                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                     <div class="form-group">
-                        <label for="idImagen" class="form-label">Imagen</label>
+                        <label for="idImagen" name="imgProducto" class="form-label">Imagen</label>
 
-                        <input type="file" class="form-control" name="imgProducto" id="idImagen" aria-describedby="basic-addon3">
+                        <input type="file" class="form-control"  name="imgProducto" id="idImagen" aria-describedby="basic-addon3">
 
                     </div>
                 </div>

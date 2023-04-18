@@ -8,9 +8,14 @@ $porcentajeIva = $_REQUEST['porcentajeIva'];
 $costoProducto = $_REQUEST['costoProducto'];
 $precioVenta = $_REQUEST['precioVenta'];
 $stockProducto = $_REQUEST['stockProducto'];
-$idImagen = $_REQUEST['idImagen'];
-$idImagen = registrarImg();
+$idImagenVer = registrarImg();
 
+if($idImagenVer == null){
+    $idImagen = 9;
+}
+else{
+    $idImagen = $idImagenVer;
+}
 $idProducto = $_REQUEST['idProducto'];
 
 // $sqlEdit = "CALL actualizarProducto('$nombreProducto', '$descripcionProducto', '$porcentajeIva', $costoProducto, $precioVenta, $stockProducto, 9,  $idProducto)";

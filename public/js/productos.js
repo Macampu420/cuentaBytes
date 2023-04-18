@@ -33,9 +33,8 @@ renderProductos = async productos => {
                     <h5>Precio: ${element.precioVenta}</h5>
                     <h5>Stock:     ${element.stockProducto}</h5>
 
-                    <img src="./../../public/img/productos/${element.nombreImagen}">
+                    <img class="imagen" src="./../../public/img/productos/${element.nombreImagen}">
 
-                    <h5>Imagen: ${element.nombreImagen}</h5>
                 </div>
             </div>
     

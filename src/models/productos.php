@@ -46,12 +46,11 @@ function registrar($sqlRegProduc, $conn) {
     $registro = $conn -> query("$sqlRegProduc");
 
     if (!$registro) {
-        echo "error en el registro";
+        echo "<script> alert('ha ocurrido un error al registrar el producto ')</script>";
     } else {
-        echo "Registro exitoso";
+        echo "<script> alert('se ha registrado correctamente')</script>";
+        echo "<script> window.location.href='http://localhost/cuentabytes/src/views/productos.php';</script>";
     }
-
-    header("Location: http://localhost/cuentabytes/src/views/productos.php");
 
 }
 
@@ -60,9 +59,9 @@ function eliminarProducto($sqlEliminar, $conn) {
     $resEliminar = $conn -> query($sqlEliminar);
 
     if (!$resEliminar) {
-        echo "ha ocurrido un error al eliminar el producto";
+        echo "<script> alert('ha ocurrido un error al eliminar el producto ')</script>";
     } else {
-        echo "Producto eliminado correctamente";
+        echo "Se ha eliminado correctamente el producto";
     }
 }
 
@@ -79,13 +78,12 @@ function actualizarProducto($sqlActualizar, $conn) {
     $resActualizar = $conn -> query($sqlActualizar);
 
     if (!$resActualizar) {
-        echo "ha ocurrido un error al actualizar el producto";
+        echo "<script> alert('ha ocurrido un error al actualizar el producto ')</script>";
     } else {
-        echo "Producto actualizado correctamente";
-    }
-
-    header("Location: http://localhost/cuentabytes/src/views/productos.php");
-} 
+        echo "<script> alert('se ha actualizado correctamente')</script>";
+        echo "<script> window.location.href='http://localhost/cuentabytes/src/views/productos.php';</script>";
+    } 
+}
 
  ?>
 

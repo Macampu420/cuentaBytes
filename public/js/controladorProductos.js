@@ -39,7 +39,7 @@ document.getElementById("filaProductos").addEventListener("click", async event =
                     document.getElementById("descripcionProducto").value = data.items[0].descripcionProducto;
                     document.getElementById("porcentajeIva").value = data.items[0].porcentajeIva;
                     document.getElementById("costoProducto").value = data.items[0].costoProducto;
-                    document.getElementById("precioVenta").value = data.items[0].PrecioVenta;
+                    document.getElementById("precioVenta").value = data.items[0].precioVenta;
                     document.getElementById("stockProducto").value = data.items[0].stockProducto;
 
                     document.getElementById("btnEliminar").setAttribute("idProducto", data.items[0].idProducto);
