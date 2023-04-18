@@ -10,13 +10,15 @@
 
         <hr>
 
-        <div id="${element.idVenta}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
-            <div class="card-body mt-2 mx-auto">
-                <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
-                <h5 class="text-center">Titulo</h5>
-                <h5 class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nostrum facere aliquid veniam blanditiis.</h5>
-            </div>
-        </div>
+        
+        <div id="filaNotas" class="row">
 
+            <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+                No se encontraron coincidencias
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        </div>
+ 
     </div>
 </div>
