@@ -136,7 +136,7 @@ let actualizarGrafico = async (inicio, fin, tiempo) => {
 }
 
 // muestra desde hasta cuando se hara el PyG
-let mostrarRango = (inicio, fin) => document.querySelector('#spanFechaGrafico').innerHTML = ('Generar Estado PyG desde: ' + inicio + '. Hasta: ' + fin);
+let mostrarRango = (inicio, fin) => document.querySelector('#spanFechaGrafico').innerHTML = ('Generar gráfico movimiento de efectivo: <br/> Desde: ' + inicio + '. Hasta: ' + fin);
 
 //jquery necesario para el funcionamiento del date picker
 $(function () {

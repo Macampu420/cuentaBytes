@@ -494,7 +494,7 @@ const modalRegistrar = () => {
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
     document.getElementById('divAcciones').classList.add("d-none");
-    document.getElementById('rowItems').innerHTML = "";
+    // document.getElementById('rowItems').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
     document.getElementById('inpMetPago').value = "";

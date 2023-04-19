@@ -69,6 +69,7 @@
         <?php include './modals/modalRegNota.php' ?>
         <?php include './partials/notas.php' ?>
         <?php include './modals/modalRegNota.php' ?>
+        <?php include './partials/ajustes.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
@@ -76,6 +77,8 @@
         <script src="./../../public/js/controladorClientes.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/notas/notas.js"></script>
+        <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
+
 
 </body>
 

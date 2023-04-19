@@ -52,14 +52,41 @@
                             Añadir item</h3>
                     </div>
 
-                    <div id="contItems" class="border border-dark border-3 rounded px-4 py-2 overflow-scroll mx-2">
+                    <table class="table table-secondary table-striped">
 
-                        <div id="rowItems" class="row">
+                        <thead>
+                            <tr>
+                                <th>imagen</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
 
-                        </div>
-                    </div>
+                        <tbody>
+                            <tr>
+                                <td><img src="https://via.placeholder.com/70" alt="Producto 1" class="img-size"></td>
+                                <td class="align-middle">Producto 1</td>
+                                <td class="align-middle">$10</td>
+                                <td class="align-middle">2</td>
+                                <td class="align-middle">$20</td>
+                            </tr>
+                        </tbody>
 
-                    <div id="contTotDcto" class="row mt-3 px-2">
+                        <tfoot class="table-secondary">
+                            <tr>
+                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                <td>$95</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-end"><strong>Descuento:</strong></td>
+                                <td>$5</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div id="contTotDcto" class="row mt-3 px-2 d-none">
 
                         <div class="col-6 mx-auto col-lg-4">
                             <label for="inpFecha" class="form-label quicksand ">Valor IVA:</label>
@@ -92,7 +119,7 @@
 </div>
 
 <style>
-    * {
+* {
     box-sizing: border-box !important;
     margin: 0; 
     font-family: 'Questrial', sans-serif;
@@ -177,5 +204,10 @@
     color: #fff;
     font-size: 30px;
     cursor: pointer;
+}
+
+/* Define la altura de la imagen en "rem" */
+.img-size {
+        height: 5rem;
 }
 </style>
