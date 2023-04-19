@@ -3,16 +3,16 @@
         <div class="modal-content text-dark" style="background-color: #A0D2D8;">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
 
-                <form id="formNotas">
+                <form id="formNotas" class="">
                     <div class="row">
 
                         <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                        <div id="divAcciones" class="d-none row col-11 d-flex justify-content-end">
-                            <div class="btnAccion mx-4 row p-1 bg-success" id="btnEditar">
+                        <div id="divAccionesNotas" class="d-none row col-11 d-flex justify-content-end">
+                            <div class="btnAccion mx-4 row p-1 bg-success" id="btnEditarNotas">
                                 <a class="col-12 btnEditar mx-auto"></a>
                             </div>
-                            <div class="btnAccion row p-1 bg-danger" id="btnEliminar">
+                            <div class="btnAccion row p-1 bg-danger" id="btnEliminarNotas">
                                 <a class="col-12 btnEliminar mx-auto"></a>
                             </div>
                         </div>
@@ -29,13 +29,13 @@
                             </div>
 
                             <div class="m-3 mx-auto col-11">
-                                <textarea id="inpCuerpoNota" class="form-control" name="cuerpoNota" cols="30" rows="5">Cuerpo:</textarea>
+                                <textarea id="inpCuerpoNota" class="form-control" name="cuerpoNota" cols="30" rows="5" placeholder="Cuerpo:"></textarea>
                             </div>
                         </div>
 
 
                         <div class="row px-4 mt-3">
-                            <button id="btnGuardar" type="submit" class="btn-secondary btn col-6 mx-auto mt-3">Guardar</button>
+                            <button id="btnGuardarNotas" type="submit" class="btn-secondary btn col-6 mx-auto mt-3">Guardar</button>
                         </div>
                     </div>
 

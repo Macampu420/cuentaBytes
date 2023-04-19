@@ -76,6 +76,7 @@
         <script src="./../../public/js/compras.js"></script>
         <script src="./../../public/js/controladorCompras.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
 
     </body>

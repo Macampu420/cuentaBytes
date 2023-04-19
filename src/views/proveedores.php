@@ -68,13 +68,14 @@
     <?php include './modals/modalRegProvee.php' ?>
     <?php include './partials/notas.php' ?>
     <?php include './modals/modalRegNota.php' ?>
+    <?php include './partials/ajustes.php' ?>
 
     <script src="./../../public/js/bootstrap.js"></script>
     <script src="./../../public/js/proveedores.js"></script>
     <script src="./../../public/js/controladorProveedores.js"></script>
     <script src="./../../public/js/notas/ctrNotas.js"></script>
     <script src="./../../public/js/notas/notas.js"></script>
-
+    <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
 
 </body>
 

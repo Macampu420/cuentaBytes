@@ -79,6 +79,7 @@
         <script src="./../../public/js/ventas.js"></script>
         <script src="./../../public/js/controladorVentas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
 
 </body>
