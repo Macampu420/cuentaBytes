@@ -9,7 +9,6 @@ btnAgregarNota.onclick = () => {
 }
 
 btnDesplegarNotas.onclick = () => {
-    renderNotas();
     offcanvasNotas.show();
 }
 
@@ -20,3 +19,7 @@ document.getElementById("formNotas").addEventListener("submit", (event) => {
 
     registrarNota();
 });
+
+window.onload = () => {
+    renderNotas();
+}

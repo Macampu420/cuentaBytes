@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./../../public/css/bootstrap.css">
+    <link rel="stylesheet" href="./../../public/css/compras.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -31,7 +32,7 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color: #E5ECEC">
         <div class="row containerA">
 
             <!-- navbar  -->
