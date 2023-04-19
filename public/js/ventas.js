@@ -128,27 +128,52 @@ const vrTotalEditar = (vItems) => {
 const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
-    document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-        <div class="containerBtn">
-          <div id="dlt${numeroItem}" class="btnEliminar"></div>
-        </div>
-            <select id="slc${numeroItem}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-                <option selected>Selecciona el producto</option>
-            </select>
-            <div id="slidecontainer${numeroItem}" class="">
-                <input disabled type="range" min="1" max="100" value="50" class="slc${numeroItem}">
-                <p id="pValor"></p>
+    document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+    <tr id="item${numeroItem}">
+        <td><img src="./../../public/img/placeholderProducto.jpg" alt="Producto 1" class="border border-2 img-size"></td>
+        <td class="align-middle">
+            <div class="row mx-auto">
+                <select id="slcProductos" class="col-12" name="slcProductos">
+                    <option value="" >Producto:</option>
+                </select>
             </div>
-        </div>
-        `);
+        </td>
+        <td class="align-middle">
+            <div class="row">
+                <input id="inpCantidad" class="form-control w-50 mx-auto mb-2" type="number" value="2">
+            </div>                                    
+        </td>
+        <td class="align-middle">$1.000.000</td>
+        <td class="align-middle">$1.000.000</td>
+        <td class="align-middle">
+            <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminar">
+                <a class="col-12 btnEliminar mx-auto"></a>
+            </div>  
+        </td>
+    </tr>
+    `)
 
-    //pone todos los productos que se traigan en el select del item creado
-    for (let i = 0; i < vObjsProductos.length; i++) {
-        document.getElementById("slc" + numeroItem).insertAdjacentHTML("beforeend", `
-                <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
-        `);
-    }
+    // document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+    //     <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
+    //     <div class="containerBtn">
+    //       <div id="dlt${numeroItem}" class="btnEliminar"></div>
+    //     </div>
+    //         <select id="slc${numeroItem}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
+    //             <option selected>Selecciona el producto</option>
+    //         </select>
+    //         <div id="slidecontainer${numeroItem}" class="">
+    //             <input disabled type="range" min="1" max="100" value="50" class="slc${numeroItem}">
+    //             <p id="pValor"></p>
+    //         </div>
+    //     </div>
+    //     `);
+
+    // //pone todos los productos que se traigan en el select del item creado
+    // for (let i = 0; i < vObjsProductos.length; i++) {
+    //     document.getElementById("slcProductos" + numeroItem).insertAdjacentHTML("beforeend", `
+    //             <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
+    //     `);
+    // }
 
     numeroItem++;
 }
@@ -395,8 +420,6 @@ const configModal = (modal, event) => {
     } else {
         modalRegistrar();
     }
-
-
 }
 
 const modalEditar = async event => {
@@ -490,11 +513,12 @@ const modalRegistrar = () => {
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
     let date = new Date();
+    numeroItem = 0;
 
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
     document.getElementById('divAcciones').classList.add("d-none");
-    // document.getElementById('rowItems').innerHTML = "";
+    document.getElementById('tblItemsVta').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
     document.getElementById('inpMetPago').value = "";

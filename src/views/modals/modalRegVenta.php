@@ -45,6 +45,8 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <hr>
 
                     <div id="btnAnadir" class="row mb-3">
                         <h3 class="my-auto mx-auto col-10 col-lg-4 p-0 quicksand"><img
@@ -52,39 +54,38 @@
                             Añadir item</h3>
                     </div>
 
-                    <table class="table table-secondary table-striped">
+                    <div class="div h-75 overflow-auto">
+                        <table class="table table-secondary table-striped">
 
                         <thead>
                             <tr>
                                 <th>imagen</th>
                                 <th>Producto</th>
-                                <th>Cantidad</th>
+                                <th class="text-center">Cantidad</th>
                                 <th>Precio Unitario</th>
                                 <th>Subtotal</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            <tr>
-                                <td><img src="https://via.placeholder.com/70" alt="Producto 1" class="img-size"></td>
-                                <td class="align-middle">Producto 1</td>
-                                <td class="align-middle">$10</td>
-                                <td class="align-middle">2</td>
-                                <td class="align-middle">$20</td>
-                            </tr>
+                        <tbody id="tblItemsVta">
+
                         </tbody>
 
                         <tfoot class="table-secondary">
                             <tr>
+                                <td></td>
                                 <td colspan="4" class="text-end"><strong>Total:</strong></td>
                                 <td>$95</td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td colspan="4" class="text-end"><strong>Descuento:</strong></td>
                                 <td>$5</td>
                             </tr>
                         </tfoot>
-                    </table>
+                        </table>
+                    </div>
 
                     <div id="contTotDcto" class="row mt-3 px-2 d-none">
 
