@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-04-2023 a las 02:27:29
+-- Tiempo de generación: 20-04-2023 a las 14:53:11
 -- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Versión de PHP: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -360,8 +360,6 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
-(3, 3, 50000, 4, 9),
-(4, 2, 42000, 4, 2),
 (9, 1, 55000, 5, 10),
 (10, 1, 5000, 5, 4),
 (11, 3, 50000, 5, 1),
@@ -474,8 +472,8 @@ CREATE TABLE `encventas` (
   `idVenta` int(11) NOT NULL,
   `tituloVenta` varchar(35) DEFAULT NULL,
   `fechaVenta` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `metodoPagoVenta` varchar(20) DEFAULT NULL,
   `descuentoVenta` int(11) NOT NULL,
+  `idMetodoPago` int(11) DEFAULT NULL,
   `vrTotalVta` int(11) NOT NULL,
   `vrtotalIva` int(11) NOT NULL,
   `editado` int(10) NOT NULL,
@@ -486,16 +484,15 @@ CREATE TABLE `encventas` (
 -- Volcado de datos para la tabla `encventas`
 --
 
-INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `metodoPagoVenta`, `descuentoVenta`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
-(4, '2 cremas de whiskey y 3 botellas de', '2023-03-29 12:30:33', 'Transferencia', 5000, 229000, 49140, 1, 4),
-(5, '1 botella de gin,  un pilsenon 750,', '2023-04-05 12:36:38', 'Efectivo', 10000, 284000, 61440, 1, 9),
-(6, '4 cremas de whiskey', '2023-03-27 12:37:47', 'Transferencia', 8000, 160000, 35280, 0, 7),
-(7, 'Dos aguila lata', '2023-03-22 12:38:57', 'Efectivo', 0, 7000, 1470, 0, 4),
-(8, '1 crema de whiskey', '2023-04-12 12:42:05', 'Efectivo', 0, 42000, 8820, 0, 8),
-(9, 'Un vino vientos del sur', '2023-03-23 12:58:42', 'Tarjeta de crédito', 0, 36000, 7560, 0, 11),
-(10, '10 aguila lata y 7 aguilones litro', '2023-04-08 13:01:54', 'Efectivo', 7000, 70000, 13650, 0, 10),
-(11, '2 litros de ron caldas', '2023-04-18 13:04:53', 'Efectivo', 8500, 91500, 21000, 0, 6),
-(12, '16 aguilas en lata', '2023-03-31 13:06:46', 'Transferencia', 0, 56000, 11760, 0, 7);
+INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPago`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
+(5, '1 botella de gin,  un pilsenon 750,', '2023-04-20 12:38:34', 10000, NULL, 284000, 61440, 1, 9),
+(6, '4 cremas de whiskey', '2023-04-20 12:38:34', 8000, NULL, 160000, 35280, 0, 7),
+(7, 'Dos aguila lata', '2023-04-20 12:38:34', 0, NULL, 7000, 1470, 0, 4),
+(8, '1 crema de whiskey', '2023-04-20 12:38:34', 0, NULL, 42000, 8820, 0, 8),
+(9, 'Un vino vientos del sur', '2023-04-20 12:38:34', 0, NULL, 36000, 7560, 0, 11),
+(10, '10 aguila lata y 7 aguilones litro', '2023-04-20 12:38:34', 7000, NULL, 70000, 13650, 0, 10),
+(11, '2 litros de ron caldas', '2023-04-20 12:38:34', 8500, NULL, 91500, 21000, 0, 6),
+(12, '16 aguilas en lata', '2023-04-20 12:38:34', 0, NULL, 56000, 11760, 0, 7);
 
 -- --------------------------------------------------------
 
@@ -526,6 +523,27 @@ INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
 (19, './../../../public/img/productos/', 'pilsenon.png'),
 (20, './../../../public/img/productos/', 'crema.jpg'),
 (21, './../../../public/img/productos/', 'gatoNegro.png');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodopago`
+--
+
+CREATE TABLE `metodopago` (
+  `idMetodoPago` int(11) NOT NULL,
+  `metodoPago` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `metodopago`
+--
+
+INSERT INTO `metodopago` (`idMetodoPago`, `metodoPago`) VALUES
+(1, 'Efectivo'),
+(2, 'Transferencia'),
+(3, 'Cheque'),
+(4, 'Tarjeta de Crédito');
 
 -- --------------------------------------------------------
 
@@ -706,13 +724,20 @@ ALTER TABLE `encegreso`
 --
 ALTER TABLE `encventas`
   ADD PRIMARY KEY (`idVenta`),
-  ADD KEY `clientesVentas` (`idCliente`);
+  ADD KEY `clientesVentas` (`idCliente`),
+  ADD KEY `metodoPago` (`idMetodoPago`);
 
 --
 -- Indices de la tabla `imagen`
 --
 ALTER TABLE `imagen`
   ADD PRIMARY KEY (`idImagen`);
+
+--
+-- Indices de la tabla `metodopago`
+--
+ALTER TABLE `metodopago`
+  ADD PRIMARY KEY (`idMetodoPago`);
 
 --
 -- Indices de la tabla `notas`
@@ -778,6 +803,12 @@ ALTER TABLE `detcompraproducto`
 --
 ALTER TABLE `imagen`
   MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT de la tabla `metodopago`
+--
+ALTER TABLE `metodopago`
+  MODIFY `idMetodoPago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `notas`
@@ -849,7 +880,8 @@ ALTER TABLE `encegreso`
 -- Filtros para la tabla `encventas`
 --
 ALTER TABLE `encventas`
-  ADD CONSTRAINT `encClientes` FOREIGN KEY (`idCliente`) REFERENCES `clientes` (`idCliente`) ON DELETE CASCADE;
+  ADD CONSTRAINT `encClientes` FOREIGN KEY (`idCliente`) REFERENCES `clientes` (`idCliente`) ON DELETE CASCADE,
+  ADD CONSTRAINT `metodoPago` FOREIGN KEY (`idMetodoPago`) REFERENCES `metodopago` (`idMetodoPago`);
 
 --
 -- Filtros para la tabla `productos`
