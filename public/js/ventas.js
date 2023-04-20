@@ -84,8 +84,8 @@ const renderItem = () => {
                 <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled required>
             </div>                                    
         </td>
-        <td id="pPrecioVenta${numeroItem}" class="align-middle">$0</td>
-        <td id="pSubtotalItem${numeroItem}" class="align-middle">$0</td>
+        <td class="align-middle"><p id="pPrecioVenta${numeroItem}">$0</p></td>
+        <td class="align-middle"><p id="pSubtotalItem${numeroItem}">$0</p></td>
         <td class="align-middle">
             <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminar">
                 <a class="col-12 btnEliminar mx-auto"></a>
@@ -149,14 +149,16 @@ const actualizarCrearItem = (item, disparador, vector) => {
         }
     }
 
-    console.log(productoItem);
+    document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${productoItem.nombreImagen}`;
+    document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+    document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
+    document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
 
     // //disparador diferente a undefined actualiza item sino lo crea
     // if (item != undefined) {
 
     //     vObjsProductos.forEach((producto) => {
     //         if (disparador.value == producto.idProducto) {
-    //             document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
                 
     //         }
     //     });
