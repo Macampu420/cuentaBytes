@@ -48,4 +48,11 @@ router.post("/actualizarVta:id", (req, res) => {
     objModuloVentas.actualizarVta(req, res);
 
 })
+
+router.get("/listarMetodoPago", (req, res) => {
+
+    objModuloVentas.listarMetodoPago(req, res);
+
+})
+
 module.exports = router;

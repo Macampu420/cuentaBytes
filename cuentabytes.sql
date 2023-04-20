@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-04-2023 a las 14:53:11
+-- Tiempo de generación: 20-04-2023 a las 22:37:05
 -- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.0.25
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -146,6 +146,8 @@ tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso
 FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarMetodoPago` ()   SELECT * FROM metodopago$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()   BEGIN
 SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY idProducto DESC;
 END$$
@@ -155,11 +157,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()   select * fr
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarTipoEgreso` ()   SELECT * FROM tipoegreso$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta` (IN `idVenta_` INT(11))   BEGIN
-SELECT encventas.idVenta, encventas.tituloVenta, encventas.fechaVenta, encventas.metodoPagoVenta, encventas.descuentoVenta, encventas.vrTotalVta, encventas.vrtotalIva, encventas.editado, clientes.idCliente, clientes.nombresCliente, detalleventa.idDetVenta, detalleventa.uniVendidas, detalleventa.precioUnitario, detalleventa.idProducto, productos.nombreProducto, productos.stockProducto, productos.porcentajeIva FROM encventas INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta INNER JOIN productos ON detalleventa.idProducto = productos.idProducto INNER JOIN clientes on clientes.idCliente = encventas.idCliente WHERE encventas.idVenta = idVenta_; 
-end$$
+SELECT encventas.idVenta, encventas.tituloVenta, encventas.fechaVenta, metodopago.metodoPago, metodopago.idMetodoPago, encventas.descuentoVenta, encventas.vrTotalVta, encventas.vrtotalIva, encventas.editado, clientes.idCliente, clientes.nombresCliente, detalleventa.idDetVenta, detalleventa.uniVendidas, detalleventa.precioUnitario, detalleventa.idProducto, productos.nombreProducto, productos.stockProducto, productos.porcentajeIva FROM encventas INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta INNER JOIN productos ON detalleventa.idProducto = productos.idProducto INNER JOIN clientes on clientes.idCliente = encventas.idCliente
+INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
+WHERE encventas.idVenta = idVenta_; 
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVentas` ()   BEGIN
-SELECT idVenta, tituloVenta, fechaVenta, metodoPagoVenta, descuentoVenta, vrTotalVta, nombresCliente, apellidosCliente FROM encventas INNER JOIN clientes ON encventas.idCliente = clientes.idCliente order by idVenta DESC;
+SELECT idVenta, tituloVenta, fechaVenta, metodoPago, descuentoVenta, vrTotalVta, nombresCliente, apellidosCliente FROM encventas 
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente 
+INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
+order by idVenta DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso` ()   BEGIN
@@ -485,14 +492,14 @@ CREATE TABLE `encventas` (
 --
 
 INSERT INTO `encventas` (`idVenta`, `tituloVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPago`, `vrTotalVta`, `vrtotalIva`, `editado`, `idCliente`) VALUES
-(5, '1 botella de gin,  un pilsenon 750,', '2023-04-20 12:38:34', 10000, NULL, 284000, 61440, 1, 9),
-(6, '4 cremas de whiskey', '2023-04-20 12:38:34', 8000, NULL, 160000, 35280, 0, 7),
-(7, 'Dos aguila lata', '2023-04-20 12:38:34', 0, NULL, 7000, 1470, 0, 4),
-(8, '1 crema de whiskey', '2023-04-20 12:38:34', 0, NULL, 42000, 8820, 0, 8),
-(9, 'Un vino vientos del sur', '2023-04-20 12:38:34', 0, NULL, 36000, 7560, 0, 11),
-(10, '10 aguila lata y 7 aguilones litro', '2023-04-20 12:38:34', 7000, NULL, 70000, 13650, 0, 10),
-(11, '2 litros de ron caldas', '2023-04-20 12:38:34', 8500, NULL, 91500, 21000, 0, 6),
-(12, '16 aguilas en lata', '2023-04-20 12:38:34', 0, NULL, 56000, 11760, 0, 7);
+(5, '1 botella de gin,  un pilsenon 750,', '2023-04-20 19:53:41', 10000, 1, 284000, 61440, 1, 9),
+(6, '4 cremas de whiskey', '2023-04-20 19:53:41', 8000, 1, 160000, 35280, 0, 7),
+(7, 'Dos aguila lata', '2023-04-20 19:53:41', 0, 1, 7000, 1470, 0, 4),
+(8, '1 crema de whiskey', '2023-04-20 19:53:41', 0, 1, 42000, 8820, 0, 8),
+(9, 'Un vino vientos del sur', '2023-04-20 19:53:41', 0, 1, 36000, 7560, 0, 11),
+(10, '10 aguila lata y 7 aguilones litro', '2023-04-20 19:53:41', 7000, 1, 70000, 13650, 0, 10),
+(11, '2 litros de ron caldas', '2023-04-20 19:53:41', 8500, 1, 91500, 21000, 0, 6),
+(12, '16 aguilas en lata', '2023-04-20 19:53:41', 0, 1, 56000, 11760, 0, 7);
 
 -- --------------------------------------------------------
 
