@@ -46,23 +46,22 @@ const traerClientes = async () => {
 
 const vrTotalRegistar = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
-    let dto = document.getElementById("inpDto").value;
+    let dto = document.getElementById("inpDescuento").value;
     let vrTot = 0;
-    let vrIva = 0
 
     //por cada item de la venta calcula el valor de las unidVend * precioUnit
     //y el valor del iva unidVend * ((porcentajeIva / 100) * precioVta)
     vItems.forEach(item => {
 
-        vrTot += item.unidVend * item.precioVta;
-        item.porcentajeIva <= 0 ? vrIva += 0 : vrIva += item.unidVend * ((item.porcentajeIva / 100) * item.precioVta);
+        vrTot += item.unidadesVendidas * item.precioUnitario;
 
     });
 
     vrTot -= dto;
 
-    document.getElementById("inpVrIva").value = conversorColombia.format(vrIva).toString();
-    document.getElementById("inpVrTotal").value = conversorColombia.format(vrTot).toString();
+    console.log(vrTot);
+
+    document.getElementById("pValorTotal").innerHTML = "$"+conversorColombia.format(vrTot);
 }
 
 const renderItem = () => {
@@ -70,7 +69,7 @@ const renderItem = () => {
 
     document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
     <tr id="item${numeroItem}" class="">
-        <td><img id="imgProductoItem${numeroItem}" src="./../../public/img/placeholderProducto.jpg" alt="Producto 1" class="border border-2 img-size"></td>
+        <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/placeholderProducto.jpg" alt="Producto 1"></td>
         <td class="align-middle">
             <div class="mx-auto">
                 <select id="slcProducto${numeroItem}" class="" name="slcProductos" required>
@@ -84,8 +83,8 @@ const renderItem = () => {
                 <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled required>
             </div>                                    
         </td>
-        <td class="align-middle"><p id="pPrecioVenta${numeroItem}">$0</p></td>
-        <td class="align-middle"><p id="pSubtotalItem${numeroItem}">$0</p></td>
+        <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$0</p></td>
+        <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$0</p></td>
         <td class="align-middle">
             <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminar">
                 <a class="col-12 btnEliminar mx-auto"></a>
@@ -93,28 +92,6 @@ const renderItem = () => {
         </td>
     </tr>
     `)
-
-    //pone todos los productos que se traigan en el select del item creado
-    // vObjsProductos.forEach(element => {
-    //     document.getElementById("slcProducto" + numeroItem).insertAdjacentHTML("beforeend", `
-    //             <option value="${element.idProducto}">${element.nombreProducto}</option>
-    //     `);
-    // });
-
-    // document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
-    //     <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-    //     <div class="containerBtn">
-    //       <div id="dlt${numeroItem}" class="btnEliminar"></div>
-    //     </div>
-    //         <select id="slc${numeroItem}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-    //             <option selected>Selecciona el producto</option>
-    //         </select>
-    //         <div id="slidecontainer${numeroItem}" class="">
-    //             <input disabled type="range" min="1" max="100" value="50" class="slc${numeroItem}">
-    //             <p id="pValor"></p>
-    //         </div>
-    //     </div>
-    //     `);
 
     //pone todos los productos que se traigan en el select del item creado
     for (let i = 0; i < vObjsProductos.length; i++) {
@@ -151,31 +128,11 @@ const actualizarCrearItem = (item, disparador, vector) => {
 
     document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${productoItem.nombreImagen}`;
     document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+    document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.stockProducto);
     document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
     document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
-
-    // //disparador diferente a undefined actualiza item sino lo crea
-    // if (item != undefined) {
-
-    //     vObjsProductos.forEach((producto) => {
-    //         if (disparador.value == producto.idProducto) {
-                
-    //         }
-    //     });
-
-    // } else {
-    //     //en el vector de productos busca el que coincida con el seleccionado
-    //     //y setea el item segun los datos
-    //     vObjsProductos.forEach((producto) => {
-    //         if (disparador.value == producto.idProducto) {
-    //             document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
-                
-    //         }
-    //     })
-    //     document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
-    // }
-
-    disparador.nextElementSibling.innerHTML = `Actualmente tienes:`;
+    disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.stockProducto} unidades.`;
+   
     vrTotalRegistar(vector);
 
 }
@@ -393,7 +350,6 @@ const modalRegistrar = () => {
 
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('btnFactura').classList.add("d-none");
-    document.getElementById('divAcciones').classList.add("d-none");
     document.getElementById('tblItemsVta').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
@@ -402,9 +358,8 @@ const modalRegistrar = () => {
     document.getElementById('slcClientes').value = 0;
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('inpVrTotal').value = 0;
-    document.getElementById('inpDto').value = 0;
-    document.getElementById('inpVrIva').value = 0;
-
+    document.getElementById('inpDescuento').value = 0;
+    document.getElementById('pValorTotal').innerHTML = "$0";
 }
 
 const actualizarVenta = async (event) => {

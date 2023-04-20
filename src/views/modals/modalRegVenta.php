@@ -76,14 +76,16 @@
                             <tr>
                                 <td colspan="4" class="text-end col-5"><strong>Descuento:</strong></td>
                                 <td colspan="3" class="col-7">
-                                <div class="col-12">
-                                    <input id="inpCantidad" class="form-control w-75 mb-2" type="number" value="0">
-                                </div>                                    
+                                    <div class="col-12">
+                                        <input id="inpDescuento" class="form-control w-75 mb-2" type="number" value="0">
+                                    </div>                                    
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="text-end col-4"><strong>Total:</strong></td>
-                                <td colspan="2">$95</td>
+                                <td colspan="4" class="text-end col-4 align-middle">
+                                    <p><strong>Total:</strong></p>
+                                </td>
+                                <td colspan="2"><p id="pValorTotal">$0</p></td>
                             </tr>                           
                         </tfoot>
 
