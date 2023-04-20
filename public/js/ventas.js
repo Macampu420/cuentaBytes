@@ -129,40 +129,49 @@ const renderItem = () => {
 const actualizarCrearItem = (item, disparador, vector) => {
     
     let nroItemDisparador = parseInt(disparador.id.slice(-1));
+    let productoItem = vObjsProductos.find(producto => producto.idProducto == disparador.value);
 
-    //disparador diferente a undefined actualiza item sino lo crea
-    if (item != undefined) {
-
-        vObjsProductos.forEach((producto) => {
-            if (disparador.value == producto.idProducto) {
-                document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
-                vector[vector.indexOf(item)] = {
-                    idItem: nroItemDisparador,
-                    idProducto: producto.idProducto,
-                    precioUnitario: producto.precioVenta,
-                    unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
-                    nuevoStock: producto.stockProducto
-                }
-            }
-        });
-
+    if(item == undefined){
+        vector.push({
+            idItem: nroItemDisparador,
+            idProducto: productoItem.idProducto,
+            precioUnitario: productoItem.precioVenta,
+            unidadesVendidas: 1,
+            nuevoStock: productoItem.stockProducto - 1
+        }) 
     } else {
-        //en el vector de productos busca el que coincida con el seleccionado
-        //y setea el item segun los datos
-        vObjsProductos.forEach((producto) => {
-            if (disparador.value == producto.idProducto) {
-                document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
-                vector.push({
-                    idItem: nroItemDisparador,
-                    idProducto: producto.idProducto,
-                    precioUnitario: producto.precioVenta,
-                    unidadesVendidas: 1,
-                    nuevoStock: producto.stockProducto - 1
-                })
-            }
-        })
-        document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+        vector[vector.indexOf(item)] = {
+            idItem: nroItemDisparador,
+            idProducto: productoItem.idProducto,
+            precioUnitario: productoItem.precioVenta,
+            unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
+            nuevoStock: productoItem.stockProducto
+        }
     }
+
+    console.log(productoItem);
+
+    // //disparador diferente a undefined actualiza item sino lo crea
+    // if (item != undefined) {
+
+    //     vObjsProductos.forEach((producto) => {
+    //         if (disparador.value == producto.idProducto) {
+    //             document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
+                
+    //         }
+    //     });
+
+    // } else {
+    //     //en el vector de productos busca el que coincida con el seleccionado
+    //     //y setea el item segun los datos
+    //     vObjsProductos.forEach((producto) => {
+    //         if (disparador.value == producto.idProducto) {
+    //             document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
+                
+    //         }
+    //     })
+    //     document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+    // }
 
     disparador.nextElementSibling.innerHTML = `Actualmente tienes:`;
     vrTotalRegistar(vector);

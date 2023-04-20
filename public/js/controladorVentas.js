@@ -52,8 +52,6 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
             actualizarCrearItem(item, event.target, vItemsVta);
         }
 
-        console.log(disparador.nextElementSibling);
-
         disparador.nextElementSibling.classList.remove("d-none");
     }   
 
