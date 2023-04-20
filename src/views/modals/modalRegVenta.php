@@ -55,16 +55,16 @@
                     </div>
 
                     <div class="div h-75 overflow-auto">
-                        <table class="table table-secondary table-striped">
+                        <table class="table rounded-3 border border-dark border-3 rounded">
 
-                        <thead>
+                        <thead class="bg-light">
                             <tr>
-                                <th>imagen</th>
-                                <th>Producto</th>
+                                <th class="text-center">imagen</th>
+                                <th class="text-center">Producto</th>
                                 <th class="text-center">Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Subtotal</th>
-                                <th>Eliminar</th>
+                                <th class="text-center">Precio Unitario</th>
+                                <th class="text-center">Subtotal</th>
+                                <th class="text-center">Eliminar</th>
                             </tr>
                         </thead>
 
@@ -72,18 +72,21 @@
 
                         </tbody>
 
-                        <tfoot class="table-secondary">
+                        <tfoot class="table bg-light">
                             <tr>
-                                <td></td>
-                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                <td>$95</td>
+                                <td colspan="4" class="text-end col-5"><strong>Descuento:</strong></td>
+                                <td colspan="3" class="col-7">
+                                <div class="col-12">
+                                    <input id="inpCantidad" class="form-control w-75 mb-2" type="number" value="0">
+                                </div>                                    
+                                </td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td colspan="4" class="text-end"><strong>Descuento:</strong></td>
-                                <td>$5</td>
-                            </tr>
+                                <td colspan="4" class="text-end col-4"><strong>Total:</strong></td>
+                                <td colspan="2">$95</td>
+                            </tr>                           
                         </tfoot>
+
                         </table>
                     </div>
 

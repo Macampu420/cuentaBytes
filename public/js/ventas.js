@@ -44,45 +44,6 @@ const traerClientes = async () => {
         .catch(err => console.log(err));
 }
 
-const agregarItem = (disparador_, vector) => {
-    //agrega un item de la vta actual al vector
-
-    let sliderItem = document.querySelector('.' + disparador_.id);
-
-    //en el vector de productos busca el que coincida con el seleccionado
-    //y setea el item segun los datos
-    vObjsProductos.forEach((producto) => {
-        if (disparador_.value == producto.idProducto) {
-
-            if (divModal.getAttribute('editar') == "false") {
-                vector.push({
-                    idItem: disparador_.parentElement.id,
-                    idProducto: producto.idProducto,
-                    precioVta: producto.precioVenta,
-                    unidVend: parseInt(sliderItem.value),
-                    porcentajeIva: producto.porcentajeIva,
-                    nuevoStock: producto.stockProducto - 1
-
-                })
-            } else {
-
-                vector.push({
-                    idItem: disparador_.parentElement.id,
-                    idProducto: producto.idProducto,
-                    precioUnitario: producto.precioVenta,
-                    uniVendidas: parseInt(sliderItem.value),
-                    porcentajeIva: producto.porcentajeIva,
-                    nuevoStock: producto.stockProducto - 1
-
-
-                })
-
-            }
-
-        }
-    })
-};
-
 const vrTotalRegistar = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
     let dto = document.getElementById("inpDto").value;
@@ -104,47 +65,27 @@ const vrTotalRegistar = (vItems) => {
     document.getElementById("inpVrTotal").value = conversorColombia.format(vrTot).toString();
 }
 
-const vrTotalEditar = (vItems) => {
-    //calcula el valor total de la venta y del iva cuando se va a editar
-    let dto = document.getElementById("inpDto").value;
-    let vrTot = 0;
-    let vrIva = 0
-
-    //por cada item de la venta calcula el valor de las unidVend * precioUnit
-    //y el valor del iva unidVend * ((porcentajeIva / 100) * precioVta)
-    vItems.forEach(item => {
-
-        vrTot += (item.uniVendidas * item.precioUnitario);
-        item.porcentajeIva <= 0 ? vrIva += 0 : vrIva += item.uniVendidas * ((item.porcentajeIva / 100) * item.precioUnitario);
-
-    });
-
-    vrTot -= dto;
-
-    document.getElementById("inpVrIva").value = conversorColombia.format(vrIva).toString();
-    document.getElementById("inpVrTotal").value = conversorColombia.format(vrTot);
-}
-
 const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
     document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
-    <tr id="item${numeroItem}">
-        <td><img src="./../../public/img/placeholderProducto.jpg" alt="Producto 1" class="border border-2 img-size"></td>
+    <tr id="item${numeroItem}" class="">
+        <td><img id="imgProductoItem${numeroItem}" src="./../../public/img/placeholderProducto.jpg" alt="Producto 1" class="border border-2 img-size"></td>
         <td class="align-middle">
-            <div class="row mx-auto">
-                <select id="slcProductos" class="col-12" name="slcProductos">
-                    <option value="" >Producto:</option>
+            <div class="mx-auto">
+                <select id="slcProducto${numeroItem}" class="" name="slcProductos" required>
+                    <option value="">Producto:</option>
                 </select>
+                <p class="text-center mt-2 d-none"></p>
             </div>
         </td>
         <td class="align-middle">
             <div class="row">
-                <input id="inpCantidad" class="form-control w-50 mx-auto mb-2" type="number" value="2">
+                <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled required>
             </div>                                    
         </td>
-        <td class="align-middle">$1.000.000</td>
-        <td class="align-middle">$1.000.000</td>
+        <td id="pPrecioVenta${numeroItem}" class="align-middle">$0</td>
+        <td id="pSubtotalItem${numeroItem}" class="align-middle">$0</td>
         <td class="align-middle">
             <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminar">
                 <a class="col-12 btnEliminar mx-auto"></a>
@@ -152,6 +93,13 @@ const renderItem = () => {
         </td>
     </tr>
     `)
+
+    //pone todos los productos que se traigan en el select del item creado
+    // vObjsProductos.forEach(element => {
+    //     document.getElementById("slcProducto" + numeroItem).insertAdjacentHTML("beforeend", `
+    //             <option value="${element.idProducto}">${element.nombreProducto}</option>
+    //     `);
+    // });
 
     // document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
     //     <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
@@ -168,53 +116,56 @@ const renderItem = () => {
     //     </div>
     //     `);
 
-    // //pone todos los productos que se traigan en el select del item creado
-    // for (let i = 0; i < vObjsProductos.length; i++) {
-    //     document.getElementById("slcProductos" + numeroItem).insertAdjacentHTML("beforeend", `
-    //             <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
-    //     `);
-    // }
+    //pone todos los productos que se traigan en el select del item creado
+    for (let i = 0; i < vObjsProductos.length; i++) {
+        document.getElementById("slcProducto" + numeroItem).insertAdjacentHTML("beforeend", `
+                <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
+        `);
+    }
 
     numeroItem++;
 }
 
 const actualizarCrearItem = (item, disparador, vector) => {
+    
+    let nroItemDisparador = parseInt(disparador.id.slice(-1));
 
-    //si el disparador existe lo actualiza, sino lo crea
+    //disparador diferente a undefined actualiza item sino lo crea
     if (item != undefined) {
 
         vObjsProductos.forEach((producto) => {
             if (disparador.value == producto.idProducto) {
+                document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
                 vector[vector.indexOf(item)] = {
-                    idItem: disparador.parentElement.id,
+                    idItem: nroItemDisparador,
                     idProducto: producto.idProducto,
-                    precioVta: producto.precioVenta,
-                    unidVend: parseInt(slider.value),
-                    porcentajeIva: producto.porcentajeIva,
+                    precioUnitario: producto.precioVenta,
+                    unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
                     nuevoStock: producto.stockProducto
                 }
             }
         });
 
-        divModal.getAttribute("editar") == "true" ? vrTotalEditar(vector) : vrTotalRegistar(vector);
-
     } else {
-        agregarItem(disparador, vector);
-        divModal.getAttribute("editar") == "true" ? vrTotalEditar(vector) : vrTotalRegistar(vector);
+        //en el vector de productos busca el que coincida con el seleccionado
+        //y setea el item segun los datos
+        vObjsProductos.forEach((producto) => {
+            if (disparador.value == producto.idProducto) {
+                document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${producto.nombreImagen}`;
+                vector.push({
+                    idItem: nroItemDisparador,
+                    idProducto: producto.idProducto,
+                    precioUnitario: producto.precioVenta,
+                    unidadesVendidas: 1,
+                    nuevoStock: producto.stockProducto - 1
+                })
+            }
+        })
+        document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
     }
 
-}
-
-const habilitarSlider = (slider, stockActual) => {
-    //habilita el input range
-    slider.removeAttribute("disabled");
-    //setea el valor maximo(stock actual del prod)
-    slider.setAttribute("max", stockActual);
-    slider.setAttribute("value", 1);
-    //genera el nuevo stock del producto
-    nuevoStock = (slider.max - slider.value);
-    //imprime las unidades actuales  y el stock restante
-    slider.nextElementSibling.innerHTML = (slider.value + " unidades. " + nuevoStock + " restantes");
+    disparador.nextElementSibling.innerHTML = `Actualmente tienes:`;
+    vrTotalRegistar(vector);
 
 }
 
@@ -420,92 +371,6 @@ const configModal = (modal, event) => {
     } else {
         modalRegistrar();
     }
-}
-
-const modalEditar = async event => {
-
-    //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
-    document.getElementById('rowItems').innerHTML = "";
-    //muestra las acciones para poder ejecutarlas
-    document.getElementById('divAcciones').classList.remove("d-none");
-    //desabilita el btn guardar que se habilitara cuando el usuario clickee editar
-    document.getElementById('btnGuardar').disabled = true;
-    //cambia el valor del btn actualizar
-    document.getElementById('btnGuardar').innerHTML = "Actualizar";
-    document.getElementById('btnFactura').classList.remove("d-none");
-    document.getElementById('inpFecha').setAttribute('type', 'date');
-
-    let idVenta = event.target.getAttribute("idventa");
-
-    document.getElementById("btnGuardar").setAttribute("idVenta", idVenta);
-    document.querySelector("form").setAttribute("idVenta", idVenta);
-
-    //trae la venta (enc y dets) para renderizarlos
-    await fetch(`http://localhost:3000/editVenta${idVenta}`)
-        .then(res => res.json())
-        .then(data => {
-            vItemsEditar = data
-        })
-        .catch(e => console.log(e));
-
-    //da un formato legible a la fecha de la venta
-    vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
-
-    if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
-
-    //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
-    document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
-    document.getElementById('inpMetPago').value = vItemsEditar[0].metodoPagoVenta;
-    document.getElementById('inpTitulo').value = vItemsEditar[0].tituloVenta;
-    document.getElementById('slcClientes').value = vItemsEditar[0].idCliente;
-    document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
-    document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
-    document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
-    document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
-
-
-    //renderiza todos los detalles traidos de la bd para poderlos editar
-    vItemsEditar.forEach(element => {
-        document.getElementById('rowItems').insertAdjacentHTML('beforeend', `
-        <div id="${element.idDetVenta}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-            <div class="containerBtn">
-                <div id="dlt${element.idDetVenta}" class="btnEliminar"></div>
-            </div>
-                <select disabled id="slc${element.idDetVenta}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-                    <option selected>Selecciona el producto</option>
-                </select>
-                <div id="slidecontainer${element.idDetVenta}" class="">
-                    <input disabled type="range" min="1" max="100" value="${element.uniVendidas}" class="slc${element.idDetVenta}" id="slider${element.idDetVenta}">
-                    <p id="pValor"></p>
-                </div>
-        </div>`)
-
-        //pone todos los productos que se traigan en el select del item creado
-        for (let i = 0; i < vObjsProductos.length; i++) {
-            document.getElementById("slc" + element.idDetVenta).insertAdjacentHTML("beforeend", `
-                <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
-            `);
-        }
-
-        slider = document.getElementById("slider" + element.idDetVenta);
-
-
-        //si el stock actual es mayor a 0 habilita el slider y genera el texto con el stock restante del
-        //sino lo deja deshabilitado e inserta un texto mostrando que no hay stock
-        if (element.stockProducto > 0) {
-            document.getElementById("slc" + element.idDetVenta).value = element.idProducto;
-            slider.disabled = false;
-            slider.max = element.stockProducto + element.uniVendidas;
-            slider.nextElementSibling.innerHTML = (slider.value + " unidades. " + element.stockProducto + " restantes");
-        } else {
-            slider.nextElementSibling.innerHTML = "No hay unidades disponibles";
-        }
-
-    });
-
-    document.getElementById('btnEliminar').setAttribute("idVenta", vItemsEditar[0].idVenta)
-
-
 }
 
 const modalRegistrar = () => {
