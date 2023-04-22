@@ -137,6 +137,18 @@ class ModuloVentas {
 
     }
 
+    listarMetodoPago = async (req, res) => {
+        await pool.query("CALL 	listarMetodoPago()", (err,rows) =>{
+            if (err) {
+                console.log(err);
+                res.write(err);
+                res.end();
+            } else {
+                res.send(rows[0]);
+            }
+        })
+    }
+
     listarProductos = async (req, res) => {
 
         await pool.query("CALL listarProductos()", (err, rows) => {
@@ -197,6 +209,7 @@ class ModuloVentas {
             })
 
     }
+    
 }
 
 module.exports = ModuloVentas;
