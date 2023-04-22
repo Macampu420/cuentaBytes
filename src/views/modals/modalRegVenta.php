@@ -3,25 +3,12 @@
         <div class="modal-content text-dark">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
             <form class="">
+
                 <div class="row">
-
-                    <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-
-                    <div id="divAcciones" class="row col-11 d-flex justify-content-end">
-                        <div class="btnAccion mx-4 row p-1 bg-success" id="btnEditar">
-                            <a class="col-12 btnEditar mx-auto"></a>
-                        </div>
-                        <div class="btnAccion row p-1 bg-danger" id="btnEliminar">
-                            <a class="col-12 btnEliminar mx-auto"></a>
-                        </div>
-                    </div>
-                </div>
-            
-                
+                    <button type="button" class="btn-close m-3 col-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>          
 
                 <h1 class="text-center mt-3 questrial">Registrar venta</h1>
-
                 
                     <div class="row p-2 mb-5">
                         <div class="col-6 mx-auto col-lg-3">
@@ -54,7 +41,7 @@
                             Añadir item</h3>
                     </div>
 
-                    <div class="div h-75 overflow-auto">
+                    <div class="div">
                         <table class="table rounded-3 border border-dark border-3 rounded">
 
                         <thead class="bg-light">
@@ -68,7 +55,7 @@
                             </tr>
                         </thead>
 
-                        <tbody id="tblItemsVta">
+                        <tbody id="tblItemsVta" class="overflow-scroll">
 
                         </tbody>
 
@@ -216,4 +203,8 @@
 .img-size {
         height: 5rem;
 }
+
+/* #tblItemsVta{
+    height: 18.75rem;
+} */
 </style>

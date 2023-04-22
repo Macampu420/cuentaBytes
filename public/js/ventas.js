@@ -50,12 +50,7 @@ const vrTotalRegistar = (vItems) => {
     let vrTot = 0;
 
     //por cada item de la venta calcula el valor de las unidVend * precioUnit
-    //y el valor del iva unidVend * ((porcentajeIva / 100) * precioVta)
-    vItems.forEach(item => {
-
-        vrTot += item.unidadesVendidas * item.precioUnitario;
-
-    });
+    vItems.forEach(item => vrTot += item.unidadesVendidas * item.precioUnitario);
 
     vrTot -= dto;
 
@@ -68,7 +63,7 @@ const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
     document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
-    <tr id="item${numeroItem}" class="">
+    <tr id="item${numeroItem}" class="h-25">
         <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/placeholderProducto.jpg" alt="Producto 1"></td>
         <td class="align-middle">
             <div class="mx-auto">
@@ -126,13 +121,23 @@ const actualizarCrearItem = (item, disparador, vector) => {
         }
     }
 
+    console.log(productoItem);
+
     document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${productoItem.nombreImagen}`;
-    document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
-    document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.stockProducto);
     document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
     document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
-    disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.stockProducto} unidades.`;
-   
+
+    if(productoItem.stockProducto == 0){
+        disparador.nextElementSibling.innerHTML = `No hay unidades disponibles.`;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute("readonly", "");
+        document.getElementById(`inpCantidad${nroItemDisparador}`).value = 0;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("disabled");
+    } else {
+        document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("readonly");
+        document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.stockProducto);
+        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.stockProducto} unidades.`;    
+    }   
     vrTotalRegistar(vector);
 
 }
