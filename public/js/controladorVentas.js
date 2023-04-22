@@ -4,6 +4,7 @@ const divModal = document.getElementById('modalVtas');
 traerClientes();
 traerProductos();
 renderVentas();
+traerMetodosPago();
 
 document.getElementById('btnAnadirVta').addEventListener('click', event => {
 

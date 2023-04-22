@@ -29,9 +29,11 @@
                             <input disabled type="date" class="form-control" id="inpFecha" aria-describedby="basic-addon3">
                         </div>
                         <div class="col-6 mx-auto col-lg-3">
-                            <label for="inpFecha" class="form-label quicksand">Metodo de pago:</label>
-                            <input required type="text" class="form-control" id="inpMetPago" aria-describedby="basic-addon3">
-                        </div>
+                            <label for="slcMetodoPago" class="form-label quicksand">Metodo de pago:</label>
+                            <select required id="slcMetodoPago" class="form-select" aria-label="Default select example">
+                                <option selected disabled>Metodo de pago </option>
+                            </select> 
+                       </div>
                         <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-3">
                             <label for="inpFecha" class="form-label quicksand">Concepto:</label>
                             <input required type="text" class="form-control" id="inpTitulo" aria-describedby="basic-addon3">
@@ -40,7 +42,7 @@
                             <label for="inpFecha" class="form-label quicksand">Cliente:</label>
                             <select required id="slcClientes" class="form-select" aria-label="Default select example">
 
-                                <option value=""> Selecciona el cliente </option>
+                                <option selected disabled>Cliente </option>
 
                             </select>
                         </div>
@@ -119,95 +121,95 @@
 </div>
 
 <style>
-* {
-    box-sizing: border-box !important;
-    margin: 0; 
-    font-family: 'Questrial', sans-serif;
-}
+    * {
+        box-sizing: border-box !important;
+        margin: 0; 
+        font-family: 'Questrial', sans-serif;
+    }
 
-.item{
-    background: #E5ECEC;
-}
+    .item{
+        background: #E5ECEC;
+    }
 
-.modal-content{
-    background: #A0D2D8;
-}
+    .modal-content{
+        background: #A0D2D8;
+    }
 
-.img {
-    width: 70px;
-    height: 50px;
-}
+    .img {
+        width: 70px;
+        height: 50px;
+    }
 
-.quicksand{
-    font-family: 'Quicksand', sans-serif;
-}
+    .quicksand{
+        font-family: 'Quicksand', sans-serif;
+    }
 
-#contItems{
-    height: 15.625rem;
-}
+    #contItems{
+        height: 15.625rem;
+    }
 
-.inpVta{
-    width: 6.5rem;
-}
+    .inpVta{
+        width: 6.5rem;
+    }
 
-#btnAnadir{
-    cursor: pointer;
-}
+    #btnAnadir{
+        cursor: pointer;
+    }
 
-.containerBtn{
-    height: 25px;
-    width: 100%;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-}
+    .containerBtn{
+        height: 25px;
+        width: 100%;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+    }
 
-.btnEliminar{
-    background-image: url(../../public/img/trashIcon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    border: none;
-    color: #fff;
-    font-size: 30px;
-    width: 20px;
-    height: 100%;
-    cursor: pointer;
-}
+    .btnEliminar{
+        background-image: url(../../public/img/trashIcon.svg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+        border: none;
+        color: #fff;
+        font-size: 30px;
+        width: 20px;
+        height: 100%;
+        cursor: pointer;
+    }
 
-.btnAccion {
+    .btnAccion {
 
-    width: 3.4rem;
-    height: 3.4rem;
-    border: 2px solid #000;
-    border-radius: 15px;
+        width: 3.4rem;
+        height: 3.4rem;
+        border: 2px solid #000;
+        border-radius: 15px;
 
-}
+    }
 
-.btnEditar{
-    background-image: url(../../public/img/edit.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    border: none;
-    color: #fff;
-    font-size: 30px;
-    cursor: pointer;
-}
+    .btnEditar{
+        background-image: url(../../public/img/edit.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+        border: none;
+        color: #fff;
+        font-size: 30px;
+        cursor: pointer;
+    }
 
-.btnEliminar{
-    background-image: url(../../public/img/trashIcon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain;
-    border: none;
-    color: #fff;
-    font-size: 30px;
-    cursor: pointer;
-}
+    .btnEliminar{
+        background-image: url(../../public/img/trashIcon.svg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+        border: none;
+        color: #fff;
+        font-size: 30px;
+        cursor: pointer;
+    }
 
-/* Define la altura de la imagen en "rem" */
-.img-size {
-        height: 5rem;
-}
+    /* Define la altura de la imagen en "rem" */
+    .img-size {
+            height: 5rem;
+    }
 </style>

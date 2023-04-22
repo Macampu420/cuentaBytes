@@ -8,8 +8,30 @@ let nuevoStock = 0;
 let vObjsEncVentas = [];
 let vItemsEditar = [];
 let vItemsElim = [];
+let vObjsMetodosPago;
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
+
+const traerMetodosPago = async () => {
+
+    try {
+        let resMetodosPago = await fetch('http://localhost:3000/listarMetodoPago');
+        vObjsMetodosPago = await resMetodosPago.json();    
+    } catch (error) {
+        console.log(error);
+    }
+
+    vObjsMetodosPago.forEach(metodoPago => {
+        document.getElementById("slcMetodoPago").insertAdjacentHTML('beforeend', `
+        
+            <option value="${metodoPago.idMetodoPago}">${metodoPago.metodoPago}</option>
+
+
+        `);
+
+    });
+
+}
 
 const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
@@ -497,9 +519,7 @@ const modalRegistrar = () => {
     // document.getElementById('rowItems').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
-    document.getElementById('inpMetPago').value = "";
     document.getElementById('inpTitulo').value = "";
-    document.getElementById('slcClientes').value = 0;
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDto').value = 0;
