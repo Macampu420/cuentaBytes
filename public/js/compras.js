@@ -230,7 +230,9 @@ let creaVitemsActualizar = (compra) => {
             idItem: ('item'+compra.indexOf(item)),
             idProducto: parseInt(idProducto),
             porcentajeIva: parseInt(producto.porcentajeIva),
-            costoProducto: parseInt(producto.costoProducto)
+            costoProducto: parseInt(producto.costoProducto),
+            stockProducto: parseInt(producto.stockProducto),
+            idDetItem: (compra.indexOf(item))
         })
     });
 }
@@ -254,7 +256,7 @@ let crearItemReg = (vector, disparador, numeroItem) => {
         idProducto: parseInt(producto.idProducto),
         costoProducto: parseInt(document.querySelector('#inpPrecioUnitslc' + numeroItem).value),
         cantidadCompra: parseInt(document.querySelector('#inpunidCompslc' + numeroItem).value),
-        porcentajeIva: parseInt(producto.porcentajeIva)
+        porcentajeIva: parseInt(producto.porcentajeIva),
     })
 
     vrTotal(vector);
@@ -330,6 +332,20 @@ let mostrarNuevoStock = disparador => {
     //valida que el usuario haya ingresado un # de unidades adquiridas y calcula el valor del nuevostock
     let nuevoStock = (disparador.value.length == 0 ? 0 : parseInt(disparador.value)) + parseInt(leyendaItem.getAttribute('stockactual'));
     leyendaItem.innerHTML = `Actualmente tienes ${leyendaItem.getAttribute('stockactual')}. Quedarás con ${nuevoStock}`;
+
+}
+let mostrarNuevoStockEditar = (disparador, vector) => {
+    let i = vector[0].idDetItem;
+
+    console.log(vector);
+    console.log(i);
+
+    //busca la leyenda que pertenece al item en base al id del input disparador del evento
+    let leyendaItem = document.querySelector("#pslc" + disparador.id[disparador.id.length - 1]);
+
+    //valida que el usuario haya ingresado un # de unidades adquiridas y calcula el valor del nuevostock
+    let nuevoStock = (disparador.value.length == 0 ? 0 : parseInt(disparador.value)) + vector[0].stockProducto;
+    leyendaItem.innerHTML = `Actualmente tienes ${vector[0].stockProducto}. Quedarás con ${nuevoStock}`;
 }
 
 let enviarRegCompra = async () => {
@@ -394,17 +410,3 @@ let enviarEditCompra = async () => {
         });
 }
 
-// let modalEditar = async event => {
-//     let idCompra = event.target.getAttribute("idcompra");
-
-//     //trae la venta (enc y dets) para renderizarlos
-//     await fetch(`http://localhost:3000/editCompra${idCompra}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             vItemsEditar = data
-//         })
-//         .catch(e => console.log(e));
-
-//     console.log(vItemsEditar);
-
-// }
