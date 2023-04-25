@@ -9,11 +9,7 @@ traerMetodosPago();
 document.getElementById('btnAnadirVta').addEventListener('click', event => {
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-
-        divModal.setAttribute('editar', false);
-
-        configModal(divModal, event);
-
+        iniciarModalRegistrar(divModal, event);
         renderItem();
         modalBootstrap.show();
     }
@@ -46,17 +42,27 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
 
 });
 
-document.getElementById("inpDescuento").addEventListener("input", (event) => vrTotalRegistar(vItemsVta));
-
 document.getElementById("tblItemsVta").addEventListener("input", (event) => {
     if(event.target.id.includes("inpCantidad")){
-
         actualizarUnidadesVendidas(event.target, vItemsVta);
     }
 
     vrTotalRegistar(vItemsVta);
 
-})
+});
+
+document.getElementById("tblItemsVta").addEventListener("click", (event) => {
+
+    console.log(event.target.id);
+
+    if(event.target.id.includes("btnEliminarItem")){
+        console.log("eliminame");        
+        eliminarItem(event.target, vItemsVta);
+    };
+
+});
+
+document.getElementById("inpDescuento").addEventListener("input", (event) => vrTotalRegistar(vItemsVta));
 
 document.querySelector("form").addEventListener("submit", (event) => {
 
@@ -70,19 +76,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
     if(confirmacion) actualizarVenta(event);
    }
 });
-
-document.getElementById("filaVentas").addEventListener("click", async event => {
-
-    if (event.target.hasAttribute("btnAcciones")) {
-
-        divModal.setAttribute('editar', true);
-
-        configModal(divModal, event);
-
-        modalBootstrap.show();
-
-    }
-})
 
 document.getElementById("buscadorVtas").addEventListener("change", () => {
 

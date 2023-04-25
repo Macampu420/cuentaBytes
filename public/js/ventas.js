@@ -52,11 +52,7 @@ const traerClientes = async () => {
         .then(data => {
 
             //cada item se pone en el vector correspondiente para poderse usar posteriormente en el resto del programa
-            data.forEach(element => {
-
-                vObjsCliente.push(element);
-
-            })
+            data.forEach(element => vObjsCliente.push(element));
 
             //se renderizan todos los clientes
             vObjsCliente.forEach(cliente => {
@@ -65,7 +61,6 @@ const traerClientes = async () => {
         })
         .catch(err => console.log(err));
 }
-
 
 
 const vrTotalRegistar = (vItems) => {
@@ -103,7 +98,7 @@ const renderItem = () => {
         <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$0</p></td>
         <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$0</p></td>
         <td class="align-middle">
-            <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminar">
+            <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminarItem${numeroItem}">
                 <a class="col-12 btnEliminar mx-auto"></a>
             </div>  
         </td>
@@ -172,54 +167,6 @@ const actualizarUnidadesVendidas = (disparador, vector) => {
 
 }
 
-const renderNuevoStock = (disparador, vector_) => {
-    //genera el nuevo stock del producto
-    nuevoStock = (disparador.max - disparador.value);
-    //imprime las unidades actuales  y el stock restante
-    disparador.nextElementSibling.innerHTML = (disparador.value + " unidades. " + nuevoStock + " restantes");
-
-    let item = vector_.find(
-        //busca en los elementos de la venta actual uno que coincida con el item modificado
-        //si no existe se define como undefined
-        element => element.idItem || element.idDetVenta == disparador.parentElement.parentElement.id
-    );
-
-    vector_[vector_.indexOf(item)].nuevoStock = nuevoStock;
-}
-
-const actualizarUnidVend = (disparador, vector_) => {
-
-    if (divModal.getAttribute("editar") == "true") {
-        let item = vector_.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem || element.idDetVenta == parseInt(disparador.parentElement.parentElement.id)
-        );
-
-        //actualiza el numero de unidades vendidas para poder calcular el valor total de la venta condicionando si la venta se va a registrar o a editar
-        vector_[vector_.indexOf(item)].uniVendidas = parseInt(disparador.value);
-
-        //llama el valor total dependiendo del estado del att editar
-        vrTotalEditar(vector_);
-
-    } else {
-
-        let item = vector_.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem == disparador.parentElement.parentElement.id
-        );
-
-        //actualiza el numero de unidades vendidas para poder calcular el valor total de la venta condicionando si la venta se va a registrar o a editar
-        vector_[vector_.indexOf(item)].unidVend = parseInt(disparador.value);
-
-        //llama el valor total dependiendo del estado del att editar
-        vrTotalRegistar(vector_);
-
-    }
-
-}
-
 const registrarVenta = () => {
 
     let now = new Date();
@@ -275,29 +222,26 @@ const enviarRegVenta = async (ventaActual_) => {
 
 const eliminarItem = (disparador, vector_) => {
 
+    console.log("eliminame");
+
     let item = vector_.findIndex(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
-        element => (element.idItem || element.idDetVenta) == disparador.parentElement.parentElement.getAttribute("id")
+        element => (element.idItem) == disparador.id.slice(-1)
     );
 
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
     //sino solo eliminara la carta
     if (item != -1) {
         if (item == 0) {
-
             vector_.shift();
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
             disparador.parentElement.parentElement.remove();
 
         } else {
-
             vector_.splice(vector_.indexOf(item), 1);
-
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
-
             disparador.parentElement.parentElement.remove();
         }
+        vrTotalRegistar(vector_);
     } else {
         disparador.parentElement.parentElement.remove();
     }
@@ -365,18 +309,7 @@ const renderVentas = async () => {
 
 }
 
-const configModal = (modal, event) => {
-
-    //configura el modal dependiendo del estado editar
-    if (modal.getAttribute('editar') == "true") {
-        modalEditar(event);
-
-    } else {
-        modalRegistrar();
-    }
-}
-
-const modalRegistrar = () => {
+const iniciarModalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
@@ -395,54 +328,6 @@ const modalRegistrar = () => {
     document.getElementById('slcClientes').selectedIndex = 0;
     document.getElementById('slcMetodoPago').selectedIndex = 0;
 
-}
-
-const actualizarVenta = async (event) => {
-
-    let idVenta = event.target.getAttribute('idventa');
-    let tituloVenta = document.getElementById("inpTitulo").value;
-    let fecha = document.getElementById("inpFecha").value;
-    let metPago = document.getElementById("inpMetPago").value;
-    let idCliente = parseInt(document.getElementById("slcClientes").value);
-    let dto = parseInt(document.getElementById("inpDto").value.replace(',', ''));
-    let vrtotalIva = parseInt(document.getElementById("inpVrIva").value.replace(',', ''));
-    let vrTotal = parseInt(document.getElementById("inpVrTotal").value.replace(',', ''));
-
-    //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
-    if (tituloVenta == "" || fecha == "" || metPago == "" || idCliente == NaN || dto == NaN || vrTotal == NaN || vItemsEditar.length == 0) {
-        alert("Por favor llena todos los campos y añade items a la venta");
-    } else {
-
-        let ventaActualizar = {
-            idVenta,
-            tituloVenta,
-            fecha,
-            metPago,
-            idCliente,
-            dto,
-            vrtotalIva,
-            vrTotal,
-            vItemsEditar: vItemsEditar
-        };
-
-        await fetch('http://localhost:3000/actualizarVta' + idVenta, {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(ventaActualizar)
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                location.reload();
-            })
-            .catch(err => {
-                alert("Ha ocurrido un error actualizando la venta, por favor intentalo mas tarde");
-                location.reload();
-            });
-    }
 }
 
 const generarPdf = () => {

@@ -39,40 +39,40 @@
                             Añadir item</h3>
                     </div>
 
-                    <div class="div">
-                        <table class="table rounded-3 border border-dark border-3 rounded">
+                    <div class="tablaVentas rounded">
+                        <table class="table table-light table-striped rounded-3 h-100 mb-0">
 
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="text-center">imagen</th>
-                                <th class="text-center">Producto</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-center">Precio Unitario</th>
-                                <th class="text-center">Subtotal</th>
-                                <th class="text-center">Eliminar</th>
-                            </tr>
-                        </thead>
+                            <thead class="">
+                                <tr>
+                                    <th class="text-center">imagen</th>
+                                    <th class="text-center">Producto</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-center">Precio Unitario</th>
+                                    <th class="text-center">Subtotal</th>
+                                    <th class="text-center">Eliminar</th>
+                                </tr>
+                            </thead>
 
-                        <tbody id="tblItemsVta" class="overflow-scroll">
+                            <tbody id="tblItemsVta" class="">
 
-                        </tbody>
+                            </tbody>
 
-                        <tfoot class="table bg-light">
-                            <tr>
-                                <td colspan="4" class="text-end col-5"><strong>Descuento:</strong></td>
-                                <td colspan="3" class="col-7">
-                                    <div class="col-12">
-                                        <input id="inpDescuento" class="form-control w-75 mb-2" type="number" value="0">
-                                    </div>                                    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" class="text-end col-4 align-middle">
-                                    <p><strong>Total:</strong></p>
-                                </td>
-                                <td colspan="2"><p id="pValorTotal">$0</p></td>
-                            </tr>                           
-                        </tfoot>
+                            <tfoot class="">
+                                <tr>
+                                    <td colspan="4" class="text-end col-5"><strong>Descuento:</strong></td>
+                                    <td colspan="3" class="col-7">
+                                        <div class="col-12">
+                                            <input id="inpDescuento" class="form-control w-75 mb-2" type="number" value="0">
+                                        </div>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-end col-4 align-middle">
+                                        <p><strong>Total:</strong></p>
+                                    </td>
+                                    <td colspan="2"><p id="pValorTotal">$0</p></td>
+                                </tr>                           
+                            </tfoot>
 
                         </table>
                     </div>
@@ -100,7 +100,7 @@
                         <button id="btnFactura" class="btn-dark btn col-4 mt-3 ms-0">Factura</button>
 
                         <div class="row col-8 p-0 m-0 justify-content-end">
-                            <button id="btnGuardar" type="submit" class="btn-dark btn col-6 mt-3">Guardar</button>
+                            <button id="btnGuardar" type="submit" class="btn-secondary btn col-6 mt-3">Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -110,6 +110,19 @@
 </div>
 
 <style>
+
+    .tablaVentas{
+        max-height: 450px !important;
+        overflow: auto !important;
+        /* min-height: 450px !important; */
+        position: relative;
+    }
+
+    thead{
+        position: sticky;
+        top: 0;
+    }
+
     * {
         box-sizing: border-box !important;
         margin: 0; 
@@ -153,26 +166,9 @@
         align-items: center;
     }
 
-    .btnEliminar{
-        background-image: url(../../public/img/trashIcon.svg);
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: contain;
-        border: none;
-        color: #fff;
-        font-size: 30px;
-        width: 20px;
-        height: 100%;
-        cursor: pointer;
-    }
-
     .btnAccion {
-
         width: 3.4rem;
         height: 3.4rem;
-        border: 2px solid #000;
-        border-radius: 15px;
-
     }
 
     .btnEditar{
@@ -191,8 +187,7 @@
         background-repeat: no-repeat;
         background-position: center center;
         background-size: contain;
-        border: none;
-        color: #fff;
+        border: none !important;
         font-size: 30px;
         cursor: pointer;
     }
@@ -201,8 +196,4 @@
 .img-size {
         height: 5rem;
 }
-
-/* #tblItemsVta{
-    height: 18.75rem;
-} */
 </style>
