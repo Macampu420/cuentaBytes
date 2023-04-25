@@ -270,7 +270,6 @@ const renderVentas = async () => {
                 <div id="${element.idVenta}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
                         <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
-                        <h5>Concepto: ${element.tituloVenta}</h5>
                         <h5>Valor Total: ${conversorColombia.format(element.vrTotalVta)}</h5>
                         <h5>Fecha: ${element.fechaVenta}</h5>
                         <h5>Vendido a: ${element.nombresCliente + " " + element.apellidosCliente}</h5>
@@ -296,16 +295,63 @@ const iniciarModalRegistrar = () => {
     let date = new Date();
     numeroItem = 0;
 
+    document.getElementById('btnAnadir').disabled = false;
     document.getElementById('btnGuardar').disabled = false;
-    document.getElementById('btnFactura').classList.add("d-none");
-    document.getElementById('tblItemsVta').innerHTML = "";
-    document.getElementById('btnGuardar').innerHTML = "Guardar";
-    document.getElementById('inpFecha').value = 0;
+    document.getElementById('slcClientes').disabled = false;
+    document.getElementById('slcMetodoPago').disabled = false;
+    
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
+    document.getElementById('tblItemsVta').innerHTML = "";
     document.getElementById('inpDescuento').value = 0;
     document.getElementById('pValorTotal').innerHTML = "$0";
     document.getElementById('slcClientes').selectedIndex = 0;
     document.getElementById('slcMetodoPago').selectedIndex = 0;
+
+}
+
+const iniciarModalDetallesVenta = async (disparador) => {
+
+    let resVenta = await fetch(`http://localhost:3000/editVenta${disparador.getAttribute('idVenta')}`);
+    let venta = await resVenta.json();
+
+    console.log(venta);
+
+    document.getElementById("tblItemsVta").innerHTML = "";
+
+    document.getElementById("inpFecha").value = venta[0].fechaVenta.slice(0, 10);
+    document.getElementById("slcMetodoPago").value = venta[0].idMetodoPago;
+    document.getElementById("slcClientes").value = venta[0].idCliente;
+    document.getElementById("inpDescuento").value = venta[0].descuentoVenta;
+
+    document.getElementById("btnAnadir").disabled = true;
+    document.getElementById("btnGuardar").disabled = true;
+    document.getElementById("slcMetodoPago").disabled = true;
+    document.getElementById("slcClientes").disabled = true;
+    document.getElementById("inpDescuento").disabled = true;
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(venta[0].vrTotalVta)}`;    
+
+    venta.forEach(detalle => {
+        document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+        <tr id="item${numeroItem}" class="h-25">
+            <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/productos/${detalle.nombreImagen}" alt="Producto 1"></td>
+            <td class="align-middle">
+                <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
+            </td>
+            <td class="align-middle">
+                <div class="row">
+                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.uniVendidas}" disabled required>
+                </div>                                    
+            </td>
+            <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
+            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.uniVendidas)}</p></td>
+            <td class="align-middle">
+                <div class="btnAccion row p-1 bg-danger mx-auto">
+                    <p class="col-12 btnEliminar mx-auto"></p>
+                </div>  
+            </td>
+        </tr>
+        `);
+    });
 
 }
 

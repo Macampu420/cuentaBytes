@@ -112,6 +112,14 @@ document.getElementById("buscadorVtas").addEventListener("change", () => {
     }
 })
 
+document.getElementById("filaVentas").addEventListener("click", (event) => {
+    if(event.target.hasAttribute("btnacciones")){
+        iniciarModalDetallesVenta(event.target);
+        divModal.classList.add("d-flex");
+        modalBootstrap.show();
+    }
+})
+
 document.getElementById("btnFactura").addEventListener("click", (event) => {
 
     event.preventDefault();
