@@ -9,7 +9,7 @@ const objModuloVentas = new clsModuloVentas();
 //hace la peticion post a /guardarVta
 router.post('/guardarVta', (req, res) => {
     // objModuloVentas.registrarVta(req, res);
-    console.log(req.body);
+    objModuloVentas.registrarVta(req, res)
 });
 
 router.get("/ventas", (req, res) => {
