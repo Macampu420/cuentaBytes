@@ -322,7 +322,6 @@ const iniciarModalRegistrar = () => {
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
-    document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDescuento').value = 0;
     document.getElementById('pValorTotal').innerHTML = "$0";
     document.getElementById('slcClientes').selectedIndex = 0;

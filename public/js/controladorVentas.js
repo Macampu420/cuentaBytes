@@ -8,20 +8,22 @@ traerMetodosPago();
 
 document.getElementById('btnAnadirVta').addEventListener('click', event => {
 
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        iniciarModalRegistrar(divModal, event);
-        renderItem();
-        modalBootstrap.show();
-    }
+    divModal.classList.add("d-flex");
+    iniciarModalRegistrar(divModal, event);
+    renderItem();
+    modalBootstrap.show();
+    
 
 });
 
+divModal.addEventListener('hdden.bs.modal', (event) => {
+    divModal.classList.remove("d-flex");
+    console.log("modal cerrado");
+});
+
 document.getElementById('btnAnadir').addEventListener('click', event => {
-
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        renderItem();
-    }
-
+    console.log(event.target);
+    renderItem();
 });
 
 document.getElementById("tblItemsVta").addEventListener("change", (event) => {
@@ -54,6 +56,8 @@ document.getElementById("tblItemsVta").addEventListener("input", (event) => {
 document.getElementById("tblItemsVta").addEventListener("click", (event) => {
 
     console.log(event.target.id);
+
+    // if(event.target.)
 
     if(event.target.id.includes("btnEliminarItem")){
         console.log("eliminame");        
