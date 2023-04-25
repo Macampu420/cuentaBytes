@@ -151,7 +151,7 @@ class ModuloVentas {
 
     listarProductos = async (req, res) => {
 
-        await pool.query("CALL listarProductos()", (err, rows) => {
+        await pool.query("CALL mostrarProductos()", (err, rows) => {
 
             if (err) {
                 console.log(err);

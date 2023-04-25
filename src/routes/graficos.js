@@ -52,6 +52,8 @@ router.post('/graficos:tiempo', async (req, res, next) => {
                 egresos
             };
 
+            console.log(datosGraficos);
+
             res.status(200).json(datosGraficos);
 
         } else if (req.params.tiempo == "dias") {

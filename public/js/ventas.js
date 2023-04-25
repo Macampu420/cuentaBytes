@@ -11,7 +11,7 @@ let vItemsElim = [];
 let vObjsMetodosPago;
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
-
+//METODOS PARA TRAER DE LA BD LA INFORMACION NECESARIA
 const traerMetodosPago = async () => {
 
     try {
@@ -59,12 +59,14 @@ const traerClientes = async () => {
             })
 
             //se renderizan todos los clientes
-            for (let i = 0; i < vObjsCliente.length; i++) {
-                document.getElementById("slcClientes").innerHTML += `<option value="${vObjsCliente[i].idCliente}">${vObjsCliente[i].nombresCliente}</option>`
-            }
+            vObjsCliente.forEach(cliente => {
+                document.getElementById("slcClientes").innerHTML += `<option value="${cliente.idCliente}">${cliente.nombresCliente+" "+ cliente.apellidosCliente}</option>`
+            })
         })
         .catch(err => console.log(err));
 }
+
+
 
 const vrTotalRegistar = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
@@ -75,8 +77,6 @@ const vrTotalRegistar = (vItems) => {
     vItems.forEach(item => vrTot += item.unidadesVendidas * item.precioUnitario);
 
     vrTot -= dto;
-
-    console.log(vrTot);
 
     document.getElementById("pValorTotal").innerHTML = "$"+conversorColombia.format(vrTot);
 }
@@ -143,8 +143,6 @@ const actualizarCrearItem = (item, disparador, vector) => {
         }
     }
 
-    console.log(productoItem);
-
     document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${productoItem.nombreImagen}`;
     document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
     document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
@@ -161,6 +159,16 @@ const actualizarCrearItem = (item, disparador, vector) => {
         disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.stockProducto} unidades.`;    
     }   
     vrTotalRegistar(vector);
+
+}
+
+const actualizarUnidadesVendidas = (disparador, vector) => {
+
+    let nroIdItem = disparador.id.slice(-1);
+    let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
+
+    vector[vector.indexOf(item)].unidadesVendidas = disparador.value;
+    document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesVendidas * item.precioUnitario)}`;
 
 }
 
@@ -380,7 +388,6 @@ const modalRegistrar = () => {
     document.getElementById('tblItemsVta').innerHTML = "";
     document.getElementById('btnGuardar').innerHTML = "Guardar";
     document.getElementById('inpFecha').value = 0;
-    document.getElementById('inpTitulo').value = "";
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('inpVrTotal').value = 0;
     document.getElementById('inpDescuento').value = 0;

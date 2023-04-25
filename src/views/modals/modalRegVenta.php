@@ -11,21 +11,17 @@
                 <h1 class="text-center mt-3 questrial">Registrar venta</h1>
                 
                     <div class="row p-2 mb-5">
-                        <div class="col-6 mx-auto col-lg-3">
+                        <div class="col-6 mx-auto col-lg-4">
                             <label for="inpFecha" class="form-label quicksand">Fecha:</label>
                             <input disabled type="date" class="form-control" id="inpFecha" aria-describedby="basic-addon3">
                         </div>
-                        <div class="col-6 mx-auto col-lg-3">
+                        <div class="col-6 mx-auto col-lg-4">
                             <label for="slcMetodoPago" class="form-label quicksand">Metodo de pago:</label>
                             <select required id="slcMetodoPago" class="form-select" aria-label="Default select example">
                                 <option selected disabled>Metodo de pago</option>
                             </select> 
                        </div>
-                        <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-3">
-                            <label for="inpFecha" class="form-label quicksand">Concepto:</label>
-                            <input required type="text" class="form-control" id="inpTitulo" aria-describedby="basic-addon3">
-                        </div>
-                        <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-3">
+                        <div class="col-6 mt-3 mt-md-0 mx-auto col-lg-4">
                             <label for="inpFecha" class="form-label quicksand">Cliente:</label>
                             <select required id="slcClientes" class="form-select" aria-label="Default select example">
 

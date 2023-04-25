@@ -51,15 +51,11 @@ document.getElementById("inpDescuento").addEventListener("input", (event) => vrT
 document.getElementById("tblItemsVta").addEventListener("input", (event) => {
     if(event.target.id.includes("inpCantidad")){
 
-        let item = vItemsVta.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem ==  parseInt(event.target.id.slice(-1)));
-
-
-        actualizarCrearItem(item, event.target, vItemsVta);
-        vrTotalRegistar(vrt)
+        actualizarUnidadesVendidas(event.target, vItemsVta);
     }
+
+    vrTotalRegistar(vItemsVta);
+
 })
 
 document.querySelector("form").addEventListener("submit", (event) => {
@@ -93,8 +89,6 @@ document.getElementById("buscadorVtas").addEventListener("change", () => {
     let ventas = document.querySelectorAll("[cartaItem]");
     let swNoCoinc = false;
     var alert = document.getElementById("alert");
-
-    console.log(alert);
 
     ventas.forEach(element => {
 
