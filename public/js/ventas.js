@@ -169,28 +169,21 @@ const actualizarUnidadesVendidas = (disparador, vector) => {
 
 const registrarVenta = () => {
 
-    let now = new Date();
-    let fecha = now.toISOString();
-
-    let tituloVenta = document.getElementById("inpTitulo").value;
-    let metPago = document.getElementById("inpMetPago").value;
+    let idMetPago = document.getElementById("slcMetodoPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
-    let dto = parseInt(document.getElementById("inpDto").value);
-    let vrIva = parseInt(document.getElementById("inpVrIva").value.replace(',', ''));
-    let vrTotal = parseInt(document.getElementById("inpVrTotal").value.replace(',', ''));
+    let descuento = parseInt(document.getElementById("inpDescuento").value);
+    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    vrTotal = vrTotal.slice(1);
 
     //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
-    if (tituloVenta == "" || fecha == "" || metPago == "" || idCliente == NaN || dto == NaN || vrTotal == NaN || vItemsVta.length == 0) {
+    if (idMetPago == "" || idCliente == "" || descuento == NaN || vrTotal == NaN || vItemsVta.length == 0) {
         alert("Por favor llena todos los campos y añade items a la venta");
     } else {
 
         let ventaActual = {
-            tituloVenta,
-            fecha,
-            metPago,
+            idMetPago,
             idCliente,
-            dto,
-            vrIva,
+            descuento,
             vrTotal,
             itemsVta: vItemsVta,
         };
@@ -222,8 +215,6 @@ const enviarRegVenta = async (ventaActual_) => {
 
 const eliminarItem = (disparador, vector_) => {
 
-    console.log("eliminame");
-
     let item = vector_.findIndex(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
@@ -244,17 +235,6 @@ const eliminarItem = (disparador, vector_) => {
         vrTotalRegistar(vector_);
     } else {
         disparador.parentElement.parentElement.remove();
-    }
-
-}
-
-const stockItemElim = (item) => {
-
-    if (item.idVenta) {
-        vItemsElim.push({
-            idProducto: item.idProducto,
-            nuevo
-        })
     }
 
 }

@@ -8,7 +8,8 @@ const objModuloVentas = new clsModuloVentas();
 //ejecuta la funcion que viene de los modelos cuando se 
 //hace la peticion post a /guardarVta
 router.post('/guardarVta', (req, res) => {
-    objModuloVentas.registrarVta(req, res);
+    // objModuloVentas.registrarVta(req, res);
+    console.log(req.body);
 });
 
 router.get("/ventas", (req, res) => {

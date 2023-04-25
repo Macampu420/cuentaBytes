@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl bg-light rounded-3">
 
         <div class="modal-header d-flex justify-content-between px-5">
-            <h1 class="modal-title text-center mt-3 questrial">Registrar venta</h1>
+            <h2 class="modal-title text-center questrial">Registrar venta</h2>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -11,7 +11,7 @@
 
             <div class="modal-body row p-0 m-0">
 
-                <div class="col-12 col-lg-4 row">
+                <div class="col-12 col-lg-4 row d-flex align-items-center">
                     <form class="">
 
                         <div class="col-10 mx-auto col-lg-10 my-3">
@@ -22,18 +22,14 @@
 
                         <div class="col-10 mx-auto col-lg-10 my-3">
                             <label for="slcMetodoPago" class="form-label quicksand">Metodo de pago:</label>
-                            <select required id="slcMetodoPago" class="form-select"
-                                aria-label="Default select example">
-                                <option selected disabled>Metodo de pago</option>
+                            <select required id="slcMetodoPago" class="form-select" aria-label="Default select example">
+                                <option selected disabled value="">Metodo de pago</option>
                             </select>
                         </div>
                         <div class="col-10 mt-3 mt-md-0 mx-auto col-lg-10 my-3">
                             <label for="inpFecha" class="form-label quicksand">Cliente:</label>
-                            <select required id="slcClientes" class="form-select"
-                                aria-label="Default select example">
-
-                                <option selected disabled>Cliente </option>
-
+                            <select required id="slcClientes" class="form-select" aria-label="Default select example">
+                                <option selected disabled value="">Cliente </option>
                             </select>
                         </div>
 
@@ -52,17 +48,17 @@
                 </div>
 
 
-                <div class="tablaVentas table-responsive rounded col-12 col-lg-8 m-0 p-0 h-100">
+                <div class="col-12 col-lg-8 m-0 p-0 tablaVentas table-responsive rounded">
                     <table class="table table-light table-striped rounded-3 mb-0">
 
                         <thead class="">
                             <tr>
-                                <th class="text-center">imagen</th>
-                                <th class="text-center">Producto</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-center">Precio Unitario</th>
-                                <th class="text-center">Subtotal</th>
-                                <th class="text-center">Eliminar</th>
+                                <th class="text-center questrial">Imagen</th>
+                                <th class="text-center questrial">Producto</th>
+                                <th class="text-center questrial">Cantidad</th>
+                                <th class="text-center questrial">Precio Unitario</th>
+                                <th class="text-center questrial">Subtotal</th>
+                                <th class="text-center questrial">Eliminar</th>
                             </tr>
                         </thead>
 
@@ -72,18 +68,18 @@
 
                         <tfoot class="">
                             <tr>
-                                <td colspan="4" class="text-end col-5"><strong>Descuento:</strong></td>
-                                <td colspan="3" class="col-7">
-                                    <div class="col-12">
+                                <td colspan="5" class="text-end col-5"><strong>Descuento:</strong></td>
+                                <td colspan="5" class="col-7">
+                                    <div class="col-9">
                                         <input id="inpDescuento" class="form-control w-75 mb-2" type="number" value="0">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="text-end col-4 align-middle">
+                                <td colspan="5" class="text-end col-4 align-middle">
                                     <p><strong>Total:</strong></p>
                                 </td>
-                                <td colspan="2">
+                                <td colspan="5">
                                     <p id="pValorTotal">$0</p>
                                 </td>
                             </tr>
@@ -103,7 +99,6 @@
     .tablaVentas{
         max-height: 450px !important;
         overflow-y: auto !important;
-        min-height: 450px !important;
         position: relative;
     }
 
@@ -112,6 +107,10 @@
         top: 0;
     }
 
+    tfoot{
+        position: sticky;
+        bottom: 0;
+    }
     * {
         box-sizing: border-box !important;
         margin: 0; 

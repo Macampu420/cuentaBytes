@@ -16,9 +16,8 @@ document.getElementById('btnAnadirVta').addEventListener('click', event => {
 
 });
 
-divModal.addEventListener('hdden.bs.modal', (event) => {
+divModal.addEventListener('hidden.bs.modal', (event) => {
     divModal.classList.remove("d-flex");
-    console.log("modal cerrado");
 });
 
 document.getElementById('btnAnadir').addEventListener('click', event => {
@@ -55,12 +54,10 @@ document.getElementById("tblItemsVta").addEventListener("input", (event) => {
 
 document.getElementById("tblItemsVta").addEventListener("click", (event) => {
 
-    console.log(event.target.id);
-
-    // if(event.target.)
-
+    if(event.target.id == "" && event.target.nodeName == "A"){
+        eliminarItem(event.target.parentElement, vItemsVta);
+    }
     if(event.target.id.includes("btnEliminarItem")){
-        console.log("eliminame");        
         eliminarItem(event.target, vItemsVta);
     };
 
@@ -73,12 +70,12 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    if(divModal.getAttribute("editar") == "false")
-        registrarVenta()
-   else{
-    let confirmacion = confirm("Solo podrás editar la venta una unica vez");
-    if(confirmacion) actualizarVenta(event);
-   }
+    if (vItemsVta.length != 0) {
+        registrarVenta(); 
+    } else {
+        window.alert("Debes seleccionar algún producto para registrar la venta");
+    }
+
 });
 
 document.getElementById("buscadorVtas").addEventListener("change", () => {
