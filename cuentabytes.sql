@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-04-2023 a las 22:37:05
+-- Tiempo de generación: 25-04-2023 a las 04:27:58
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -125,7 +125,7 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
 proveedor.nombreProveedor, proveedor.idProveedor,
 detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
-productos.nombreProducto, productos.idProducto
+productos.nombreProducto, productos.idProducto, productos.stockProducto
 FROM enccompraproducto 
 INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
 INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
