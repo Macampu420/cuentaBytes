@@ -168,13 +168,27 @@ class Graficos {
         let datos = results.map(element => JSON.parse(JSON.stringify(element)));
 
             // Obtener la hora actual en formato 24 horas
-            let vDias = datos
+            let vProductos = datos
 
-            if (vDias.length == 0) {
+            if (vProductos.length == 0) {
                 throw new Error("No hay horas por mostrar");
             }   
             
-            return vDias;
+            return vProductos;
+    }
+
+    async traerClientesFacturas(procedimiento){
+        let [results] = await pool.query(procedimiento);
+        let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+
+            // Obtener la hora actual en formato 24 horas
+            let vClientes = datos
+
+            if (vClientes.length == 0) {
+                throw new Error("No hay horas por mostrar");
+            }   
+            
+            return vClientes;
     }
 
 }
