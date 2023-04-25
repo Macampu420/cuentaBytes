@@ -103,16 +103,30 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
         if (req.params.tiempo == "horas") {
 
             let { inicio, fin } = req.body;
-            let totalProductos, mejoresProductos, peoresProductos;
+            let totalProductos, mejoresProductos, peoresProductos,
+                rentabilidadProductos, mayorRentabilidad, peorRentabilidad,
+                existenciaProductos, mayorExistencia, menorExistencia;
 
             let queryTotal = `CALL productosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
             let queryMejores = `CALL mejoresProductosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
             let queryPeores = `CALL peoresProductosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryRentabilidad = `CALL productosRentabilidadHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejorRentabilidad = `CALL productosMayorRentabilidadHora('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeorRentabilidad = `CALL productosMenorRentabilidadHora('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryExistencia = `CALL productoExistencia()`;
+            let queryMayorExistencia = `CALL productoExistenciaMayor()`;
+            let queryMenorExistencia = `CALL productoExistenciaMenor()`;
 
             try {
                 totalProductos = await objGraficos.traerProductosFacturas(queryTotal);
                 mejoresProductos = await objGraficos.traerProductosFacturas(queryMejores);
                 peoresProductos = await objGraficos.traerProductosFacturas(queryPeores);
+                rentabilidadProductos = await objGraficos.traerProductosFacturas(queryRentabilidad);
+                mayorRentabilidad = await objGraficos.traerProductosFacturas(queryMejorRentabilidad);
+                peorRentabilidad = await objGraficos.traerProductosFacturas(queryPeorRentabilidad);
+                existenciaProductos = await objGraficos.traerProductosFacturas(queryExistencia);
+                mayorExistencia = await objGraficos.traerProductosFacturas(queryMayorExistencia);
+                menorExistencia = await objGraficos.traerProductosFacturas(queryMenorExistencia);
             } catch (error) {
                 console.log(error);
                 res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
@@ -128,7 +142,13 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
             datosGraficos = {
                 totalProductos,
                 mejoresProductos,
-                peoresProductos
+                peoresProductos,
+                rentabilidadProductos,
+                mayorRentabilidad,
+                peorRentabilidad,
+                existenciaProductos,
+                mayorExistencia,
+                menorExistencia
             };
 
             console.log(datosGraficos);
@@ -137,16 +157,32 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
         } else if (req.params.tiempo == "dias") {
 
             let { inicio, fin } = req.body;
-            let totalProductos, mejoresProductos, peoresProductos;
+            let totalProductos, mejoresProductos, peoresProductos,
+                rentabilidadProductos, mayorRentabilidad, peorRentabilidad,
+                existenciaProductos, mayorExistencia, menorExistencia;
 
-            let queryTotal = `CALL ventasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
-            let queryMejores = `CALL comprasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
-            let queryPeores = `CALL egresosPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+
+            let queryTotal = `CALL productosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejores = `CALL mejoresProductosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeores = `CALL peoresProductosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryRentabilidad = `CALL productosRentabilidadDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejorRentabilidad = `CALL productosMayorRentabilidadDia('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeorRentabilidad = `CALL productosMenorRentabilidadDia('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryExistencia = `CALL productoExistencia()`;
+            let queryMayorExistencia = `CALL productoExistenciaMayor()`;
+            let queryMenorExistencia = `CALL productoExistenciaMenor()`;
 
             try {
                 totalProductos = await objGraficos.traerProductosFacturas(queryTotal);
                 mejoresProductos = await objGraficos.traerProductosFacturas(queryMejores);
                 peoresProductos = await objGraficos.traerProductosFacturas(queryPeores);
+                rentabilidadProductos = await objGraficos.traerProductosFacturas(queryRentabilidad);
+                mayorRentabilidad = await objGraficos.traerProductosFacturas(queryMejorRentabilidad);
+                peorRentabilidad = await objGraficos.traerProductosFacturas(queryPeorRentabilidad);
+                existenciaProductos = await objGraficos.traerProductosFacturas(queryExistencia);
+                mayorExistencia = await objGraficos.traerProductosFacturas(queryMayorExistencia);
+                menorExistencia = await objGraficos.traerProductosFacturas(queryMenorExistencia);
+
             } catch (error) {
                 console.log(error);
                 res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
@@ -158,11 +194,17 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
                 res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
                 return;
             }
-            
+
             datosGraficos = {
                 totalProductos,
                 mejoresProductos,
-                peoresProductos
+                peoresProductos,
+                rentabilidadProductos,
+                mayorRentabilidad,
+                peorRentabilidad,
+                existenciaProductos,
+                mayorExistencia,
+                menorExistencia
             };
 
             console.log(datosGraficos);
@@ -177,7 +219,87 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
         next(error);
     }
 
-    res.status(200).send(JSON.stringify(datosGraficos));
+})
+
+router.post('/reportesClientes:tiempo', async (req, res, next) => {
+    try {
+        if (req.params.tiempo == "horas") {
+
+            let { inicio, fin } = req.body;
+            let totalClientes, mejoresClientes, peoresClientes;
+
+            let queryTotal = `CALL clientesFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejores = `CALL mejoresClientesFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeores = `CALL peoresClientesFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+
+            try {
+                totalClientes = await objGraficos.traerClientesFacturas(queryTotal);
+                mejoresClientes = await objGraficos.traerClientesFacturas(queryMejores);
+                peoresClientes = await objGraficos.traerClientesFacturas(queryPeores);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
+                return;
+            }
+
+            // Validación de datos
+            if (!totalClientes || !mejoresClientes || !peoresClientes) {
+                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
+                return;
+            }
+
+            datosGraficos = {
+                totalClientes,
+                mejoresClientes,
+                peoresClientes
+            };
+
+            console.log(datosGraficos);
+
+            res.status(200).send(JSON.stringify(datosGraficos));
+        } else if (req.params.tiempo == "dias") {
+
+            let { inicio, fin } = req.body;
+            let totalClientes, mejoresClientes, peoresClientes;
+
+            let queryTotal = `CALL clientesFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejores = `CALL mejoresClientesFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeores = `CALL peoresClientesFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+
+            try {
+                totalClientes = await objGraficos.traerProductosFacturas(queryTotal);
+                mejoresClientes = await objGraficos.traerProductosFacturas(queryMejores);
+                peoresClientes = await objGraficos.traerProductosFacturas(queryPeores);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
+                return;
+            }
+
+            // Validación de datos
+            if (!totalClientes || !mejoresClientes || !peoresClientes) {
+                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
+                return;
+            }
+
+            datosGraficos = {
+                totalClientes,
+                mejoresClientes,
+                peoresClientes
+            };
+
+            console.log(datosGraficos);
+
+            res.status(200).send(JSON.stringify(datosGraficos));
+        } else {
+            const error = new Error("El parámetro de tiempo no es válido");
+            error.statusCode = 400;
+            throw error;
+        }
+    } catch (error) {
+        next(error);
+    }
+
 })
 
 // router.get('/acordeon', async (req, res) => {
