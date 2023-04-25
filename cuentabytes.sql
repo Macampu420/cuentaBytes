@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 23, 2023 at 02:08 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 25-04-2023 a las 22:10:09
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -50,6 +50,24 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarStock` (IN `unidVend` INT(11), IN `_idProducto` INT(11))   BEGIN
 UPDATE productos SET stockProducto = stockProducto - unidVend WHERE idProducto = _idProducto;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `comprasPorDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
@@ -125,7 +143,7 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
 proveedor.nombreProveedor, proveedor.idProveedor,
 detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
-productos.nombreProducto, productos.idProducto
+productos.nombreProducto, productos.idProducto, productos.stockProducto
 FROM enccompraproducto 
 INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
 INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
@@ -169,10 +187,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor DESC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientes` ()   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente FROM encventas INNER
-JOIN clientes on encventas.idCliente = clientes.idCliente GROUP BY encventas.idCliente ORDER BY nroFacturas desc limit 3;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas desc limit 10;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas desc limit 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas DESC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas DESC LIMIT 10$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
@@ -197,20 +244,46 @@ INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen
 WHERE productos.idProducto = _idProducto$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas ASC limit 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas ASC limit 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas ASC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas ASC LIMIT 10$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock` ()   SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
 FROM productos 
 INNER JOIN imagen ON productos.idImagen = imagen.idImagen
 GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
 ORDER BY stockMayor DESC 
 LIMIT 1$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasVend` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto, imagen.nombreImagen 
-FROM detalleventa 
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
-INNER JOIN imagen ON productos.idImagen = imagen.idImagen
-GROUP BY detalleventa.idProducto, productos.idProducto, productos.nombreProducto, imagen.nombreImagen
-ORDER BY nroFacturas DESC 
-LIMIT 3$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock` ()   SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
 FROM productos 
@@ -219,33 +292,85 @@ GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
 ORDER BY stockMayor ASC 
 LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenVend` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, productos.idProducto, productos.nombreProducto, imagen.nombreImagen 
-FROM detalleventa 
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
-INNER JOIN imagen ON productos.idImagen = imagen.idImagen
-GROUP BY detalleventa.idProducto, productos.idProducto, productos.nombreProducto, imagen.nombreImagen
-ORDER BY nroFacturas ASC 
-LIMIT 3$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistencia` ()   SELECT MAX(productos.stockProducto) AS existencia, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
+ORDER BY existencia DESC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMayor` ()   SELECT MAX(productos.stockProducto) AS existenciaMayor, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
+ORDER BY existenciaMayor DESC 
+LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMenor` ()   SELECT MAX(productos.stockProducto) AS menorExistencia, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
+ORDER BY menorExistencia ASC
+LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas DESC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
+ORDER BY nroFacturas DESC$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto ORDER BY Rentabilidad DESC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto  ORDER BY Rentabilidad DESC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto ORDER BY Rentabilidad$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto ORDER BY Rentabilidad$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa` (IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(255))   INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarImagen` (IN `rutaImg_` VARCHAR(100), IN `nombreImg_` VARCHAR(30))   INSERT INTO `imagen`( `rutaImagen`, `nombreImagen`) VALUES ( rutaImg_, nombreImg_)$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `rentabilidadProductos` ()   SELECT COUNT(detalleventa.idProducto) as nroFacturas, 
-productos.idProducto, 
-productos.nombreProducto, 
-imagen.nombreImagen,
-MAX((productos.precioVenta - productos.costoProducto)/productos.costoProducto) as rentabilidad
-FROM detalleventa 
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto 
-INNER JOIN imagen ON productos.idImagen = imagen.idImagen
-GROUP BY detalleventa.idProducto, 
-productos.idProducto, 
-productos.nombreProducto, 
-imagen.nombreImagen
-ORDER BY nroFacturas DESC 
-LIMIT 3$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenCompras` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
 enccompraproducto.fechaCompra >= fecha1_ AND enccompraproducto.fechaCompra <= fecha2_ GROUP BY enccompraproducto.idCompra ORDER BY enccompraproducto.fechaCompra ASC$$
@@ -255,12 +380,6 @@ encegreso.fechaEgreso >= fecha1_ AND encegreso.fechaEgreso <= fecha2_ GROUP BY e
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
 encventas.fechaVenta >= fecha1_ AND encventas.fechaVenta <= fecha2_ GROUP BY encventas.idVenta ORDER BY encventas.fechaVenta ASC$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_productoRentable` (OUT `_Rentabilidad` INT(11))   BEGIN
-SELECT productos.nombreProducto, 
-MAX((productos.precioVenta- productos.costoProducto)/productos.costoProducto)AS Rentabilidad
-FROM productos INTO _Rentabilidad;
-END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ventasPorDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
     SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia, SUM(vrTotalVta) AS VrTotalDia

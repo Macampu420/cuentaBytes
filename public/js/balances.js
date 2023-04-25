@@ -111,7 +111,7 @@ let actualizarGrafico = async (inicio, fin, tiempo) => {
 
     // se consumen los datos de la API y se le pasan al metodo para que los setee,
     //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-    let resGraficos = await fetch(`http://localhost:3000/graficos${tiempo}`, {
+    let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
         method: "POST",
         credentials: "same-origin",
         headers: {
