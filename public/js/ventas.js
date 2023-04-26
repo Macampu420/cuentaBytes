@@ -125,8 +125,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
             idItem: nroItemDisparador,
             idProducto: productoItem.idProducto,
             precioUnitario: productoItem.precioVenta,
-            unidadesVendidas: 1,
-            nuevoStock: productoItem.stockProducto - 1
+            unidadesVendidas: 0,
         }) 
     } else {
         vector[vector.indexOf(item)] = {
@@ -134,7 +133,6 @@ const actualizarCrearItem = (item, disparador, vector) => {
             idProducto: productoItem.idProducto,
             precioUnitario: productoItem.precioVenta,
             unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
-            nuevoStock: productoItem.stockProducto
         }
     }
 
@@ -175,10 +173,22 @@ const registrarVenta = () => {
     let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
     vrTotal = vrTotal.slice(1);
 
+    let itemsConUnidades = vItemsVta.some(item => {
+        if(parseInt(item.unidadesVendidas) <= 0){
+            return false;
+        }
+        return true;
+    });
+    
+
     //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
     if (idMetPago == "" || idCliente == "" || descuento == NaN || vrTotal == NaN || vItemsVta.length == 0) {
         alert("Por favor llena todos los campos y añade items a la venta");
-    } else {
+    }
+    else if(!itemsConUnidades){
+        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados pafra registrar la venta");
+    } 
+    else {
 
         let ventaActual = {
             idMetPago,
@@ -299,6 +309,7 @@ const iniciarModalRegistrar = () => {
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById('slcClientes').disabled = false;
     document.getElementById('slcMetodoPago').disabled = false;
+    document.getElementById('inpDescuento').disabled = false;
     
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('tblItemsVta').innerHTML = "";

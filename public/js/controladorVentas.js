@@ -44,13 +44,29 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
 });
 
 document.getElementById("tblItemsVta").addEventListener("input", (event) => {
-    if(event.target.id.includes("inpCantidad")){
+    //codigo a ejecutar si el diparador es un inpCantidad producto
+    if (event.target.id.includes("inpCantidad")) {
+        //si el valor digitado es mayor que las unidades disponibles setea el valor del
+        //input como este numero de unidades
+        if (event.target.value > parseInt(event.target.getAttribute("max")))
+            event.target.value = parseInt(event.target.getAttribute("max"));
+
+        //si el valor digitado es menor a  setea el valor del
+        //input como 0
+        if (event.target.value < 0) event.target.value = 0;
+
         actualizarUnidadesVendidas(event.target, vItemsVta);
     }
 
     vrTotalRegistar(vItemsVta);
 
 });
+
+document.getElementById("inpDescuento").addEventListener("input", (event) => {
+    //si el valor digitado es menor a  setea el valor del
+    //input como 0
+    if(event.target.value < 0) event.target.value = 0;
+})
 
 document.getElementById("tblItemsVta").addEventListener("click", (event) => {
 
