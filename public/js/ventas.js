@@ -325,8 +325,6 @@ const iniciarModalDetallesVenta = async (disparador) => {
     let resVenta = await fetch(`http://localhost:3000/editVenta${disparador.getAttribute('idVenta')}`);
     let venta = await resVenta.json();
 
-    console.log(venta);
-
     document.getElementById("tblItemsVta").innerHTML = "";
 
     document.getElementById("inpFecha").value = venta[0].fechaVenta.slice(0, 10);

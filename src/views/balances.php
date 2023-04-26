@@ -30,37 +30,30 @@
 
     </style>
 </head>
-
 <body>
-    <div class="container-fluid" style="background-color: #E5ECEC">
-        <div class="row containerA">
+<div class="container-fluid" style="background-color: #E5ECEC">
+    <div class="row containerA">
 
-            <!-- navbar  -->
-            <div class="col-2 d-none d-xl-block nav aside py-5 overflow-hidden">
-                <?php include 'partials/navbar.php'?>
+        <!-- navbar  -->
+        <div class="col-2 d-none d-xl-block nav aside py-5 overflow-hidden">
+            <?php include 'partials/navbar.php'?>
+        </div>
+
+        <!-- contenido principal -->
+        <main class="col-12 col-xl-10 px-lg-5 header pt-lg-4">
+            
+            <!-- importacion del header -->
+            <div class="row">
+                <?php include 'partials/header.php'?>
             </div>
 
-            <!-- contenido principal -->
-            <main class="col-12 col-xl-10 px-lg-5 header pt-lg-4">
-
-                <div class="row">
-                    <!-- importacion del header -->
-                    <?php include 'partials/header.php'?>
-
-                </div>
-
-                <!-- titulo y barra de busqueda -->
-                <div class="row col-12 mx-0 mx-lg-auto pt-3">
+            <!-- titulo y barra de busqueda -->
+            <div class="row col-12 mx-0 mx-lg-auto pt-3">
 
 
-                    <div class="col-12 col-lg-10 row mx-auto w">
-                        <canvas class="col-11 px-auto mb-3" id="myChart"></canvas>
-                    </div>
-
-
-
-
-                    <div id="reportrange"
+                <div class="col-12 col-lg-10 row mx-auto d-none">
+                    <canvas class="col-11 px-auto mb-3" id="myChart"></canvas>
+                        <div id="reportrange"
                         class="btn btn-secondary col-10 col-lg-4 mx-auto my-3 fs-4 fs-lg-3 text-white text-center ">
                         <span class="rounded" id="spanFechaGrafico">Generar Estado PyG desde:</span> <i
                             class="fa fa-caret-down"></i>
@@ -68,17 +61,63 @@
 
                     <button class="btn btn-secondary col-10 col-lg-3 mx-auto my-3 fs-2 fs-lg-3">Generar PDF</button>
 
-                    <div class="row">
+                </div>
 
 
-                    <div id="acordeonBalances" class="accordion mx-auto col-lg-9 col-11 p-4 my-4">
+                <div class="row">
 
+                    <div class="col-12 col-lg-10 accordion mx-auto mb-5" id="accordionExample">
+                        <div class="accordion-item">
+
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Ejemplo 1
+                                </button>
+                            </h2>
+
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample">
+                                
+                                <div class="accordion-body">
+
+                                    <div class="row col-12 mb-4 d-flex justify-content-start">
+
+                                        <!-- dropdown tipo balance -->
+                                        <div class="dropdown col-3">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Seleccionar reporte
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdown">
+                                                <li><a class="dropdown-item" href="#">Opcion A</a></li>
+                                                <li><a class="dropdown-item" href="#">Opcion B</a></li>
+                                                <li><a class="dropdown-item" href="#">Opcion C</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- dropdown fecha -->
+                                        <button id="dropdownFecha" class="col-3 btn btn-secondary dropdown-toggle" type="button" aria-expanded="false">Seleccionar fecha</button>
+                                    
+                                    </div>
+
+                                    <div class="col-12">
+                                        <canvas id="canva1"></canvas>
+                                    </div>
+                                   
+                                    <div class="col-12 mt-2">
+                                        <p id="pFechaGrafico" class="text-center fs-3 questrial my-0">Estas viendo este reporte desde hoy hasta ayer</p>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
 
-            </main>
-        </div>
+                </div>
+
+        </main>
+    </div>
 
         <?php include './partials/notas.php' ?>
         <?php include './partials/ajustes.php' ?>
@@ -88,14 +127,13 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <script src="./../../public/js/popper.js"></script>
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/balances.js"></script>
         <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
         <script src="./../../public/js/acordeon.js"></script>
-
-
 </body>
 
 </html>
