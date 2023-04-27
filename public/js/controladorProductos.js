@@ -1,9 +1,28 @@
 let modalReg = new bootstrap.Modal(document.getElementById("modalReg"));
+let swAlertImg = false;
+let swAlertPrecioVenta = false;
 const divModal = document.getElementById("modalReg");
 const urlBase = "http://localhost/cuentabytes/src/controllers/productos/";
 
+document.getElementById("inpImg").addEventListener("focus", event => {
+
+    if(swAlertImg){
+        window.alert("Te recomendamos que la foto sea en un fondo blanco y en formato jpg o png");
+        swAlertImg = false;
+    }
+})
+
+document.getElementById("inpPrecioVenta").addEventListener('focus', () => {
+    if(swAlertPrecioVenta){
+        window.alert("Ten en cuenta que este es el valor con IVA incluido");
+        swAlertPrecioVenta = false;
+    }
+})
+
 document.getElementById("btnAnadirProd").addEventListener("click", () => {
 
+    swAlertImg = true;
+    swAlertPrecioVenta = true;
     divModal.setAttribute("editar", "false");
    if(divModal.getAttribute("editar") == "false"){
         document.getElementById("divAcciones").classList.add("d-none");

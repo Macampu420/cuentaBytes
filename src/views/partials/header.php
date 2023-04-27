@@ -1,6 +1,6 @@
 <header class="row col-12 col-md-8 mx-1 my-1 mx-lg-auto py-2 shadow d-flex justify-content-between rounded-bottom-3 rounded-bottom-lg-1">
 	
-	<p class="col-8 fs-1 my-auto">Licorera Élite</p>
+	<p class="col-8 fs-1 my-auto text-white">Licorera Élite</p>
 	<button class="col-4 btn btn-primary d-xl-none" type="button" data-bs-toggle="offcanvas"
 		data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
 		menu

@@ -34,6 +34,22 @@ document.getElementById("containerDropdownProductos").addEventListener("click",e
         case "mayorExistencia":
             mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
             break;
+        case "mayorRentabilidad":
+            mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+            break;
+        case "mejoresProductos":
+            mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+            break;
+        case "menorExistencia":
+            mostrarDatosProductoHora(datosProductos, tipoBalance, "menorExistencia");
+            break;
+        case "peorRentabilidad":
+            mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+            break;
+        case "peoresProductos":
+            mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+            break;
+
     }
 
     graficoProductos.data

@@ -35,7 +35,8 @@ let graficoProductos = new Chart(document.getElementById('canva1'), {
         data: {
             labels: [],
             datasets: [{
-                data: []
+                label: "Productos",
+                data: [],
             }]
         }
 });
@@ -92,10 +93,10 @@ let mostrarDatosProductoHora = (vectorDatos, tipoBalance, propiedadData) => {
     let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
 
     //se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
-    graficoProductos.data.labels = nombresProductos.reverse();
+    graficoProductos.data.labels = nombresProductos;
 
     //se llenan y muestran los datos correspondientes a las compras
-    graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]).reverse();
+    graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
 
     graficoProductos.update();
 }
