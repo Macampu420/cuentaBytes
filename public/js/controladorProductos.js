@@ -38,6 +38,9 @@ document.getElementById("btnAnadirProd").addEventListener("click", () => {
 
 document.getElementById("filaProductos").addEventListener("click", async event => {
 
+    let resProducto = await fetch( urlBase + `listarUnProducto.php?idProducto=${event.target.getAttribute("idProducto")}`);
+    let datosProducto = await resProducto.json(); 
+
     if (event.target.hasAttribute("btnAcciones")) {
         //Le damos valor al atributo
         divModal.setAttribute("editar", "true");
@@ -49,21 +52,24 @@ document.getElementById("filaProductos").addEventListener("click", async event =
             document.getElementById("btnGuardar").innerHTML = "Actualizar";
             document.getElementById('btnGuardar').setAttribute('formaction', urlBase + `editarProducto.php?idProducto=${event.target.getAttribute('idProducto')}`);
 
+            document.getElementById("nombreProducto").value = datosProducto.items[0].nombreProducto;
+            document.getElementById("nombreProducto").disabled = true;
 
-            await fetch( urlBase + `listarUnProducto.php?idProducto=${event.target.getAttribute("idProducto")}`)
-                .then(res => res.json())
-                .then(data => {
+            document.getElementById("descripcionProducto").value = datosProducto.items[0].descripcionProducto;
+            document.getElementById("descripcionProducto").disabled = true;
 
-                    document.getElementById("nombreProducto").value = data.items[0].nombreProducto;
-                    document.getElementById("descripcionProducto").value = data.items[0].descripcionProducto;
-                    document.getElementById("porcentajeIva").value = data.items[0].porcentajeIva;
-                    document.getElementById("costoProducto").value = data.items[0].costoProducto;
-                    document.getElementById("precioVenta").value = data.items[0].precioVenta;
-                    document.getElementById("stockProducto").value = data.items[0].stockProducto;
+            document.getElementById("costoProducto").value = datosProducto.items[0].costoProducto;
+            document.getElementById("costoProducto").disabled = true;
 
-                    document.getElementById("btnEliminar").setAttribute("idProducto", data.items[0].idProducto);
-                });
+            document.getElementById("inpPrecioVenta").value = datosProducto.items[0].precioVenta;
+            document.getElementById("inpPrecioVenta").disabled = true;
 
+            document.getElementById("inpExistenciaProducto").value = datosProducto.items[0].stockProducto;
+            document.getElementById("inpExistenciaProducto").disabled = true;
+
+            document.getElementById("inpImg").disabled = true;
+
+            document.getElementById("btnEliminar").setAttribute("idProducto", datosProducto.items[0].idProducto);
         }
         modalReg.show()
     }
@@ -122,10 +128,18 @@ document.getElementById("buscadorProd").addEventListener("change", () => {
     }
 })
 
-document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false);
+document.getElementById('btnEditar').addEventListener('click', event => {
+    
+    document.getElementById('btnGuardar').disabled = false;
+    document.getElementById("nombreProducto").disabled = false;
+    document.getElementById("descripcionProducto").disabled = false;
+    document.getElementById("costoProducto").disabled = false;
+    document.getElementById("inpPrecioVenta").disabled = false;
+    document.getElementById("inpExistenciaProducto").disabled = false;
+    document.getElementById("inpImg").disabled = false;
+
+});
 
 let Productos = [];
-
-// obtenerDatos(Productos);
 
 renderProductos(Productos);

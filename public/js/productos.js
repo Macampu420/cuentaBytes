@@ -1,3 +1,4 @@
+const conversorColombia = new Intl.NumberFormat('en-CO');
 
 const traerProductos = async productos => {
 
@@ -30,8 +31,8 @@ renderProductos = async productos => {
                 <div idProducto="${element.idProducto}" class="card-body mt-2 mx-auto">
                     <h5 btnAcciones idProducto="${element.idProducto}" class="puntosAcciones">...</h5>
                     <h5>Nombre: ${element.nombreProducto}</h5>
-                    <h5>Precio: ${element.precioVenta}</h5>
-                    <h5>Stock:     ${element.stockProducto}</h5>
+                    <h5>Precio de venta: $${conversorColombia.format(element.precioVenta)}</h5>
+                    <h5>Existencia: ${element.stockProducto}</h5>
 
                     <div class="row col-12">
                         <img class="imagen col-12 mx-auto" src="./../../public/img/productos/${element.nombreImagen}">

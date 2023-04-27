@@ -57,7 +57,7 @@
 
                                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                                     <label for="stockProducto" class="form-label">Existencia del producto</label>
-                                    <input type="number" class="form-control" name="stockProducto" id="stockProducto"
+                                    <input type="number" class="form-control" name="stockProducto" id="inpExistenciaProducto"
                                         placeholder="Existencia" aria-describedby="basic-addon3" required>
                                 </div>
 
