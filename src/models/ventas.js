@@ -35,7 +35,7 @@ class ModuloVentas {
                                         res.write(err);
                                         res.end();
                                     } else {
-                                        pool.query("CALL actualizarStock(?,?)", [element.unidVend, element.idProducto],
+                                        pool.query("CALL actualizarExistencia(?,?)", [element.unidadesVendidas, element.idProducto],
                                             err => {
                                                 if (err) {
                                                     console.log(err);

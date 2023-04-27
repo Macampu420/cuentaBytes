@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 26-04-2023 a las 02:30:45
--- Versión del servidor: 10.4.24-MariaDB
--- Versión de PHP: 7.4.29
+-- Host: 127.0.0.1
+-- Generation Time: Apr 27, 2023 at 05:40 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `cuentabytes`
+-- Database: `cuentabytes`
 --
 
 DELIMITER $$
 --
--- Procedimientos
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCliente` (IN `_idCliente` INT(11), IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))   UPDATE `clientes` SET `idCliente`=_idCliente,`nombresCliente`=_nombresCliente,`apellidosCliente`=_apellidosCliente,`telefonoCliente`=_telefonoCliente,`cedulaCliente`=_cedulaCliente WHERE idCliente = _idCliente$$
 
@@ -39,17 +39,17 @@ UPDATE `encventas` SET `tituloVenta`=titVenta,`metodoPagoVenta`=metodoPagoVenta_
 ,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`editado`= 1,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarExistencia` (IN `unidVend` INT(11), IN `_idProducto` INT(11))   BEGIN
+UPDATE productos SET existenciaProducto = existenciaProducto - unidVend WHERE idProducto = _idProducto;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarNota` (IN `_idNota` INT(11), IN `_tituloNota` VARCHAR(20), IN `_contenidoNota` VARCHAR(100))   UPDATE `notas` SET `idNota`=_idNota,`tituloNota`=_tituloNota,`contenidoNota`=_contenidoNota WHERE idNota = _idNota$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto` (IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))   UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`porcentajeIva`=_porcentajeIva,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
-`stockProducto`=_stockProducto,`idImagen`=_idImagen WHERE idProducto = _idProducto$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto` (IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_existenciaProducto` INT(7), IN `_idImagen` INT(11))   UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
+`existenciaProducto`=_existenciaProducto,`idImagen`=_idImagen WHERE idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProveedor` (IN `_idProveedor` INT(11), IN `_nombreProveedor` VARCHAR(40), IN `_direccionProveedor` VARCHAR(30), IN `_telefonoProveedor` VARCHAR(15))   BEGIN
 UPDATE `proveedor` SET `nombreProveedor`=_nombreProveedor,`direccionProveedor`=_direccionProveedor,`telefonoProveedor`=_telefonoProveedor WHERE idProveedor = _idProveedor;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarStock` (IN `unidVend` INT(11), IN `_idProducto` INT(11))   BEGIN
-UPDATE productos SET stockProducto = stockProducto - unidVend WHERE idProducto = _idProducto;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
@@ -62,7 +62,7 @@ ORDER BY nroFacturas DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente, clientes.apellidosCliente
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
@@ -134,7 +134,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarNota` (IN `_tituloNota` VARCHAR(20), IN `_contenidoNota` VARCHAR(100))   INSERT INTO `Notas`(`tituloNota`, `contenidoNota`) VALUES (_tituloNota,_contenidoNota)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_porcentajeIva` INT(5), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_stockProducto` INT(7), IN `_idImagen` INT(11))   INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_porcentajeIva,_costoProducto,_precioVenta,_stockProducto,_idImagen)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_existenciaProducto` INT(7), IN `_idImagen` INT(11))   INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_costoProducto,_precioVenta,_existenciaProducto,_idImagen)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
 SELECT nombresCliente,apellidosCliente, idCliente FROM clientes;
@@ -167,7 +167,7 @@ INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarMetodoPago` ()   SELECT * FROM metodopago$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos` ()   BEGIN
-SELECT idProducto, nombreProducto, stockProducto, precioVenta, porcentajeIva, costoProducto FROM productos ORDER BY idProducto DESC;
+SELECT idProducto, nombreProducto, existenciaProducto, precioVenta, costoProducto FROM productos ORDER BY nombreProducto ASC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProveedores` ()   select * from proveedor order by idProveedor desc$$
@@ -189,9 +189,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta` (IN `idVenta_` INT)   
         detalleventa.precioUnitario,
         detalleventa.idProducto,
         productos.nombreProducto,
-        productos.stockProducto,
-        imagen.nombreImagen,
-        productos.porcentajeIva
+        productos.existenciaProducto,
+        imagen.nombreImagen
     FROM
         encventas
     INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
@@ -215,7 +214,7 @@ SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, e
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente, clientes.apellidosCliente
+SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
@@ -224,7 +223,7 @@ ORDER BY nroFacturas desc limit 10;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente, clientes.apellidosCliente
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
@@ -232,7 +231,7 @@ GROUP BY clientes.nombresCliente
 ORDER BY nroFacturas desc limit 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
 FROM encventas
 INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
 INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
@@ -256,23 +255,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarNotas` ()   BEGIN
 SELECT * FROM notas ORDER BY idNota DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()   SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.porcentajeIva, productos.costoProducto, productos.precioVenta, productos.stockProducto, imagen.nombreImagen
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos` ()   SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.costoProducto, productos.precioVenta, productos.existenciaProducto, imagen.nombreImagen
 FROM productos INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen
-ORDER BY productos.idProducto DESC$$
+ORDER BY productos.nombreProducto ASC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnaNota` (IN `_idNota` INT(11))   BEGIN
 SELECT * FROM notas WHERE idNota = _idNota;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))   SELECT productos.idProducto, productos.nombreProducto, productos.stockProducto, productos.precioVenta, productos.porcentajeIva, productos.costoProducto, imagen.nombreImagen, imagen.idImagen
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto` (IN `_idProducto` INT(11))   SELECT productos.idProducto, productos.nombreProducto, productos.existenciaProducto, productos.precioVenta, productos.costoProducto, imagen.nombreImagen, imagen.idImagen
 FROM productos 
 INNER JOIN imagen
 ON productos.idImagen = imagen.idImagen
 WHERE productos.idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente, clientes.apellidosCliente
+SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
@@ -281,7 +280,7 @@ ORDER BY nroFacturas ASC limit 10;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente, clientes.apellidosCliente
+SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
@@ -289,7 +288,7 @@ GROUP BY clientes.nombresCliente
 ORDER BY nroFacturas ASC limit 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
 FROM encventas
 INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
 INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
@@ -297,7 +296,7 @@ WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto
 ORDER BY nroFacturas ASC LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
 FROM encventas
 INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
 INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
@@ -336,7 +335,7 @@ GROUP BY productos.idProducto, productos.nombreProducto
 ORDER BY menorExistencia ASC
 LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
 FROM encventas
 INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
 INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
@@ -352,42 +351,42 @@ WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad DESC LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto  ORDER BY Rentabilidad DESC LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadDia` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadHora` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
 WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
 FROM encventas 
 INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
 INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
@@ -426,7 +425,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ajustes`
+-- Table structure for table `ajustes`
 --
 
 CREATE TABLE `ajustes` (
@@ -434,10 +433,10 @@ CREATE TABLE `ajustes` (
   `horaApertura` time DEFAULT '08:00:00',
   `horaCierre` time DEFAULT '17:00:00',
   `tipoGrafico` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `ajustes`
+-- Dumping data for table `ajustes`
 --
 
 INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES
@@ -446,7 +445,7 @@ INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafi
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clientes`
+-- Table structure for table `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -455,10 +454,10 @@ CREATE TABLE `clientes` (
   `apellidosCliente` varchar(30) DEFAULT NULL,
   `telefonoCliente` varchar(15) DEFAULT NULL,
   `cedulaCliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `clientes`
+-- Dumping data for table `clientes`
 --
 
 INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES
@@ -475,7 +474,7 @@ INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `tele
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalleegreso`
+-- Table structure for table `detalleegreso`
 --
 
 CREATE TABLE `detalleegreso` (
@@ -483,10 +482,10 @@ CREATE TABLE `detalleegreso` (
   `valorEgreso` int(8) NOT NULL,
   `descripcion` varchar(100) DEFAULT NULL,
   `idEgreso` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `detalleegreso`
+-- Dumping data for table `detalleegreso`
 --
 
 INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgreso`) VALUES
@@ -513,7 +512,7 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalleventa`
+-- Table structure for table `detalleventa`
 --
 
 CREATE TABLE `detalleventa` (
@@ -522,10 +521,10 @@ CREATE TABLE `detalleventa` (
   `precioUnitario` int(11) DEFAULT NULL,
   `idVenta` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `detalleventa`
+-- Dumping data for table `detalleventa`
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
@@ -543,12 +542,19 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (21, 16, 3500, 12, 11),
 (22, 1, 50000, 14, 1),
 (23, 3, 3500, 14, 11),
-(24, 1, 55000, 15, 10);
+(24, 1, 55000, 15, 10),
+(25, 10, 50000, 16, 12),
+(26, 0, 5000, 17, 4),
+(27, 1, 50000, 18, 12),
+(28, 0, 50000, 1, 12),
+(29, 1, 50000, 19, 6),
+(30, 1, 36000, 20, 8),
+(31, 1, 6000, 21, 7);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detcompraproducto`
+-- Table structure for table `detcompraproducto`
 --
 
 CREATE TABLE `detcompraproducto` (
@@ -557,10 +563,10 @@ CREATE TABLE `detcompraproducto` (
   `precioUnitario` int(11) NOT NULL,
   `idCompra` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `detcompraproducto`
+-- Dumping data for table `detcompraproducto`
 --
 
 INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) VALUES
@@ -581,7 +587,7 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `enccompraproducto`
+-- Table structure for table `enccompraproducto`
 --
 
 CREATE TABLE `enccompraproducto` (
@@ -591,10 +597,10 @@ CREATE TABLE `enccompraproducto` (
   `idProveedor` int(11) DEFAULT NULL,
   `vrTotalCompra` int(11) NOT NULL,
   `vrTotalIva` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `enccompraproducto`
+-- Dumping data for table `enccompraproducto`
 --
 
 INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `idProveedor`, `vrTotalCompra`, `vrTotalIva`) VALUES
@@ -610,7 +616,7 @@ INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `i
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `encegreso`
+-- Table structure for table `encegreso`
 --
 
 CREATE TABLE `encegreso` (
@@ -619,10 +625,10 @@ CREATE TABLE `encegreso` (
   `tituloEgreso` varchar(80) DEFAULT NULL,
   `vrTotalEgreso` int(8) NOT NULL,
   `idTipoEgreso` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `encegreso`
+-- Dumping data for table `encegreso`
 --
 
 INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES
@@ -637,7 +643,7 @@ INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgre
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `encventas`
+-- Table structure for table `encventas`
 --
 
 CREATE TABLE `encventas` (
@@ -647,13 +653,14 @@ CREATE TABLE `encventas` (
   `idMetodoPago` int(11) DEFAULT NULL,
   `vrTotalVta` int(11) NOT NULL,
   `idCliente` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `encventas`
+-- Dumping data for table `encventas`
 --
 
 INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPago`, `vrTotalVta`, `idCliente`) VALUES
+(1, '2023-04-26 15:40:23', 0, 1, 0, 14),
 (5, '2023-04-20 19:53:41', 10000, 1, 284000, 9),
 (6, '2023-04-20 19:53:41', 8000, 1, 160000, 7),
 (7, '2023-04-20 19:53:41', 0, 1, 7000, 4),
@@ -664,22 +671,28 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (12, '2023-04-20 19:53:41', 0, 1, 56000, 7),
 (13, '2023-04-25 21:17:33', 0, 1, 50000, 14),
 (14, '2023-04-25 21:21:05', 0, 1, 60500, 14),
-(15, '2023-04-25 22:29:19', 0, 1, 55000, 14);
+(15, '2023-04-25 22:29:19', 0, 1, 55000, 14),
+(16, '2023-04-26 15:27:09', 0, 1, 500000, 9),
+(17, '2023-04-26 15:35:49', 0, 1, 0, 10),
+(18, '2023-04-26 15:39:00', 0, 1, 50000, 14),
+(19, '2023-04-26 15:46:24', 0, 1, 50000, 13),
+(20, '2023-04-27 12:17:29', 1000, 1, 35000, 7),
+(21, '2023-04-27 12:27:56', 0, 1, 6000, 7);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `imagen`
+-- Table structure for table `imagen`
 --
 
 CREATE TABLE `imagen` (
   `idImagen` int(11) NOT NULL,
   `rutaImagen` varchar(100) NOT NULL,
   `nombreImagen` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `imagen`
+-- Dumping data for table `imagen`
 --
 
 INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
@@ -694,21 +707,24 @@ INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
 (18, './../../../public/img/productos/', 'pilsenon750.jpg'),
 (19, './../../../public/img/productos/', 'pilsenon.png'),
 (20, './../../../public/img/productos/', 'crema.jpg'),
-(21, './../../../public/img/productos/', 'gatoNegro.png');
+(21, './../../../public/img/productos/', 'gatoNegro.png'),
+(22, './../../../public/img/productos/', '20230427165000.png'),
+(23, './../../../public/img/productos/', '20230427165047.png'),
+(24, './../../../public/img/productos/', '20230427171202.png');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `metodopago`
+-- Table structure for table `metodopago`
 --
 
 CREATE TABLE `metodopago` (
   `idMetodoPago` int(11) NOT NULL,
   `metodoPago` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `metodopago`
+-- Dumping data for table `metodopago`
 --
 
 INSERT INTO `metodopago` (`idMetodoPago`, `metodoPago`) VALUES
@@ -720,17 +736,17 @@ INSERT INTO `metodopago` (`idMetodoPago`, `metodoPago`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `notas`
+-- Table structure for table `notas`
 --
 
 CREATE TABLE `notas` (
   `idNota` int(11) NOT NULL,
   `tituloNota` varchar(20) DEFAULT NULL,
   `contenidoNota` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `notas`
+-- Dumping data for table `notas`
 --
 
 INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
@@ -741,42 +757,41 @@ INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productos`
+-- Table structure for table `productos`
 --
 
 CREATE TABLE `productos` (
   `idProducto` int(11) NOT NULL,
   `nombreProducto` varchar(30) NOT NULL,
   `descripcionProducto` varchar(100) DEFAULT NULL,
-  `porcentajeIva` int(5) NOT NULL,
   `costoProducto` int(8) NOT NULL,
   `precioVenta` int(8) NOT NULL,
-  `stockProducto` int(7) NOT NULL,
+  `existenciaProducto` int(7) NOT NULL,
   `idImagen` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `productos`
+-- Dumping data for table `productos`
 --
 
-INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `porcentajeIva`, `costoProducto`, `precioVenta`, `stockProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 21, 42000, 50000, 0, 21),
-(2, 'Crema de whiskey', 'Crema dulce', 21, 30000, 42000, 8, 20),
-(3, 'Pilsenon litro', 'Cerveza pilsen litro', 3, 3000, 5500, 44, 19),
-(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 15, 2500, 5000, 47, 18),
-(5, 'Media de guaro', 'Media de guaro tapa roja', 21, 25000, 20000, 20, 9),
-(6, 'litro de ron caldas', 'Litro de ron caldas', 21, 40000, 50000, 14, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 15, 5000, 6000, 42, 16),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 21, 25000, 36000, 18, 15),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 21, 30000, 50000, 17, 14),
-(10, 'Botella de gin', 'Botella de ginebra ', 21, 40000, 55000, 0, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 21, 2000, 3500, 0, 12),
-(12, 'Botella de vodka', 'botella de vodka smirnoff', 21, 40000, 50000, 10, 11);
+INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 0, 21),
+(2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 8, 20),
+(3, 'Pilsenon litro', 'Cerveza pilsen litro', 3000, 5500, 44, 19),
+(4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
+(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 20, 9),
+(6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 0, 17),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 0, 16),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 0, 15),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 17, 14),
+(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 0, 13),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 0, 12),
+(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 0, 11);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE `proveedor` (
@@ -784,10 +799,10 @@ CREATE TABLE `proveedor` (
   `nombreProveedor` varchar(40) NOT NULL,
   `direccionProveedor` varchar(30) DEFAULT NULL,
   `telefonoProveedor` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `proveedor`
+-- Dumping data for table `proveedor`
 --
 
 INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`, `telefonoProveedor`) VALUES
@@ -802,16 +817,16 @@ INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`,
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tipoegreso`
+-- Table structure for table `tipoegreso`
 --
 
 CREATE TABLE `tipoegreso` (
   `idTipoEgreso` int(11) NOT NULL,
   `nombreTipoEgreso` varchar(40) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tipoegreso`
+-- Dumping data for table `tipoegreso`
 --
 
 INSERT INTO `tipoegreso` (`idTipoEgreso`, `nombreTipoEgreso`) VALUES
@@ -826,7 +841,7 @@ INSERT INTO `tipoegreso` (`idTipoEgreso`, `nombreTipoEgreso`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -834,10 +849,10 @@ CREATE TABLE `usuarios` (
   `nombreUsuario` varchar(40) NOT NULL,
   `correoUsuario` varchar(40) NOT NULL,
   `contrasenaUsuario` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Dumping data for table `usuarios`
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) VALUES
@@ -845,30 +860,30 @@ INSERT INTO `usuarios` (`idUsuario`, `nombreUsuario`, `correoUsuario`, `contrase
 (2, 'Licores elite', 'campuzanomiguel2208@gmail.com', '3f944f9c37e525fdc0e2f9935d5dac22f366d14364777ff8d9c5a0ea33b7b87b');
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `ajustes`
+-- Indexes for table `ajustes`
 --
 ALTER TABLE `ajustes`
   ADD PRIMARY KEY (`nombreEmpresa`);
 
 --
--- Indices de la tabla `clientes`
+-- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`idCliente`);
 
 --
--- Indices de la tabla `detalleegreso`
+-- Indexes for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   ADD PRIMARY KEY (`idDetEgreso`),
   ADD KEY `detalleEgreso` (`idEgreso`);
 
 --
--- Indices de la tabla `detalleventa`
+-- Indexes for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
   ADD PRIMARY KEY (`idDetVenta`),
@@ -876,7 +891,7 @@ ALTER TABLE `detalleventa`
   ADD KEY `detEncVta` (`idVenta`);
 
 --
--- Indices de la tabla `detcompraproducto`
+-- Indexes for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
   ADD PRIMARY KEY (`idDetCompra`),
@@ -884,21 +899,21 @@ ALTER TABLE `detcompraproducto`
   ADD KEY `detalleCompraProducto` (`idProducto`);
 
 --
--- Indices de la tabla `enccompraproducto`
+-- Indexes for table `enccompraproducto`
 --
 ALTER TABLE `enccompraproducto`
   ADD PRIMARY KEY (`idCompra`),
   ADD KEY `encCompraProductos` (`idProveedor`);
 
 --
--- Indices de la tabla `encegreso`
+-- Indexes for table `encegreso`
 --
 ALTER TABLE `encegreso`
   ADD PRIMARY KEY (`idEgreso`),
   ADD KEY `egresosTipo` (`idTipoEgreso`);
 
 --
--- Indices de la tabla `encventas`
+-- Indexes for table `encventas`
 --
 ALTER TABLE `encventas`
   ADD PRIMARY KEY (`idVenta`),
@@ -906,166 +921,166 @@ ALTER TABLE `encventas`
   ADD KEY `metodoPago` (`idMetodoPago`);
 
 --
--- Indices de la tabla `imagen`
+-- Indexes for table `imagen`
 --
 ALTER TABLE `imagen`
   ADD PRIMARY KEY (`idImagen`);
 
 --
--- Indices de la tabla `metodopago`
+-- Indexes for table `metodopago`
 --
 ALTER TABLE `metodopago`
   ADD PRIMARY KEY (`idMetodoPago`);
 
 --
--- Indices de la tabla `notas`
+-- Indexes for table `notas`
 --
 ALTER TABLE `notas`
   ADD PRIMARY KEY (`idNota`);
 
 --
--- Indices de la tabla `productos`
+-- Indexes for table `productos`
 --
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`idProducto`),
   ADD KEY `productoImagen` (`idImagen`);
 
 --
--- Indices de la tabla `proveedor`
+-- Indexes for table `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`idProveedor`);
 
 --
--- Indices de la tabla `tipoegreso`
+-- Indexes for table `tipoegreso`
 --
 ALTER TABLE `tipoegreso`
   ADD PRIMARY KEY (`idTipoEgreso`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`idUsuario`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
+-- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT de la tabla `detalleegreso`
+-- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT de la tabla `detalleventa`
+-- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT de la tabla `detcompraproducto`
+-- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
   MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
--- AUTO_INCREMENT de la tabla `imagen`
+-- AUTO_INCREMENT for table `imagen`
 --
 ALTER TABLE `imagen`
-  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT de la tabla `metodopago`
+-- AUTO_INCREMENT for table `metodopago`
 --
 ALTER TABLE `metodopago`
   MODIFY `idMetodoPago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `notas`
+-- AUTO_INCREMENT for table `notas`
 --
 ALTER TABLE `notas`
   MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT de la tabla `productos`
+-- AUTO_INCREMENT for table `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT de la tabla `proveedor`
+-- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT de la tabla `tipoegreso`
+-- AUTO_INCREMENT for table `tipoegreso`
 --
 ALTER TABLE `tipoegreso`
   MODIFY `idTipoEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `detalleegreso`
+-- Constraints for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   ADD CONSTRAINT `detalleEgreso` FOREIGN KEY (`idEgreso`) REFERENCES `encegreso` (`idEgreso`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `detalleventa`
+-- Constraints for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
   ADD CONSTRAINT `EncDetVta` FOREIGN KEY (`idVenta`) REFERENCES `encventas` (`idVenta`) ON DELETE CASCADE,
   ADD CONSTRAINT `ventaProducto` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`);
 
 --
--- Filtros para la tabla `detcompraproducto`
+-- Constraints for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
   ADD CONSTRAINT `compraProducto` FOREIGN KEY (`idCompra`) REFERENCES `enccompraproducto` (`idCompra`) ON DELETE CASCADE,
   ADD CONSTRAINT `detalleCompraProducto` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`);
 
 --
--- Filtros para la tabla `enccompraproducto`
+-- Constraints for table `enccompraproducto`
 --
 ALTER TABLE `enccompraproducto`
   ADD CONSTRAINT `encCompraProductos` FOREIGN KEY (`idProveedor`) REFERENCES `proveedor` (`idProveedor`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `encegreso`
+-- Constraints for table `encegreso`
 --
 ALTER TABLE `encegreso`
   ADD CONSTRAINT `egresosTipo` FOREIGN KEY (`idTipoEgreso`) REFERENCES `tipoegreso` (`idTipoEgreso`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `encventas`
+-- Constraints for table `encventas`
 --
 ALTER TABLE `encventas`
   ADD CONSTRAINT `encClientes` FOREIGN KEY (`idCliente`) REFERENCES `clientes` (`idCliente`) ON DELETE CASCADE,
   ADD CONSTRAINT `metodoPago` FOREIGN KEY (`idMetodoPago`) REFERENCES `metodopago` (`idMetodoPago`);
 
 --
--- Filtros para la tabla `productos`
+-- Constraints for table `productos`
 --
 ALTER TABLE `productos`
-  ADD CONSTRAINT `productoImagen` FOREIGN KEY (`idImagen`) REFERENCES `imagen` (`idImagen`);
+  ADD CONSTRAINT `productoImagen` FOREIGN KEY (`idImagen`) REFERENCES `imagen` (`idImagen`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

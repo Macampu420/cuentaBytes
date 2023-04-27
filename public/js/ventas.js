@@ -140,7 +140,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
     document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
     document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
 
-    if(productoItem.stockProducto == 0){
+    if(productoItem.existenciaProducto == 0){
         disparador.nextElementSibling.innerHTML = `No hay unidades disponibles.`;
         document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute("readonly", "");
         document.getElementById(`inpCantidad${nroItemDisparador}`).value = 0;
@@ -148,8 +148,8 @@ const actualizarCrearItem = (item, disparador, vector) => {
     } else {
         document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("readonly");
         document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
-        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.stockProducto);
-        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.stockProducto} unidades.`;    
+        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.existenciaProducto);
+        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.existenciaProducto} unidades.`;    
     }   
     vrTotalRegistar(vector);
 
