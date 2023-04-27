@@ -4,3 +4,12 @@ var offcanvasAjustes = new bootstrap.Offcanvas(document.getElementById('offcanva
 btnDesplegarAjustes.onclick = () => {
     offcanvasAjustes.show();
 }
+
+let traerAjustes = async () => {
+    let resAjustes = await fetch('http://localhost:3000/ajustes');
+    let ajustes = await resAjustes.json();
+
+    document.getElementById("pHeader").innerHTML = ajustes.nombreEmpresa;
+}
+
+document.addEventListener("DOMContentLoaded", () => {traerAjustes()});

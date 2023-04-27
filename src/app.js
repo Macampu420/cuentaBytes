@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const rutasGraficos = require('./routes/graficos');
+const Ajustes = require("./models/ajustes");
 const morgan = require('morgan');
 let  corsOptions = { origin: 'http://localhost'}
 
 const app = express();
+const objAjustes = new Ajustes();
 
 //configuraciones
 app.set('port', process.env.PORT || 3000);
@@ -30,7 +32,7 @@ app.use(require('./routes/compras'));
 app.use(require('./routes/notas'))
 app.use(require('./routes/inicioSesion'))
 app.use(require('./routes/mailer'));
-
+app.get('/ajustes', (req, res) => objAjustes.servirAjustes(req, res));
 
 
 //inicializacion del servidor

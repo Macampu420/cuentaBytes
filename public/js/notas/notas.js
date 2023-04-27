@@ -1,5 +1,5 @@
-var vObjsNotas = [];
-var vItemNota = [];
+let vObjsNotas = [];
+let vItemNota = [];
 
 const renderizarNotas = async () => {
     await fetch("http://localhost:3000/listarNotas")

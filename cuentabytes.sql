@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2023 at 05:40 PM
+-- Generation Time: Apr 27, 2023 at 06:16 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -135,6 +135,10 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarNota` (IN `_tituloNota` VARCHAR(20), IN `_contenidoNota` VARCHAR(100))   INSERT INTO `Notas`(`tituloNota`, `contenidoNota`) VALUES (_tituloNota,_contenidoNota)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarProducto` (IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_existenciaProducto` INT(7), IN `_idImagen` INT(11))   INSERT INTO `productos`(`nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES (_nombreProducto,_descripcionProducto,_costoProducto,_precioVenta,_existenciaProducto,_idImagen)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarAjustes` ()   BEGIN
+SELECT * FROM ajustes;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
 SELECT nombresCliente,apellidosCliente, idCliente FROM clientes;
@@ -318,18 +322,18 @@ GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
 ORDER BY stockMayor ASC 
 LIMIT 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistencia` ()   SELECT MAX(productos.stockProducto) AS existencia, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistencia` ()   SELECT MAX(productos.existenciaProducto) AS existencia, productos.nombreProducto
 FROM productos
 GROUP BY productos.idProducto, productos.nombreProducto
 ORDER BY existencia DESC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMayor` ()   SELECT MAX(productos.stockProducto) AS existenciaMayor, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMayor` ()   SELECT MAX(productos.existenciaProducto) AS existenciaMayor, productos.nombreProducto
 FROM productos
 GROUP BY productos.idProducto, productos.nombreProducto
 ORDER BY existenciaMayor DESC 
 LIMIT 10$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMenor` ()   SELECT MAX(productos.stockProducto) AS menorExistencia, productos.nombreProducto
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMenor` ()   SELECT MAX(productos.existenciaProducto) AS menorExistencia, productos.nombreProducto
 FROM productos
 GROUP BY productos.idProducto, productos.nombreProducto
 ORDER BY menorExistencia ASC
@@ -440,7 +444,7 @@ CREATE TABLE `ajustes` (
 --
 
 INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES
-('Licorera elite', '08:00:00', '17:00:00', 'barras');
+('Licorera Elite', '08:00:00', '17:00:00', 'barras');
 
 -- --------------------------------------------------------
 

@@ -6,13 +6,15 @@ const urlBase = "http://localhost/cuentabytes/src/controllers/productos/";
 
 document.getElementById("inpImg").addEventListener("focus", event => {
 
+    //alerta al usuario la recomendacion sobre el registro de la imagen
     if(swAlertImg){
-        window.alert("Te recomendamos que la foto sea en un fondo blanco y en formato jpg o png");
+        window.alert("Te recomendamos que la foto sea en un fondo blanco y debe ser en formato jpg o png");
         swAlertImg = false;
     }
 })
 
 document.getElementById("inpPrecioVenta").addEventListener('focus', () => {
+    //alerta al usuario recomendacion sobre el registro del precio de venta
     if(swAlertPrecioVenta){
         window.alert("Ten en cuenta que este es el valor con IVA incluido");
         swAlertPrecioVenta = false;
@@ -62,6 +64,7 @@ document.getElementById("filaProductos").addEventListener("click", async event =
             document.getElementById("btnGuardar").innerHTML = "Actualizar";
             document.getElementById('btnGuardar').setAttribute('formaction', urlBase + `editarProducto.php?idProducto=${event.target.getAttribute('idProducto')}`);
 
+            //se llenan todos los inputs y se deshabilitan
             document.getElementById("nombreProducto").value = datosProducto.items[0].nombreProducto;
             document.getElementById("nombreProducto").disabled = true;
 
@@ -79,12 +82,13 @@ document.getElementById("filaProductos").addEventListener("click", async event =
 
             document.getElementById("inpImg").disabled = true;
 
+            //se le da el atributo idProducto al boton para poderlo eliminar
             document.getElementById("btnEliminar").setAttribute("idProducto", datosProducto.items[0].idProducto);
         }
         modalReg.show()
     }
 
-})
+});
 
 document.getElementById("btnEliminar").addEventListener("click", async event => {
 
@@ -99,7 +103,7 @@ document.getElementById("btnEliminar").addEventListener("click", async event => 
         });
     }
 
-})
+});
 
 document.getElementById("buscadorProd").addEventListener("change", () => {
 
@@ -136,10 +140,10 @@ document.getElementById("buscadorProd").addEventListener("change", () => {
         alert.classList.add("d-none");
     
     }
-})
+});
 
 document.getElementById('btnEditar').addEventListener('click', event => {
-    
+    //habilita todos los campos del form para poder hacer la edicion
     document.getElementById('btnGuardar').disabled = false;
     document.getElementById("nombreProducto").disabled = false;
     document.getElementById("descripcionProducto").disabled = false;
