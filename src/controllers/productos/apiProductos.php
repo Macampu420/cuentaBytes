@@ -12,10 +12,9 @@ if($datos -> num_rows > 0){
             'idProducto' => $row['idProducto'],
             'nombreProducto' => $row['nombreProducto'],
             'descripcionProducto' => $row['descripcionProducto'],
-            'porcentajeIva' => $row['porcentajeIva'],
             'costoProducto' => $row['costoProducto'],
             'precioVenta' => $row['precioVenta'],
-            'stockProducto' => $row['stockProducto'],
+            'existenciaProducto' => $row['existenciaProducto'],
             'nombreImagen' => $row['nombreImagen'],
             
         );

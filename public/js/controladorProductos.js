@@ -29,6 +29,16 @@ document.getElementById("btnAnadirProd").addEventListener("click", () => {
         document.getElementById("btnGuardar").disabled = false;
         document.getElementById("btnGuardar").innerHTML = "Guardar";
         document.getElementById('btnGuardar').setAttribute('formaction', (urlBase + 'regProducto.php'));
+
+        document.getElementById('btnGuardar').disabled = false;
+        document.getElementById("nombreProducto").disabled = false;
+        document.getElementById("descripcionProducto").disabled = false;
+        document.getElementById("costoProducto").disabled = false;
+        document.getElementById("inpPrecioVenta").disabled = false;
+        document.getElementById("inpExistenciaProducto").disabled = false;
+        document.getElementById("inpImg").disabled = false;
+    
+
         document.querySelector('form').reset();
    }
 
@@ -64,7 +74,7 @@ document.getElementById("filaProductos").addEventListener("click", async event =
             document.getElementById("inpPrecioVenta").value = datosProducto.items[0].precioVenta;
             document.getElementById("inpPrecioVenta").disabled = true;
 
-            document.getElementById("inpExistenciaProducto").value = datosProducto.items[0].stockProducto;
+            document.getElementById("inpExistenciaProducto").value = datosProducto.items[0].existenciaProducto;
             document.getElementById("inpExistenciaProducto").disabled = true;
 
             document.getElementById("inpImg").disabled = true;
