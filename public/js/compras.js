@@ -539,17 +539,3 @@ let enviarEditCompra = async () => {
         });
 }
 
-// let modalEditar = async event => {
-//     let idCompra = event.target.getAttribute("idcompra");
-
-//     //trae la venta (enc y dets) para renderizarlos
-//     await fetch(`http://localhost:3000/editCompra${idCompra}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             vItemsEditar = data
-//         })
-//         .catch(e => console.log(e));
-
-//     console.log(vItemsEditar);
-
-// }
