@@ -60,31 +60,7 @@
 //     });
 // }
 
-// let mostrarDatosGraficoHora = (vectorDatos) => {
 
-//     //se obtienen todos los valores de las horas correspondientes
-//     let horasCompras = vectorDatos.compras.map(elemento => elemento.hora);
-//     let horasEgresos = vectorDatos.egresos.map(elemento => elemento.hora);
-//     let horasVentas = vectorDatos.ventas.map(elemento => elemento.hora);
-
-//     //se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
-//     chart.data.labels = convertirHora12(horasCompras);
-
-//     //se llenan y muestran los datos correspondientes a las compras
-//     chart.data.datasets[0].data = vectorDatos.compras.map(elemento => elemento.vrTotalHora);
-//     chart.data.datasets[0].label = 'Compras';
-//     chart.data.datasets[0].conceptos = convertirHora12(horasCompras);
-
-//     //se llenan y muestran los datos correspondientes a los egresos
-//     chart.data.datasets[1].data = vectorDatos.egresos.map(elemento => elemento.vrTotalHora);
-//     chart.data.datasets[1].label = 'Egresos';
-//     chart.data.datasets[1].conceptos = convertirHora12(horasEgresos);
-
-//     //se llenan y muestran los datos correspondientes a las ventas
-//     chart.data.datasets[2].data = vectorDatos.ventas.map(elemento => elemento.vrTotalHora);
-//     chart.data.datasets[2].label = 'Ventas';
-//     chart.data.datasets[2].conceptos = convertirHora12(horasVentas);
-// }
 
 // let mostrarDatosGraficoDia = (vectorDatos) => {
 
@@ -107,33 +83,7 @@
 //     chart.data.datasets[2].conceptos = vectorDatos.ventas.map(elemento => elemento.Dia);
 // }
 
-// let actualizarGrafico = async (inicio, fin, tiempo) => {
 
-//     // se consumen los datos de la API y se le pasan al metodo para que los setee,
-//     //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-//     let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
-//         method: "POST",
-//         credentials: "same-origin",
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//             inicio,
-//             fin
-//         })
-//     });
-
-//     let datosGraficos = await resGraficos.json();
-
-//     if(tiempo == 'horas'){
-//         mostrarDatosGraficoHora(datosGraficos);
-//     } else {
-//         mostrarDatosGraficoDia(datosGraficos);
-//     }
-
-//     chart.update();
-
-// }
 
 // // muestra desde hasta cuando se hara el PyG
 // let mostrarRango = (inicio, fin) => document.querySelector('#spanFechaGrafico').innerHTML = ('Generar gráfico movimiento de efectivo: <br/> Desde: ' + inicio + '. Hasta: ' + fin);

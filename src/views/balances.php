@@ -81,22 +81,19 @@
                                 
                                 <div class="accordion-body">
 
-                                    <div class="row col-12 mb-4 d-flex justify-content-start">
+                                    <div class="row col-12 mb-4">
 
                                         <!-- dropdown tipo balance -->
-                                        <div class="dropdown col-3">
+                                        <div class="dropdown col-8 col-md-3 mx-auto my-2 mx-lg-1">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Seleccionar reporte
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdown">
-                                                <li><a class="dropdown-item" href="#">Opcion A</a></li>
-                                                <li><a class="dropdown-item" href="#">Opcion B</a></li>
-                                                <li><a class="dropdown-item" href="#">Opcion C</a></li>
+                                            <ul id="containerDropdownProductos" class="dropdown-menu" aria-labelledby="dropdown">
                                             </ul>
                                         </div>
 
                                         <!-- dropdown fecha -->
-                                        <button id="dropdownFecha" class="col-3 btn btn-secondary dropdown-toggle" type="button" aria-expanded="false">Seleccionar fecha</button>
+                                        <button id="dropdownFecha" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1" type="button" aria-expanded="false">Seleccionar fecha</button>
                                     
                                     </div>
 
@@ -129,11 +126,11 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <script src="./../../public/js/popper.js"></script>
         <script src="./../../public/js/bootstrap.js"></script>
-        <script src="./../../public/js/balances.js"></script>
         <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
-        <script src="./../../public/js/acordeon.js"></script>
+        <script src="./../../public/js/graficos/acordeon.js"></script>
+        <script src="./../../public/js/graficos/controladorGraficos.js"></script>
 </body>
 
 </html>

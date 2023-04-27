@@ -129,10 +129,6 @@ class Graficos {
             // Llenar el vector de horas con los datos de ventas obtenidos de la base de datos
             this.reemplazarHorasDatos(vHoras, datos);
 
-            if (vHoras.length == 0) {
-                throw new Error("No hay horas por mostrar");
-            }
-
             return vHoras;
 
         } catch (error) {
@@ -150,11 +146,7 @@ class Graficos {
             // Obtener la hora actual en formato 24 horas
             let vDias = this.crearTotalFechas(fechaInicio, fechaFin);
 
-            this.reemplazarDiasDatos(vDias, datos)
-
-            if (vDias.length == 0) {
-                throw new Error("No hay horas por mostrar");
-            }   
+            this.reemplazarDiasDatos(vDias, datos);
             
             return vDias;
 
@@ -168,11 +160,7 @@ class Graficos {
         let datos = results.map(element => JSON.parse(JSON.stringify(element)));
 
             // Obtener la hora actual en formato 24 horas
-            let vProductos = datos
-
-            if (vProductos.length == 0) {
-                throw new Error("No hay horas por mostrar");
-            }   
+            let vProductos = datos  
             
             return vProductos;
     }
