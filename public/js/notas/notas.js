@@ -16,7 +16,6 @@ const renderizarNotas = async () => {
             console.log(error)
         });
 
-    console.log(vObjsNotas);
 
     if (vObjsNotas.length > 0) {
         vObjsNotas.forEach(element => {
@@ -140,5 +139,4 @@ const actualizarNota = async (idNota) => {
             location.reload();
         });
 
-        console.log(notaEditar);
 }

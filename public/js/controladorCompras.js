@@ -6,7 +6,7 @@ traerCompras();
 traerProductos();
 traerProveedores();
 mostrarProveedores();
-guardarProductos();
+// guardarProductos();
 mostrarCompras();
 
 //inicializacion y despliegue del modal
@@ -17,65 +17,110 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
         configModalReg();
         modalCompras.show();
         numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
+        
     }
+
+});
+
+document.getElementById("tblItemsVta").addEventListener("change", (event) => {
+
+    let disparador = event.target;
+
+    if (disparador.tagName == "SELECT") {
+
+        let item = vItemsCompra.find(
+            //busca en los elementos de la venta actual uno que coincida con el item modificado
+            //si no existe se define como undefined
+            element => element.idItem ==  parseInt(disparador.id.slice(-1)));
+
+        actualizarCrearItem(item, event.target, vItemsCompra);
+        
+        disparador.nextElementSibling.classList.remove("d-none");
+    }   
 
 });
 
 document.getElementById('btnAnadir').addEventListener('click', event => {
 
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-
         divModal.getAttribute('editar') == 'false' ? renderItemReg(numeroItem, vProductos) : renderItemEdit(vProductos);
-        numeroItem++;
-    }
+        numeroItem++; 
 
 });
 
-document.getElementById("contItems").addEventListener("change", event => {
+document.getElementById("tblItemsVta").addEventListener("click", (event) => {
 
-    let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-    let disparador = event.target;
-    let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
-    let item = vector.find(item => item.idItem == ('item' + numeroItem));
-
-    if (disparador.tagName == "SELECT") {
-        habilitarInputsItem(disparador);
-        if (divModal.getAttribute('editar') == 'false') {
-            item == undefined ? crearItemReg(vector, disparador, numeroItem) : actualizarItem(vector, item, disparador, numeroItem);
-        } else {
-            item == undefined ? crearItemEdit(vector) : actualizarItem(vector, item, disparador, numeroItem);
-        }
+    if(event.target.id == "" && event.target.nodeName == "A"){
+        eliminarItem(event.target.parentElement, vCompras);
     }
+    if(event.target.id.includes("btnEliminarItem")){
+        eliminarItem(event.target, vCompras);
+    };
+
 });
 
-document.getElementById('rowItems').addEventListener('input', event => {
-    if (event.target.tagName == "INPUT") {
-        let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-        let disparador = event.target;
-        let numeroItem = disparador.id.slice(disparador.id.length - 1);
-        let item = vector.find(item => item.idItem == ('item' + numeroItem));
+document.getElementById("tblItemsVta").addEventListener("input", (event) => {
+    //codigo a ejecutar si el diparador es un inpCantidad producto
+    if (event.target.id.includes("inpCantidad")) {
+        //si el valor digitado es mayor que las unidades disponibles setea el valor del
+        //input como este numero de unidades
+        if (event.target.value > parseInt(event.target.getAttribute("max")))
+            event.target.value = parseInt(event.target.getAttribute("max"));
 
-        if (disparador.id.includes('inpunidCompslc')) {
-            actualizarUnidCompradas(vector, item, numeroItem);
-            mostrarNuevoStock(disparador);
+        //si el valor digitado es menor a  setea el valor del
+        //input como 0
+        if (event.target.value < 0) event.target.value = 0;
 
-        } else if (disparador.id.includes('inpPrecioUnitslc')) {
-            actualizarCostoProducto(vector, item, numeroItem);
-        }
+        actualizarUnidadesVendidas(event.target, vItemsCompra);
     }
-})
 
-document.getElementById('rowItems').addEventListener('click', event => {
-    if (event.target.id.includes('dlt')) {
-        let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-        let disparador = event.target;
-        let numeroItem = disparador.id.slice(disparador.id.length - 1);
-        let item = vector.find(item => item.idItem == ('item' + numeroItem));
+    vrTotal(vItemsCompra);
 
-        disparador.parentElement.parentElement.remove();
-        eliminarProducto(vector, item);
-    }
 });
+// document.getElementById("contItems").addEventListener("change", event => {
+
+//     let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
+//     let disparador = event.target;
+//     let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
+//     let item = vector.find(item => item.idItem == ('item' + numeroItem));
+
+//     if (disparador.tagName == "SELECT") {
+//         habilitarInputsItem(disparador);
+//         if (divModal.getAttribute('editar') == 'false') {
+//             item == undefined ? crearItemReg(vector, disparador, numeroItem) : actualizarItem(vector, item, disparador, numeroItem);
+//         } else {
+//             item == undefined ? crearItemEdit(vector) : actualizarItem(vector, item, disparador, numeroItem);
+//         }
+//     }
+// });
+
+// document.getElementById('rowItems').addEventListener('input', event => {
+//     if (event.target.tagName == "INPUT") {
+//         let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
+//         let disparador = event.target;
+//         let numeroItem = disparador.id.slice(disparador.id.length - 1);
+//         let item = vector.find(item => item.idItem == ('item' + numeroItem));
+
+//         if (disparador.id.includes('inpunidCompslc')) {
+//             actualizarUnidCompradas(vector, item, numeroItem);
+//             mostrarNuevoStock(disparador);
+
+//         } else if (disparador.id.includes('inpPrecioUnitslc')) {
+//             actualizarCostoProducto(vector, item, numeroItem);
+//         }
+//     }
+// })
+
+// document.getElementById('rowItems').addEventListener('click', event => {
+//     if (event.target.id.includes('dlt')) {
+//         let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
+//         let disparador = event.target;
+//         let numeroItem = disparador.id.slice(disparador.id.length - 1);
+//         let item = vector.find(item => item.idItem == ('item' + numeroItem));
+
+//         disparador.parentElement.parentElement.remove();
+//         eliminarProducto(vector, item);
+//     }
+// });
 
 document.querySelector("form").addEventListener("submit", (event) => {
 
@@ -94,20 +139,20 @@ document.getElementById('filaCompras').addEventListener('click', event => {
     }
 })
 
-document.getElementById('btnEliminar').addEventListener("click", async () => {
-    let idCompra = document.getElementById('btnEliminar').getAttribute('idcompra');
+// document.getElementById('btnEliminar').addEventListener("click", async () => {
+//     let idCompra = document.getElementById('btnEliminar').getAttribute('idcompra');
 
-    if (confirm("¿Deseas eliminar la compra?") == true) {
+//     if (confirm("¿Deseas eliminar la compra?") == true) {
 
-        await fetch(`http://localhost:3000/eliminarCompra${idCompra}`)
-            .then(res => res.text())
-            .then(data => {
-                alert(data);
-                location.reload();
-            });
+//         await fetch(`http://localhost:3000/eliminarCompra${idCompra}`)
+//             .then(res => res.text())
+//             .then(data => {
+//                 alert(data);
+//                 location.reload();
+//             });
 
-    }
-})
+//     }
+// })
 
 document.getElementById("buscadorCompras").addEventListener("change", () => {
 
@@ -146,4 +191,4 @@ document.getElementById("buscadorCompras").addEventListener("change", () => {
     }
 })
 
-document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false)
+// document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false)
