@@ -194,7 +194,7 @@
                         
                         <div class="col-10 mt-3 mt-md-0 mx-auto col-lg-10 my-3">
                             <label for="inpFecha" class="form-label quicksand">Proveedor:</label>
-                            <select required id="slcCProveedor" class="form-select" aria-label="Default select example">
+                            <select required id="slcProveedor" class="form-select" aria-label="Default select example">
                                 <option selected disabled value="">Proveedor </option>
                             </select>
                         </div>
@@ -233,14 +233,6 @@
                         </tbody>
 
                         <tfoot class="">
-                            <tr>
-                                <td colspan="5" class="text-end col-5"><strong>Descuento:</strong></td>
-                                <td colspan="5" class="col-7">
-                                    <div class="col-9">
-                                        <input id="inpDescuento" class="form-control w-75 mb-2" type="number" value="0">
-                                    </div>
-                                </td>
-                            </tr>
                             <tr>
                                 <td colspan="5" class="text-end col-4 align-middle">
                                     <p><strong>Total:</strong></p>

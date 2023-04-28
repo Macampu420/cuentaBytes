@@ -1,4 +1,3 @@
-let numeroItem;
 let divModal = document.getElementById("modalCompras");
 let modalCompras = new bootstrap.Modal(divModal);
 
@@ -15,6 +14,8 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
         configModalReg();
+        reiniciarModal();
+        renderItemReg();
         modalCompras.show();
         numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
         
@@ -50,10 +51,10 @@ document.getElementById('btnAnadir').addEventListener('click', event => {
 document.getElementById("tblItemsVta").addEventListener("click", (event) => {
 
     if(event.target.id == "" && event.target.nodeName == "A"){
-        eliminarItem(event.target.parentElement, vCompras);
+        eliminarItem(event.target.parentElement, vItemsCompra);
     }
     if(event.target.id.includes("btnEliminarItem")){
-        eliminarItem(event.target, vCompras);
+        eliminarItem(event.target, vItemsCompra);
     };
 
 });
@@ -76,51 +77,6 @@ document.getElementById("tblItemsVta").addEventListener("input", (event) => {
     vrTotal(vItemsCompra);
 
 });
-// document.getElementById("contItems").addEventListener("change", event => {
-
-//     let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-//     let disparador = event.target;
-//     let numeroItem = disparador.parentElement.id.slice(disparador.parentElement.id.length - 1);
-//     let item = vector.find(item => item.idItem == ('item' + numeroItem));
-
-//     if (disparador.tagName == "SELECT") {
-//         habilitarInputsItem(disparador);
-//         if (divModal.getAttribute('editar') == 'false') {
-//             item == undefined ? crearItemReg(vector, disparador, numeroItem) : actualizarItem(vector, item, disparador, numeroItem);
-//         } else {
-//             item == undefined ? crearItemEdit(vector) : actualizarItem(vector, item, disparador, numeroItem);
-//         }
-//     }
-// });
-
-// document.getElementById('rowItems').addEventListener('input', event => {
-//     if (event.target.tagName == "INPUT") {
-//         let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-//         let disparador = event.target;
-//         let numeroItem = disparador.id.slice(disparador.id.length - 1);
-//         let item = vector.find(item => item.idItem == ('item' + numeroItem));
-
-//         if (disparador.id.includes('inpunidCompslc')) {
-//             actualizarUnidCompradas(vector, item, numeroItem);
-//             mostrarNuevoStock(disparador);
-
-//         } else if (disparador.id.includes('inpPrecioUnitslc')) {
-//             actualizarCostoProducto(vector, item, numeroItem);
-//         }
-//     }
-// })
-
-// document.getElementById('rowItems').addEventListener('click', event => {
-//     if (event.target.id.includes('dlt')) {
-//         let vector = divModal.getAttribute('editar') == 'false' ? vItemsCompra : vItemsEditar;
-//         let disparador = event.target;
-//         let numeroItem = disparador.id.slice(disparador.id.length - 1);
-//         let item = vector.find(item => item.idItem == ('item' + numeroItem));
-
-//         disparador.parentElement.parentElement.remove();
-//         eliminarProducto(vector, item);
-//     }
-// });
 
 document.querySelector("form").addEventListener("submit", (event) => {
 
