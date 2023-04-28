@@ -1,45 +1,38 @@
-let secciones = [
-{
-    nombreSeccion: 'Ventas',
-    idSeccion: 'graficosVentas'
-},
-{
-    nombreSeccion: 'Egresos',
-    idSeccion: 'graficosEgresos'
-},
-{
-    nombreSeccion: 'Compras',
-    idSeccion: 'graficosCompras'
-},
-{
-    nombreSeccion: 'Clientes',
-    idSeccion: 'graficosClientes'
-},
-{
-    nombreSeccion: 'Productos',
-    idSeccion: 'GraficosProductos'
-}]
-
-const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-];
-
-let graficoProductos = new Chart(document.getElementById('canva1'), {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: "Productos",
-                data: [],
-            }]
-        }
-});
+function generarSeccionAccordion(titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) {
+    return `
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="${titulo}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#${idCollapse}" aria-expanded="true" aria-controls="${idCollapse}">
+            ${titulo}
+          </button>
+        </h2>
+        <div id="${idCollapse}" class="accordion-collapse collapse" aria-labelledby="${titulo}"
+          data-bs-parent="#acordeonBalances">
+          <div class="accordion-body">
+            <div class="row col-12 mb-4">
+              <div class="dropdown col-8 col-md-3 mx-auto my-2 mx-lg-1">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                  id="${idDropdown}" data-bs-toggle="dropdown" aria-expanded="false">
+                  Seleccionar reporte
+                </button>
+                <ul id="${containerDropdown}" class="dropdown-menu" aria-labelledby="${idDropdown}">
+                </ul>
+              </div>
+              <button id="${idFecha}" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1"
+                type="button" aria-expanded="false">Seleccionar fecha</button>
+            </div>
+            <div class="col-12">
+              <canvas id="${idCanvas}"></canvas>
+            </div>
+            <div class="col-12 mt-2">
+              <p id="${idFechaGrafico}" class="text-center fs-3 questrial my-0">Estas viendo este reporte desde hoy hasta ayer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+}
 
 let traerDatosProductos = async (inicio, fin, tiempo) => {
 
@@ -85,9 +78,9 @@ let  convertirACamelCase = (str) => {
 }
 
 // muestra desde hasta cuando se hara el PyG
-let mostrarRango = (inicio, fin) => document.querySelector('#pFechaGrafico').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
+let mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
 
-let mostrarDatosProductoHora = (vectorDatos, tipoBalance, propiedadData) => {
+let mostrarDatosProductoHora = (graficoProductos, vectorDatos, tipoBalance, propiedadData) => {
 
     //se obtienen todos los valores de las horas correspondientes
     let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
