@@ -36,7 +36,7 @@ class moduloCompras {
                                         res.write(err);
                                         res.end();
                                     } else {
-                                        pool.query("CALL actualizarCostoProducto(?,?,?)", [element.cantidadCompra, element.costoProducto, element.idProducto],
+                                        pool.query("CALL actualizarCostoProducto(?,?,?)", [element.unidadesVendidas, element.costoProducto, element.idProducto],
                                             err => {
                                                 if (err) {
                                                     console.log(err);

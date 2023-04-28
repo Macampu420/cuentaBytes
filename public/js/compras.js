@@ -19,7 +19,7 @@ let mostrarProveedores = async () => {
     vProveedores = await traerProveedores();
 
     vProveedores.forEach(proveedor => {
-        slcProveedor.insertAdjacentHTML('beforeend', `<option value="${proveedor.idProveedor}">${proveedor.nombreProveedor}</option>`)
+        slcProveedor.insertAdjacentHTML('beforeend', `<option value="${proveedor.idProveedor}">${proveedor.nombreProveedor}</option>`)       
     })
 };
 
@@ -33,6 +33,8 @@ let traerProductos = async () => {
             data.forEach(element => vProductos.push(element));
 
         });
+
+        slcProveedor.insertAdjacentHTML('beforeend', `<option value="14">Bavaria</option>`)
 }
 
 //trae todos los encs de las compras de la api y los devuelve como json
@@ -115,12 +117,12 @@ let renderItemReg = () => {
         </td>
         <td class="align-middle">
             <div class="row">
-                <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled required>
+                <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="0" disabled required>
             </div>                                    
         </td>
         <td class="align-middle">
         <div class="row">
-                <input id="pPrecioVenta${numeroItem}" class="form-control w-200 mx-auto mb-2" type="number" value="1" disabled required>
+                <input id="pPrecioVenta${numeroItem}" class="form-control w-200 mx-auto mb-2" type="number" value="0" disabled required>
             </div>  
         <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$0</p></td>
         <td class="align-middle">
@@ -178,19 +180,6 @@ let renderItemReg = () => {
 //     });
 // }
 //reinicia el modal
-let configModalReg = () => {
-
-    let date = new Date();
-    document.getElementById("formCompras").reset();
-    document.getElementById('fechaCompra').value = date.toISOString().slice(0, 10);
-    document.getElementById('btnGuardar').disabled = false;
-    // document.getElementById('divAcciones').classList.add("d-none");
-    // document.getElementById('tblItemsVta').classList.add("d-none");
-    // document.getElementById('rowItems').innerHTML = "";
-    document.getElementById('btnGuardar').innerHTML = "Guardar";
-    vItemsCompra = [];
-
-}
 
 let configModalEdit = async (event) => {
     let idCompra = event.target.getAttribute("idcompra");
@@ -278,7 +267,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
             precioUnitario: productoItem.precioVenta,
             costoProducto: productoItem.costoProducto,
             stockProducto: productoItem.existenciaProducto,
-            unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
+            unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value
         }
     }
 
@@ -365,6 +354,8 @@ let enviarRegCompra = async () => {
         vrTotalCompra,
         vItemsCompra
     };
+
+    console.log(compraActual);
 
     await fetch('http://localhost:3000/guardarCompra', {
             method: "POST",

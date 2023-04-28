@@ -13,9 +13,8 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
     divModal.setAttribute("editar", "false")
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        configModalReg();
         reiniciarModal();
-        renderItemReg();
+        // renderItemReg();
         modalCompras.show();
         numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
         
