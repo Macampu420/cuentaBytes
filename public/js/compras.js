@@ -144,43 +144,6 @@ let renderItemReg = () => {
     
 }
 
-// let renderItemEdit = (vProductos_) => {
-
-//     crearItemEdit(vItemsEditar);
-
-//     //agrega un nuevo item de la compra al modal
-//     document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-//         <div id="item${vItemsEditar.length - 1}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-//             <div class="containerBtn">
-//                 <div id="dlt${vItemsEditar.length - 1}" class="btnEliminar"></div>
-//             </div>
-//             <select id="slc${vItemsEditar.length - 1}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-//                 <option selected>Selecciona el producto</option>
-//             </select>
-//             <div id="slidecontainer${vItemsEditar.length - 1}" class="">
-//                 <div class="row">
-//                     <div class="col-7 col-lg-5 mx-auto">
-//                         <label for="inpunidCompslc${vItemsEditar.length - 1}">Unidades compradas:</label>
-//                         <input disabled id="inpunidCompslc${vItemsEditar.length - 1}" type="number" min="1" value="0" class="unidCompslc${vItemsEditar.length - 1} w-100">
-//                     </div>
-//                     <div class="col-7 col-lg-5 mx-auto">
-//                         <label for="inpPrecioUnitslc${vItemsEditar.length - 1}">Valor unitario:</label>
-//                         <input disabled id="inpPrecioUnitslc${vItemsEditar.length - 1}" type="number" min="1" class="precioUnitslc${vItemsEditar.length - 1} w-100">
-//                     </div>
-//                 </div>
-//                 <p id="pslc${vItemsEditar.length - 1}" class="d-none mx-auto mt-2 mb-0 text-center">Actualmente tienes 1. Quedarás con 20.</p>
-//             </div>
-//         </div>
-//         `);
-
-//     //pone todos los productos que se traigan en el select del item creado
-//     vProductos_.forEach(producto => {
-//         document.getElementById(("slc" + (vItemsEditar.length - 1))).insertAdjacentHTML("beforeend", `
-//          <option value="${producto.idProducto}">${producto.nombreProducto}</option>`)
-//     });
-// }
-//reinicia el modal
-
 let configModalEdit = async (event) => {
     let idCompra = event.target.getAttribute("idcompra");
     let resultado = await fetch(`http://localhost:3000/listarCompra${idCompra}`);
@@ -189,34 +152,37 @@ let configModalEdit = async (event) => {
     vItemsEditar = [];
 
     reiniciarModal(idCompra);
-    llenarEncCompra(compra[0]);
-    creaVitemsActualizar(compra);
+    document.getElementById("tblItemsVta").innerHTML = "";
 
-    compra.forEach((item, index) => {
-        document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-        <div id="id${item.index}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-            <div class="containerBtn">
-                <div id="dlt${index}" class="btnEliminar"></div>
-            </div>
-            <select disabled id="slc${index}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-                <option selected value='${item.idProducto}'>${item.nombreProducto}</option>
-            </select>
-            <div id="slidecontainer${index}" class="">
+    document.getElementById("fechaCompra").value = compra[0].fechaCompra.slice(0, 10);
+    document.getElementById("slcProveedor").value = compra[0].idProveedor;
+
+    document.getElementById("btnAnadir").disabled = true;
+    document.getElementById("btnGuardar").disabled = true;
+    document.getElementById("slcProveedor").disabled = true;
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(compra[0].vrTotalCompra)}`;    
+
+    compra.forEach(detalle => {
+        document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+        <tr id="item${numeroItem}" class="h-25">
+            <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/productos/${detalle.nombreImagen}" alt="Producto 1"></td>
+            <td class="align-middle">
+                <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
+            </td>
+            <td class="align-middle">
                 <div class="row">
-                    <div class="col-7 col-lg-5 mx-auto">
-                        <label for="inpunidCompslc${numeroItem}">Unidades compradas:</label>
-                        <input id="inpunidCompslc${numeroItem}" type="number" min="1" value='${item.cantidadCompra}' class="unidCompslc${numeroItem} w-100">
-                    </div>
-                    <div class="col-7 col-lg-5 mx-auto">
-                        <label for="inpPrecioUnitslc${numeroItem}">Valor unitario:</label>
-                        <input id="inpPrecioUnitslc${numeroItem}" type="number" min="1" value='${item.precioUnitario}' class="precioUnitslc${numeroItem} w-100">
-                    </div>
-                </div>
-                <p id="pslc${numeroItem}" class="mx-auto mt-2 mb-0 text-center">Quedarás con ${item.stockProducto}.</p>
-            </div>
-        </div>
+                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.cantidadCompra}" disabled required>
+                </div>                                    
+            </td>
+            <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
+            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.cantidadCompra)}</p></td>
+            <td class="align-middle">
+                <div class="btnAccion row p-1 bg-danger mx-auto">
+                    <p class="col-12 btnEliminar mx-auto"></p>
+                </div>  
+            </td>
+        </tr>
         `);
-        numeroItem++;
     });
 }
 
@@ -294,27 +260,6 @@ const actualizarCrearItem = (item, disparador, vector) => {
     vrTotal(vector);
 
 }
-let llenarEncCompra = compra => {
-    document.getElementById('fechaCompra').value = compra.fechaCompra.slice(0, 10);
-    document.getElementById('slcProveedor').value = compra.idProveedor;
-    document.getElementById('vrTotalIva').value = conversorColombia.format(compra.vrTotalIva);
-    document.getElementById('vrTotalCompra').value = conversorColombia.format(compra.vrTotalCompra);
-}
-
-let creaVitemsActualizar = (compra) => {
-    compra.forEach(item => {
-        let producto = vProductos.find(element => element.idProducto == item.idProducto);
-        let {cantidadCompra, idProducto} = item;
-
-        vItemsEditar.push({
-            cantidadCompra,
-            idItem: ('item'+compra.indexOf(item)),
-            idProducto: parseInt(idProducto),
-            porcentajeIva: parseInt(producto.porcentajeIva),
-            costoProducto: parseInt(producto.costoProducto)
-        })
-    });
-}
 
 const vrTotal = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
@@ -326,28 +271,11 @@ const vrTotal = (vItems) => {
     document.getElementById("pValorTotal").innerHTML = "$"+conversorColombia.format(vrTot);
 }
 
-//añade un item de la compra al vector correspondiente
-let crearItemEdit = (vector) => {
-    vector.push({
-        idItem: ('item' + vector.length),
-        costoProducto: 0,
-        cantidadCompra: 0,
-        porcentajeIva: 0
-    })
-}
-
 let enviarRegCompra = async () => {
 
     let idProveedor = document.getElementById('slcProveedor').value;
     let vrTotalCompra = document.getElementById('pValorTotal').innerHTML.replace(',', '');
     vrTotalCompra = vrTotalCompra.slice(1);
-
-    // let itemsConUnidades = vItemsVta.some(item => {
-    //     if(parseInt(item.unidadesVendidas) <= 0){
-    //         return false;
-    //     }
-    //     return true;
-    // });
 
     let compraActual = {
         idProveedor,

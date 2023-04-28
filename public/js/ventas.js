@@ -346,11 +346,7 @@ const iniciarModalDetallesVenta = async (disparador) => {
             <td class="align-middle">
                 <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
             </td>
-            <td class="align-middle">
-                <div class="row">
-                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.uniVendidas}" disabled required>
-                </div>                                    
-            </td>
+            <td class="align-middle"><p id="inpCantidad${numeroItem}" class="text-center">${detalle.uniVendidas}</p></td>                                                                
             <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
             <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.uniVendidas)}</p></td>
             <td class="align-middle">

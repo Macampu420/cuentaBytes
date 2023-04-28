@@ -85,6 +85,14 @@ document.querySelector("form").addEventListener("submit", (event) => {
     divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
 });
 
+// document.getElementById("filaCompras").addEventListener("click", (event) => {
+//     if(event.target.classList.contains("puntosAcciones")){
+//         configModalEdit(event.target);
+//         divModal.classList.add("d-flex");
+//         modalCompras.show();
+//     }
+// })
+
 document.getElementById('filaCompras').addEventListener('click', event => {
     if (event.target.classList.contains("puntosAcciones")) {
         divModal.setAttribute("editar", "true");
