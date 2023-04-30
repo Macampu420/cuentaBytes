@@ -4,6 +4,7 @@ const objModeloGraficos = new modeloGraficos();
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
 let datosProductos, datosVentas;
+let swTipoGrafico = 'dias';
 const seccionesAcordeon = [
     {
         id: "acordionProductos",
@@ -55,12 +56,18 @@ const seccionesAcordeon = [
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
-            // // Compara la fecha seleccionada con las fechas de hoy y ayer
-            // if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-            //     actualizarGrafico(inicio, fin, "horas");
-            // } else {
-            //     actualizarGrafico(inicio, fin, "dias");
-            // }
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                datosVentas = await objModeloGraficos.traerDatosVentas(pInicio, pFin, "horas");
+                console.log(datosVentas);
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
+                swTipoGrafico = 'horas';
+            } else {
+                datosVentas = await objModeloGraficos.traerDatosVentas(inicio, fin, "dias");
+                console.log(datosVentas);
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia');
+                swTipoGrafico = 'dias';
+            }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoVentas");
         }
     }, {
@@ -208,16 +215,30 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
-        switch (tipoBalance) {
-            case "totalVentas":
-                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
-                break;
-            case "mejoresVentas":
-                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasHoras', 'vrTotalVta', 'hora');
-                break;
-            case "menoresVentas":
-                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasHoras', 'vrTotalVta', 'hora');                
-                break;
+        if (swTipoGrafico == 'horas') {
+            switch (tipoBalance) {
+                case "totalVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
+                    break;
+                case "mejoresVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasHoras', 'vrTotalVta', 'hora');
+                    break;
+                case "menoresVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasHoras', 'vrTotalVta', 'hora');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia');
+                    break;
+                case "mejoresVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasDias', 'vrTotalDia', 'Dia');
+                    break;
+                case "menoresVentas":
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasDias', 'vrTotalDia', 'Dia');
+                    break;
+            }
         }
 
     })

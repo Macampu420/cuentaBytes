@@ -266,7 +266,6 @@ export default class modeloGraficos {
 	
 				let datosVentas = await resDatosVentas.json();
 				return datosVentas;
-	
 			}
 		} catch (error) {
 			console.log(error);
