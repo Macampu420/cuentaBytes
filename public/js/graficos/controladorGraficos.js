@@ -3,17 +3,22 @@ import modeloGraficos from "./acordeon.js";
 const objModeloGraficos = new modeloGraficos();
 let hoy = moment();
 let ayer = moment().subtract(1, 'days');
-let datosProductos;
-let datosClientes;
-let graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes;
-
+let datosProductos, datosVentas;
 const seccionesAcordeon = [
     {
         id: "acordionProductos",
         titulo: "Productos",
         dropdown: {
             id: "dropdownProductos",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: [
+                "Existencia productos",
+                "Mayor existencia",
+                "Menor existencia",
+                "Mayor rentabilidad",
+                "Menor rentabilidad",
+                "Productos mas vendidos",
+                "Productos menos vendidos"
+            ],
             container: "containerDropdownProductos"
         },
         canvasId: "canvaProductos",
@@ -24,7 +29,7 @@ const seccionesAcordeon = [
         titulo: "Ventas",
         dropdown: {
             id: "dropdownVentas",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total ventas", "Mejores ventas", "Menores ventas"],
             container: "containerDropdownVentas"
         },
         canvasId: "canvaVentas",
@@ -66,52 +71,32 @@ const seccionesAcordeon = [
     }
 ];
 
-document.addEventListener("DOMContentLoaded", async function() {
+document.addEventListener("DOMContentLoaded", async function () {
+
     //una vez cargado todo el DOM se crean todas las secciones del acordeon dinamicamente
     seccionesAcordeon.forEach(seccion => {
+        //se crea el layout de cada item del acordeon
         document.getElementById("acordeonBalances").insertAdjacentHTML('beforeend', objModeloGraficos.generarSeccionAccordion(seccion.titulo, seccion.id, seccion.dropdown.id, seccion.fechaId, seccion.canvasId, seccion.fechaId, seccion.dropdown.container));
+        //se crean los dropdowns de cada item del acordeon
+        objModeloGraficos.generarReportesDropdown(seccion.dropdown.opciones, seccion.dropdown.container);
+        
+        //jquery necesario para el funcionamiento de los date picker
+        $(function () {
+            //creacion y configuracion de los elementos datePicker
+            objModeloGraficos.crearDatePickers(seccion.fechaId);
+        });
     });
+
+    objModeloGraficos.crearGraficos();
 
     //se traen los datos para la seccion de productos
     datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
-    graficoProductos = new Chart(document.getElementById('canvaProductos'), {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: "Productos",
-                data: [],
-            }]
-        },
-        options: {
-            plugins: {
-                legend:{
-                    display: false
-                }
-            }
-        }
-    });
+    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
 
-
-    objModeloGraficos.mostrarDatosProductoHora(graficoProductos, datosProductos, "existenciaProductos", "existencia");
-
-    let reportes = [
-        "Existencia productos",
-        "Mayor existencia",
-        "Menor existencia",
-        "Mayor rentabilidad",
-        "Menor rentabilidad",
-        "Productos mas vendidos",
-        "Productos menos vendidos"
-    ];
-    reportes.forEach(function(value) {
-        document.getElementById("containerDropdownProductos").insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item" href="#">${value}</a></li>`);
-    });    
-
-    document.getElementById("containerDropdownProductos").addEventListener("click",event => {
+    document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
-    
+
         switch (tipoBalance) {
             case "existenciaProductos":
                 objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existencia");
@@ -134,40 +119,9 @@ document.addEventListener("DOMContentLoaded", async function() {
             case "peoresProductos":
                 objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
                 break;
-    
+
         }
-    
+
     });
-    
-    //jquery necesario para el funcionamiento del date picker
-    $(function () {
-        //creacion y configuracion del rangepicker sobre el elemento #reportrange
-        $('#dropdownFechaProductos').daterangepicker({
-                locale: {
-                    format: "YYYY-MM-DD"
-                },
-                ranges: {
-                    'Hoy': [moment(), moment()],
-                    'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
-                    'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
-                    'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            },
-            //callback para cada vez que se ejecute  un cambio de fecha
-            async function (pInicio, pFin) {
-                inicio = pInicio.format('YYYY-MM-DD');
-                fin = pFin.format('YYYY-MM-DD');
-    
-                let fechaSeleccionada = pInicio.clone().startOf('day');
-    
-                // Compara la fecha seleccionada con las fechas de hoy y ayer
-                if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                    actualizarGrafico(inicio, fin, "horas");
-                } else {
-                    actualizarGrafico(inicio, fin, "dias");
-                }
-                mostrarRango(inicio, fin);
-        });
-    });
-}); 
+
+});

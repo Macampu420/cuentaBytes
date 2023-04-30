@@ -328,10 +328,10 @@ router.post('/reportesVentas/:tiempo', async (req, res, next) => {
         }
         else{
             let datosTotalVentasDias, datosMejoresVentasDias, datosMenoresVentasDias;
-            //se define si se van a traer los datos de ayer o de hoy
+            //se definen los dias entre los cuales se van a traer los datos
             let { diaInicio, diaFin } = req.body;
 
-            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
             datosTotalVentasDias = await objGraficos.traerDatosVentas(`CALL totalVentasDias('${diaInicio}', '${diaFin}')`);
             datosMejoresVentasDias = await objGraficos.traerDatosVentas(`CALL mejoresVentasDias('${diaInicio}', '${diaFin}')`);
             datosMenoresVentasDias = await objGraficos.traerDatosVentas(`CALL menoresVentasDias('${diaInicio}', '${diaFin}')`);

@@ -1,7 +1,27 @@
+export default class modeloGraficos {
+	constructor() {
+		this.graficoProductos = undefined;
+		this.graficoVentas = undefined;
+		this.graficoCompras = undefined;
+		this.graficoEgresos = undefined;
+		this.graficoClientes = undefined;
+	}
 
-export default class modeloGraficos{
-  generarSeccionAccordion = (titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) => {
-    return `
+	#configDatePicker = {
+		locale: {
+			format: "YYYY-MM-DD"
+		},
+		ranges: {
+			'Hoy': [moment(), moment()],
+			'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+			'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
+			'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+			'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+		}
+	}
+
+	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) => {
+		return `
       <div class="accordion-item">
         <h2 class="accordion-header" id="${titulo}">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -34,169 +54,190 @@ export default class modeloGraficos{
         </div>
       </div>
     `;
-  }
- 
-  traerDatosProductos = async (inicio, fin, tiempo) => {
+	}
 
-    // se consumen los datos de la API y se le pasan al metodo para que los setee,
-    //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-    let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        inicio,
-        fin
-      })
-    });
+	generarReportesDropdown = (vSecciones, dropdown) => {
+		vSecciones.forEach(function(value) {
+			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item" href="#">${value}</a></li>`);
+		});    
+	}
 
-    let datosProductos = await resGraficos.json();
+	crearGraficos = () => {
 
-    return datosProductos;
+		this.graficoProductos = new Chart(document.getElementById('canvaProductos'), {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [{
+					data: [],
+				}]
+			},
+			options: {
+				plugins: {
+					legend: {
+						display: false
+					}
+				}
+			}
+		});
 
-    // if(tiempo == 'horas'){
-    //     mostrarDatosGraficoHora(datosGraficos);
-    // } else {
-    //     mostrarDatosGraficoDia(datosGraficos);
-    // }
+		this.graficoVentas = new Chart(document.getElementById('canvaVentas'), {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [{
+					label: "Ventas",
+					data: [],
+				}]
+			}
+		});
 
-    // chart.update();
+		this.graficoCompras = new Chart(document.getElementById('canvaCompras'), {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [{
+					label: "Compras",
+					data: [],
+				}]
+			}
+		});
 
-  }
+		this.graficoEgresos = new Chart(document.getElementById('canvaEgresos'), {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [{
+					label: "",
+					data: [],
+				}]
+			}
+		});
 
-  convertirACamelCase = (str) => {
-    //se separan las palabras (convertidas a minuscula) en un array para poderlas trabajar
-    const palabras = str.toLowerCase().split(" ");
+		this.graficoClientes = new Chart(document.getElementById('canvaClientes'), {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [{
+					label: "",
+					data: [],
+				}]
+			}
+		});
+	}
 
-    //se itera desde la segunda palabra
-    for (let i = 1; i < palabras.length; i++) {
-      //se hace la primera letra mayuscula y se concatena con el resto de la palabra
-      palabras[i] = palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1);
-    }
-    //se retorna el array pero como string ya formateado
-    return palabras.join("");
-  }
+	convertirACamelCase = (str) => {
+		//se separan las palabras (convertidas a minuscula) en un array para poderlas trabajar
+		const palabras = str.toLowerCase().split(" ");
 
-  // muestra desde hasta cuando se hara el PyG
-  mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
+		//se itera desde la segunda palabra
+		for (let i = 1; i < palabras.length; i++) {
+			//se hace la primera letra mayuscula y se concatena con el resto de la palabra
+			palabras[i] = palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1);
+		}
+		//se retorna el array pero como string ya formateado
+		return palabras.join("");
+	}
 
-  mostrarDatosProductoHora = (graficoProductos, vectorDatos, tipoBalance, propiedadData) => {
+	//callback para cada vez que se ejecute  un cambio de fecha
+	async callbackDatePicker (pInicio, pFin) {
+		inicio = pInicio.format('YYYY-MM-DD');
+		fin = pFin.format('YYYY-MM-DD');
 
-    //se obtienen todos los valores de las horas correspondientes
-    let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
+		let fechaSeleccionada = pInicio.clone().startOf('day');
 
-    //se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
-    graficoProductos.data.labels = nombresProductos;
+		// Compara la fecha seleccionada con las fechas de hoy y ayer
+		if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+			actualizarGrafico(inicio, fin, "horas");
+		} else {
+			actualizarGrafico(inicio, fin, "dias");
+		}
+		mostrarRango(inicio, fin);
+	};
 
-    //se llenan y muestran los datos correspondientes a las compras
-    graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+	crearDatePickers(elemento){
+		$(`#${elemento}`).daterangepicker(this.callbackDatePicker, this.#configDatePicker);
+	}
 
-    graficoProductos.update();
-  }
+	// muestra desde hasta cuando se hara el PyG
+	mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
 
-  actualizarGraficoProductos = async (inicio, fin, tiempo) => {
 
-    // se consumen los datos de la API y se le pasan al metodo para que los setee,
-    //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-    let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        inicio,
-        fin
-      })
-    });
+	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
-    let datosGraficos = await resGraficos.json();
+	traerDatosProductos = async (inicio, fin, tiempo) => {
+		// se consumen los datos de la API y se le pasan al metodo para que los setee,
+		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
+		let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
+			method: "POST",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				inicio,
+				fin
+			})
+		});
 
-    console.log(datosGraficos);
+		let datosProductos = await resGraficos.json();
 
-    // if(tiempo == 'horas'){
-    //     mostrarDatosGraficoHora(datosGraficos);
-    // } else {
-    //     mostrarDatosGraficoDia(datosGraficos);
-    // }
+		return datosProductos;
 
-    // chart.update();
+		// if(tiempo == 'horas'){
+		//     mostrarDatosGraficoHora(datosGraficos);
+		// } else {
+		//     mostrarDatosGraficoDia(datosGraficos);
+		// }
 
-  }
+		// chart.update();
 
-  crearGraficos = () => {
-    graficoVentas = new Chart(document.getElementById('canvaVentas'), {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: "Ventas",
-          data: [],
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    });
+	}
 
-    graficoCompras = new Chart(document.getElementById('canvaCompras'), {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: "Compras",
-          data: [],
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    });
+	mostrarDatosProductoHora = (vectorDatos, tipoBalance, propiedadData) => {
 
-    graficoEgresos = new Chart(document.getElementById('canvaEgresos'), {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: "",
-          data: [],
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    });
+		//se obtienen todos los valores de las horas correspondientes
+		let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
 
-    graficoClientes = new Chart(document.getElementById('canvaClientes'), {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: "",
-          data: [],
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    });
-  }
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoProductos.data.labels = nombresProductos;
+
+		//se llenan y muestran los datos correspondientes a las compras
+		this.graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		this.graficoProductos.update();
+	}
+
+	actualizarGraficoProductos = async (inicio, fin, tiempo) => {
+
+		// se consumen los datos de la API y se le pasan al metodo para que los setee,
+		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
+		let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
+			method: "POST",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				inicio,
+				fin
+			})
+		});
+
+		let datosGraficos = await resGraficos.json();
+
+		console.log(datosGraficos);
+
+		// if(tiempo == 'horas'){
+		//     mostrarDatosGraficoHora(datosGraficos);
+		// } else {
+		//     mostrarDatosGraficoDia(datosGraficos);
+		// }
+
+		// chart.update();
+
+	}
+
+	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
+
 }
