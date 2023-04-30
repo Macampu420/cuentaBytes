@@ -170,7 +170,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
     objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
 
-    console.log(await objModeloGraficos.traerDatosVentas('2023-04-01', '2023-04-30', 'dias'));
+    datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
+    console.log(datosVentas);
 
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
@@ -203,4 +204,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
+    document.getElementById('containerDropdownVentas').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        switch (tipoBalance) {
+            case "totalVentas":
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
+                break;
+            case "mejoresVentas":
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasHoras', 'vrTotalVta', 'hora');
+                break;
+            case "menoresVentas":
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasHoras', 'vrTotalVta', 'hora');                
+                break;
+        }
+
+    })
 });

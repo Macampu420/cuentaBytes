@@ -237,6 +237,7 @@ export default class modeloGraficos {
 	traerDatosVentas = async (inicio, fin, tiempo) => {
 		try {
 			if (tiempo == "horas") {
+
 				let resDatosVentas = await fetch(`http://localhost:3000/reportesVentas/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
@@ -244,7 +245,7 @@ export default class modeloGraficos {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						dia: inicio == this.#hoy ? 'hoy' : 'ayer'
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
 					})
 				});
 	
@@ -273,6 +274,21 @@ export default class modeloGraficos {
 		}
 	}
 
+	mostrarDatosVentas = (vectorDatos, tipoBalance, propiedadData, propiedadLabels) => {
+
+		//se obtienen todos los valores de las horas correspondientes
+		let horaVentas = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoVentas.data.labels = horaVentas;
+
+		//se llenan y muestran los datos correspondientes a las compras
+		this.graficoVentas.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		console.log(this.graficoVentas.data.datasets[0].data, this.graficoVentas.data.labels);
+
+		this.graficoVentas.update();
+	}
 
 	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
 
