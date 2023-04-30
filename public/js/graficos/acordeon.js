@@ -1,4 +1,6 @@
-function generarSeccionAccordion(titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) {
+
+export default class modeloGraficos{
+  generarSeccionAccordion = (titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) => {
     return `
       <div class="accordion-item">
         <h2 class="accordion-header" id="${titulo}">
@@ -32,26 +34,26 @@ function generarSeccionAccordion(titulo, idCollapse, idDropdown, idFecha, idCanv
         </div>
       </div>
     `;
-}
-
-let traerDatosProductos = async (inicio, fin, tiempo) => {
+  }
+ 
+  traerDatosProductos = async (inicio, fin, tiempo) => {
 
     // se consumen los datos de la API y se le pasan al metodo para que los setee,
     //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
     let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            inicio,
-            fin
-        })
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inicio,
+        fin
+      })
     });
 
     let datosProductos = await resGraficos.json();
-        
+
     return datosProductos;
 
     // if(tiempo == 'horas'){
@@ -62,25 +64,25 @@ let traerDatosProductos = async (inicio, fin, tiempo) => {
 
     // chart.update();
 
-}
+  }
 
-let  convertirACamelCase = (str) => {
+  convertirACamelCase = (str) => {
     //se separan las palabras (convertidas a minuscula) en un array para poderlas trabajar
     const palabras = str.toLowerCase().split(" ");
 
     //se itera desde la segunda palabra
     for (let i = 1; i < palabras.length; i++) {
-        //se hace la primera letra mayuscula y se concatena con el resto de la palabra
+      //se hace la primera letra mayuscula y se concatena con el resto de la palabra
       palabras[i] = palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1);
     }
     //se retorna el array pero como string ya formateado
     return palabras.join("");
-}
+  }
 
-// muestra desde hasta cuando se hara el PyG
-let mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
+  // muestra desde hasta cuando se hara el PyG
+  mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
 
-let mostrarDatosProductoHora = (graficoProductos, vectorDatos, tipoBalance, propiedadData) => {
+  mostrarDatosProductoHora = (graficoProductos, vectorDatos, tipoBalance, propiedadData) => {
 
     //se obtienen todos los valores de las horas correspondientes
     let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
@@ -92,22 +94,22 @@ let mostrarDatosProductoHora = (graficoProductos, vectorDatos, tipoBalance, prop
     graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
 
     graficoProductos.update();
-}
+  }
 
-let actualizarGraficoProductos = async (inicio, fin, tiempo) => {
+  actualizarGraficoProductos = async (inicio, fin, tiempo) => {
 
     // se consumen los datos de la API y se le pasan al metodo para que los setee,
     //  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
     let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            inicio,
-            fin
-        })
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inicio,
+        fin
+      })
     });
 
     let datosGraficos = await resGraficos.json();
@@ -122,32 +124,79 @@ let actualizarGraficoProductos = async (inicio, fin, tiempo) => {
 
     // chart.update();
 
+  }
+
+  crearGraficos = () => {
+    graficoVentas = new Chart(document.getElementById('canvaVentas'), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: "Ventas",
+          data: [],
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    graficoCompras = new Chart(document.getElementById('canvaCompras'), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: "Compras",
+          data: [],
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    graficoEgresos = new Chart(document.getElementById('canvaEgresos'), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: "",
+          data: [],
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    graficoClientes = new Chart(document.getElementById('canvaClientes'), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: "",
+          data: [],
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  }
 }
-
-
-
-// secciones.forEach((elemento, i) => {
-//     document.getElementById('accordionExample').insertAdjacentHTML('beforeend', `
-//     <div class="accordion-item">
-//     <h2 class="accordion-header" id="heading${i}">
-//         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-//             data-bs-target="#collapse${i}" aria-expanded="false" aria-controls="collapse${i}">
-//             ${elemento.nombreSeccion}
-//         </button>
-//     </h2>
-//     <div id="collapse${i}" class="accordion-collapse collapse" aria-labelledby="heading${i}"
-//         data-bs-parent="#accordionExample">
-//         <div class="accordion-body">
-//             <strong>This is the second item's accordion body.</strong> It is hidden by default,
-//             until the collapse plugin adds the appropriate classes that we use to style each
-//             element. These classes control the overall appearance, as well as the showing and
-//             hiding via CSS transitions. You can modify any of this with custom CSS or overriding
-//             our default variables. It's also worth noting that just about any HTML can go within
-//             the <code>.accordion-body</code>, though the transition does limit overflow.
-//         </div>
-//     </div>
-// </div>
-
-//     `);
-// });
-

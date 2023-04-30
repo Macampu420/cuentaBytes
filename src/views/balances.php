@@ -89,8 +89,7 @@
         <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
-        <script src="./../../public/js/graficos/acordeon.js"></script>
-        <script src="./../../public/js/graficos/controladorGraficos.js"></script>
+        <script type="module" src="./../../public/js/graficos/controladorGraficos.js"></script>
 </body>
 
 </html>
