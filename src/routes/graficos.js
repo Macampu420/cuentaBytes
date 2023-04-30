@@ -302,32 +302,33 @@ router.post('/reportesClientes:tiempo', async (req, res, next) => {
 
 })
 
-// router.get('/acordeon', async (req, res) => {
 
-//     try {
+router.post('/reportesVentas/:tiempo', async (req, res, next) => {
 
-//         let datosAcordeon = {
-//             mejoresClientes: await objAcordeon.traerMejoresClientes(),
-//             productosMasVendidos: await objAcordeon.traerProductosMasVendidos(),
-//             productosMenosVendidos: await objAcordeon.traerProductosMenosVendidos(),
-//             productosMasRentables: await objAcordeon.traerProductosMasRentables(),
-//             mayorEgreso: await objAcordeon.traerMayorEgreso(),
-//             menorEgreso: await objAcordeon.traerMenorEgreso(),
-//             productosMayorStock: await objAcordeon.traerProducMayorStock(),
-//             productosMenorStock: await objAcordeon.traerProducMenorStock()
-//         }
+    try {
+        if (req.params.tiempo == "horas") {
+            let datosTotalVentasHoras, datosMejoresVentasHoras, datosMenoresVentasHoras;
+            let { dia } = req.body;
 
-//         // console.log(datosAcordeon);
+            if (dia == "hoy") {
+                datosTotalVentasHoras = await objGraficos.traerDatosVentas(`CALL totalVentasPorHora('hoy')`);
+                datosMejoresVentasHoras = await objGraficos.traerDatosVentas(`CALL mejoresVentasPorHora('hoy')`);
+                datosMenoresVentasHoras = await objGraficos.traerDatosVentas(`CALL menoresVentasPorHora('hoy')`);
+            }
 
-//         res.send(datosAcordeon).status(200);
-//     } catch (error) {
-//         console.log(error);
-//         res.send(JSON.stringify({
-//             error: true
-//         })).status(500);
-//     }
+            let datosVentas = {
+                datosTotalVentasHoras,
+                datosMejoresVentasHoras,
+                datosMenoresVentasHoras
+            };
+            res.status(200).send(datosVentas);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
 
-// });
+})
 
 // Middleware de error
 router.use((err, req, res, next) => {
