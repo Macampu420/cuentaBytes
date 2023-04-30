@@ -125,14 +125,14 @@ const actualizarCrearItem = (item, disparador, vector) => {
             idItem: nroItemDisparador,
             idProducto: productoItem.idProducto,
             precioUnitario: productoItem.precioVenta,
-            unidadesVendidas: 0,
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? 1 : 0,
         }) 
     } else {
         vector[vector.indexOf(item)] = {
             idItem: nroItemDisparador,
             idProducto: productoItem.idProducto,
             precioUnitario: productoItem.precioVenta,
-            unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value,
+            unidadesVendidas:  productoItem.existenciaProducto > 0 ? document.getElementById(`inpCantidad${nroItemDisparador}`).value : 0,
         }
     }
 
@@ -150,7 +150,8 @@ const actualizarCrearItem = (item, disparador, vector) => {
         document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
         document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.existenciaProducto);
         disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.existenciaProducto} unidades.`;    
-    }   
+    }
+
     vrTotalRegistar(vector);
 
 }

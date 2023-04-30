@@ -1,8 +1,8 @@
 import modeloGraficos from "./acordeon.js";
 
 const objModeloGraficos = new modeloGraficos();
-let hoy = moment();
-let ayer = moment().subtract(1, 'days');
+const hoy = moment();
+const ayer = moment().subtract(1, 'days');
 let datosProductos, datosVentas;
 const seccionesAcordeon = [
     {
@@ -22,8 +22,22 @@ const seccionesAcordeon = [
             container: "containerDropdownProductos"
         },
         canvasId: "canvaProductos",
-        fechaId: "pFechaGraficoProductos",
-        fechaTexto: "Estas viendo este reporte desde hoy hasta ayer",
+        slcpFecha: "slcFechaGraficoProductos",
+        pFecha: "pFechaGraficoProductos",
+        callbackFecha: async function(pInicio, pFin){
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
+    
+            let fechaSeleccionada = pInicio.clone().startOf('day');
+                
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                objModeloGraficos.actualizarGraficoProductos(inicio, fin, "horas");
+            } else {
+                objModeloGraficos.actualizarGraficoProductos(inicio, fin, "dias");
+            }
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoProductos");
+        },
     }, {
         id: "acordionVentas",
         titulo: "Ventas",
@@ -33,8 +47,22 @@ const seccionesAcordeon = [
             container: "containerDropdownVentas"
         },
         canvasId: "canvaVentas",
-        fechaId: "pFechaGraficoVentas",
-        fechaTexto: "Estas viendo este reporte desde hoy hasta ayer",
+        slcpFecha: "slcFechaGraficoVentas",
+        pFecha: "pFechaGraficoVentas",
+        callbackFecha: async function(pInicio, pFin) {
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
+    
+            let fechaSeleccionada = pInicio.clone().startOf('day');
+    
+            // // Compara la fecha seleccionada con las fechas de hoy y ayer
+            // if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+            //     actualizarGrafico(inicio, fin, "horas");
+            // } else {
+            //     actualizarGrafico(inicio, fin, "dias");
+            // }
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoVentas");
+        }
     }, {
         id: "compras",
         titulo: "Compras",
@@ -44,8 +72,24 @@ const seccionesAcordeon = [
             container: "containerDropdownCompras"
         },
         canvasId: "canvaCompras",
-        fechaId: "pFechaGraficoCompras",
-        fechaTexto: "Estas viendo este reporte desde hoy hasta ayer",
+        slcpFecha: "slcFechaGraficoCompras",
+        pFecha: "pFechaGraficoCompras",
+        callbackFecha: async function(pInicio, pFin) {
+            let hoy = moment();
+            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
+            inicio = pInicio.format('YYYY-MM-DD');
+            fin = pFin.format('YYYY-MM-DD');
+    
+            let fechaSeleccionada = pInicio.clone().startOf('day');
+    
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                actualizarGrafico(inicio, fin, "horas");
+            } else {
+                actualizarGrafico(inicio, fin, "dias");
+            }
+            mostrarRango(inicio, fin, this.pFecha);
+        }
     },{
         id: "acordionEgresos",
         titulo: "Egresos",
@@ -55,8 +99,24 @@ const seccionesAcordeon = [
             container: "containerDropdownEgresos"
         },
         canvasId: "canvaEgresos",
-        fechaId: "pFechaGraficoEgresos",
-        fechaTexto: "Estas viendo este reporte desde hoy hasta ayer",
+        slcpFecha: "slcFechaGraficoEgresos",
+        pFecha: "pFechaGraficoEgresos",
+        callbackFecha: async function(pInicio, pFin) {
+            let hoy = moment();
+            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
+            inicio = pInicio.format('YYYY-MM-DD');
+            fin = pFin.format('YYYY-MM-DD');
+    
+            let fechaSeleccionada = pInicio.clone().startOf('day');
+    
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                actualizarGrafico(inicio, fin, "horas");
+            } else {
+                actualizarGrafico(inicio, fin, "dias");
+            }
+            mostrarRango(inicio, fin, this.pFecha);
+        }
     },{
         id: "acordionClientes",
         titulo: "Clientes",
@@ -66,25 +126,42 @@ const seccionesAcordeon = [
             container: "containerDropdownClientes"
         },
         canvasId: "canvaClientes",
-        fechaId: "pFechaGraficoClientes",
-        fechaTexto: "Estas viendo este reporte desde hoy hasta ayer",
+        slcpFecha: "slcFechaGraficoClientes",
+        pFecha: "pFechaGraficoClientes",
+        callbackFecha: async function(pInicio, pFin) {
+            let hoy = moment();
+            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
+            inicio = pInicio.format('YYYY-MM-DD');
+            fin = pFin.format('YYYY-MM-DD');
+    
+            let fechaSeleccionada = pInicio.clone().startOf('day');
+    
+            // Compara la fecha seleccionada con las fechas de hoy y ayer
+            if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
+                actualizarGrafico(inicio, fin, "horas");
+            } else {
+                actualizarGrafico(inicio, fin, "dias");
+            }
+            mostrarRango(inicio, fin, this.pFecha);
+    } 
     }
 ];
 
 document.addEventListener("DOMContentLoaded", async function () {
 
     //una vez cargado todo el DOM se crean todas las secciones del acordeon dinamicamente
-    seccionesAcordeon.forEach(seccion => {
+    seccionesAcordeon.forEach((seccion) => {
         //se crea el layout de cada item del acordeon
-        document.getElementById("acordeonBalances").insertAdjacentHTML('beforeend', objModeloGraficos.generarSeccionAccordion(seccion.titulo, seccion.id, seccion.dropdown.id, seccion.fechaId, seccion.canvasId, seccion.fechaId, seccion.dropdown.container));
+        document.getElementById("acordeonBalances").insertAdjacentHTML('beforeend', objModeloGraficos.generarSeccionAccordion(seccion.titulo, seccion.id, seccion.dropdown.id, seccion.slcpFecha, seccion.pFecha, seccion.canvasId, seccion.dropdown.container));
+
         //se crean los dropdowns de cada item del acordeon
         objModeloGraficos.generarReportesDropdown(seccion.dropdown.opciones, seccion.dropdown.container);
         
         //jquery necesario para el funcionamiento de los date picker
-        $(function () {
-            //creacion y configuracion de los elementos datePicker
-            objModeloGraficos.crearDatePickers(seccion.fechaId);
-        });
+        //creacion y configuracion de los elementos datePicker
+        objModeloGraficos.crearDatePickers(seccion.slcpFecha, seccion.callbackFecha);
+        objModeloGraficos.mostrarRango(hoy.format('YYYY-MM-DD'), hoy.format('YYYY-MM-DD'), seccion.pFecha);
+
     });
 
     objModeloGraficos.crearGraficos();
@@ -92,6 +169,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     //se traen los datos para la seccion de productos
     datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
     objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
+
+    console.log(await objModeloGraficos.traerDatosVentas('2023-04-01', '2023-04-30', 'dias'));
 
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 

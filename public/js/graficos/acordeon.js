@@ -1,3 +1,5 @@
+import moment from './../moment.js'
+
 export default class modeloGraficos {
 	constructor() {
 		this.graficoProductos = undefined;
@@ -6,6 +8,9 @@ export default class modeloGraficos {
 		this.graficoEgresos = undefined;
 		this.graficoClientes = undefined;
 	}
+
+	#hoy = moment();
+	#ayer = moment().subtract(1, 'days');
 
 	#configDatePicker = {
 		locale: {
@@ -20,7 +25,7 @@ export default class modeloGraficos {
 		}
 	}
 
-	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idFecha, idCanvas, idFechaGrafico, containerDropdown) => {
+	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
 		return `
       <div class="accordion-item">
         <h2 class="accordion-header" id="${titulo}">
@@ -33,7 +38,11 @@ export default class modeloGraficos {
           data-bs-parent="#acordeonBalances">
           <div class="accordion-body">
             <div class="row col-12 mb-4">
-              <div class="dropdown col-8 col-md-3 mx-auto my-2 mx-lg-1">
+
+              <button id="${idSlcFecha}" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1"
+                type="button" aria-expanded="false">Seleccionar fecha</button>
+
+			  <div class="dropdown col-8 col-md-3 mx-auto my-2 mx-lg-1">
                 <button class="btn btn-secondary dropdown-toggle" type="button"
                   id="${idDropdown}" data-bs-toggle="dropdown" aria-expanded="false">
                   Seleccionar reporte
@@ -41,14 +50,13 @@ export default class modeloGraficos {
                 <ul id="${containerDropdown}" class="dropdown-menu" aria-labelledby="${idDropdown}">
                 </ul>
               </div>
-              <button id="${idFecha}" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1"
-                type="button" aria-expanded="false">Seleccionar fecha</button>
+
             </div>
             <div class="col-12">
               <canvas id="${idCanvas}"></canvas>
             </div>
             <div class="col-12 mt-2">
-              <p id="${idFechaGrafico}" class="text-center fs-3 questrial my-0">Estas viendo este reporte desde hoy hasta ayer</p>
+              <p id="${idpFecha}" class="text-center fs-3 questrial my-0"></p>
             </div>
           </div>
         </div>
@@ -56,8 +64,8 @@ export default class modeloGraficos {
     `;
 	}
 
-	generarReportesDropdown = (vSecciones, dropdown) => {
-		vSecciones.forEach(function(value) {
+	generarReportesDropdown = (vReportesSeccion, dropdown) => {
+		vReportesSeccion.forEach(function(value) {
 			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item" href="#">${value}</a></li>`);
 		});    
 	}
@@ -139,28 +147,12 @@ export default class modeloGraficos {
 		return palabras.join("");
 	}
 
-	//callback para cada vez que se ejecute  un cambio de fecha
-	async callbackDatePicker (pInicio, pFin) {
-		inicio = pInicio.format('YYYY-MM-DD');
-		fin = pFin.format('YYYY-MM-DD');
-
-		let fechaSeleccionada = pInicio.clone().startOf('day');
-
-		// Compara la fecha seleccionada con las fechas de hoy y ayer
-		if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-			actualizarGrafico(inicio, fin, "horas");
-		} else {
-			actualizarGrafico(inicio, fin, "dias");
-		}
-		mostrarRango(inicio, fin);
-	};
-
-	crearDatePickers(elemento){
-		$(`#${elemento}`).daterangepicker(this.callbackDatePicker, this.#configDatePicker);
+	crearDatePickers(elemento, callback){
+		$(`#${elemento}`).daterangepicker(this.#configDatePicker, callback);
 	}
 
 	// muestra desde hasta cuando se hara el PyG
-	mostrarRango = (inicio, fin) => document.querySelector('#pFechaGraficoProductos').innerHTML = ('Estas viendo este reporte Desde: ' + inicio + '. - Hasta: ' + fin);
+	mostrarRango = (inicio, fin, parrafo) => document.querySelector(`#${parrafo}`).innerHTML = ('Estas viendo este reporte Desde: ' + inicio + ' - Hasta: ' + fin);
 
 
 	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
@@ -239,5 +231,49 @@ export default class modeloGraficos {
 	}
 
 	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
+
+	//-----------METODOS DEL GRAFICO DE VENTAS---------------------
+
+	traerDatosVentas = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+				let resDatosVentas = await fetch(`http://localhost:3000/reportesVentas/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						dia: inicio == this.#hoy ? 'hoy' : 'ayer'
+					})
+				});
+	
+				let datosVentas = await resDatosVentas.json();
+				return datosVentas;
+			} else {
+				let resDatosVentas = await fetch(`http://localhost:3000/reportesVentas/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosVentas = await resDatosVentas.json();
+				return datosVentas;
+	
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+
+	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
 
 }
