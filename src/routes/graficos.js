@@ -306,23 +306,47 @@ router.post('/reportesClientes:tiempo', async (req, res, next) => {
 router.post('/reportesVentas/:tiempo', async (req, res, next) => {
 
     try {
+
         if (req.params.tiempo == "horas") {
             let datosTotalVentasHoras, datosMejoresVentasHoras, datosMenoresVentasHoras;
+            //se define si se van a traer los datos de ayer o de hoy
             let { dia } = req.body;
 
-            if (dia == "hoy") {
-                datosTotalVentasHoras = await objGraficos.traerDatosVentas(`CALL totalVentasPorHora('hoy')`);
-                datosMejoresVentasHoras = await objGraficos.traerDatosVentas(`CALL mejoresVentasPorHora('hoy')`);
-                datosMenoresVentasHoras = await objGraficos.traerDatosVentas(`CALL menoresVentasPorHora('hoy')`);
-            }
-
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalVentasHoras = await objGraficos.traerDatosVentas(`CALL totalVentasPorHora('${dia}')`);
+            datosMejoresVentasHoras = await objGraficos.traerDatosVentas(`CALL mejoresVentasPorHora('${dia}')`);
+            datosMenoresVentasHoras = await objGraficos.traerDatosVentas(`CALL menoresVentasPorHora('${dia}')`);
+            
             let datosVentas = {
                 datosTotalVentasHoras,
                 datosMejoresVentasHoras,
                 datosMenoresVentasHoras
             };
+
+            //se envian los datos junto con el codigo 200
             res.status(200).send(datosVentas);
         }
+        else{
+            let datosTotalVentasDias, datosMejoresVentasDias, datosMenoresVentasDias;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalVentasDias = await objGraficos.traerDatosVentas(`CALL totalVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresVentasDias = await objGraficos.traerDatosVentas(`CALL mejoresVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresVentasDias = await objGraficos.traerDatosVentas(`CALL menoresVentasDias('${diaInicio}', '${diaFin}')`);
+            
+            let datosVentas = {
+                datosTotalVentasDias,
+                datosMejoresVentasDias,
+                datosMenoresVentasDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosVentas);
+
+        }
+
     } catch (error) {
         console.log(error);
         res.status(500);
