@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2023 at 06:16 PM
+-- Generation Time: May 01, 2023 at 02:30 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -27,7 +27,7 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCliente` (IN `_idCliente` INT(11), IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))   UPDATE `clientes` SET `idCliente`=_idCliente,`nombresCliente`=_nombresCliente,`apellidosCliente`=_apellidosCliente,`telefonoCliente`=_telefonoCliente,`cedulaCliente`=_cedulaCliente WHERE idCliente = _idCliente$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_idProducto` INT)   UPDATE productos SET stockProducto = stockProducto + _stockProducto, costoProducto = _costoProducto WHERE idProducto = _idProducto$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_idProducto` INT)   UPDATE productos SET existenciaProducto = existenciaProducto + _stockProducto, costoProducto = _costoProducto WHERE idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarDetEgreso` (IN `_idDetEgreso` INT(11), IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100))   UPDATE `detalleegreso` SET `idDetEgreso`=_idDetEgreso,`valorEgreso`=_valorEgreso,`descripcion`=_descripcion WHERE idDetEgreso = _idDetEgreso$$
 
@@ -251,9 +251,91 @@ WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC LIMIT 10$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresVentasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+    ORDER BY
+        encventas.vrTotalVta
+    DESC
+LIMIT 10;
+        END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresVentasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+    ORDER BY
+        encventas.vrTotalVta
+    ASC
+LIMIT 10;
+        END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarNotas` ()   BEGIN
 SELECT * FROM notas ORDER BY idNota DESC;
@@ -411,16 +493,40 @@ encegreso.fechaEgreso >= fecha1_ AND encegreso.fechaEgreso <= fecha2_ GROUP BY e
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
 encventas.fechaVenta >= fecha1_ AND encventas.fechaVenta <= fecha2_ GROUP BY encventas.idVenta ORDER BY encventas.fechaVenta ASC$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ventasPorDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-    SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia, SUM(vrTotalVta) AS VrTotalDia
-    FROM encVentas
-    WHERE fechaVenta >= inicio AND fechaVenta <= fin
-    GROUP BY Dia;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ventasPorHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, SUM(encventas.vrTotalVta) as vrTotalHora FROM encventas WHERE fechaVenta >= inicio AND fechaVenta <= fin GROUP BY HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s'));
-END$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+     ORDER BY hora ASC;
+        END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `verificarRegistro` (IN `email_` VARCHAR(40), IN `contrasena_` VARCHAR(255))   SELECT * FROM usuarios WHERE correoUsuario = email_ AND contrasenaUsuario = contrasena_$$
 
@@ -511,7 +617,12 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 (19, 240000, 'Juan', 7),
 (20, 201400, 'Maria', 7),
 (21, 120000, 'Pablo', 7),
-(22, 240000, 'Curso manejo y conservación de vinos', 8);
+(22, 240000, 'Curso manejo y conservación de vinos', 8),
+(24, 2000000, 'Arriendo', 9),
+(25, 1000000, 'Pago a juan', 10),
+(26, 1000000, 'pago a maria', 10),
+(27, 150000, 'mano de obra', 11),
+(28, 2000000, '...', 12);
 
 -- --------------------------------------------------------
 
@@ -553,7 +664,14 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (28, 0, 50000, 1, 12),
 (29, 1, 50000, 19, 6),
 (30, 1, 36000, 20, 8),
-(31, 1, 6000, 21, 7);
+(31, 1, 6000, 21, 7),
+(34, 2, 50000, 22, 1),
+(35, 1, 42000, 22, 2),
+(36, 1, 50000, 23, 1),
+(37, 6, 3500, 24, 11),
+(38, 1, 50000, 24, 6),
+(39, 2, 6000, 25, 7),
+(40, 1, 50000, 26, 6);
 
 -- --------------------------------------------------------
 
@@ -586,7 +704,22 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 (67, 5, 30000, 6, 9),
 (68, 8, 30000, 7, 2),
 (69, 9, 40000, 7, 6),
-(70, 5, 30000, 8, 9);
+(70, 5, 30000, 8, 9),
+(71, 5, 25000, 9, 8),
+(72, 10, 2000, 10, 11),
+(73, 20, 40000, 10, 6),
+(74, 10, 5000, 10, 7),
+(75, 20, 40000, 11, 6),
+(76, 20, 5000, 12, 7),
+(77, 20, 2000, 12, 11),
+(78, 15, 30000, 13, 9),
+(79, 5, 30000, 13, 2),
+(80, 10, 5000, 13, 7),
+(81, 15, 25000, 14, 5),
+(82, 32, 2000, 14, 11),
+(83, 12, 40000, 14, 10),
+(84, 12, 25000, 15, 8),
+(85, 13, 40000, 16, 12);
 
 -- --------------------------------------------------------
 
@@ -615,7 +748,15 @@ INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `i
 (5, 'Cerveza', '2023-03-21 17:29:38', 12, 101000, 10830),
 (6, 'Champaña', '2023-03-31 17:30:07', 11, 150000, 31500),
 (7, 'Trago fuerte', '2023-03-17 17:31:04', 11, 600000, 126000),
-(8, 'Champaña', '2023-04-08 17:32:14', 15, 150000, 31500);
+(8, 'Champaña', '2023-04-08 17:32:14', 15, 150000, 31500),
+(9, 'aaaa', '2023-04-27 17:24:36', 17, 125000, 0),
+(10, 'aaaa', '2023-04-30 16:01:43', 17, 870000, 0),
+(11, 'qqq', '2023-04-30 16:03:27', 16, 800000, 0),
+(12, '223', '2023-04-30 16:03:45', 12, 140000, 0),
+(13, 'wuaaaa', '2023-05-01 00:08:16', 17, 650000, 0),
+(14, 'xdxdxd', '2023-05-01 00:08:43', 16, 919000, 0),
+(15, 'xdxdxd', '2023-05-01 00:08:57', 14, 300000, 0),
+(16, 'wua', '2023-05-01 00:09:15', 11, 520000, 0);
 
 -- --------------------------------------------------------
 
@@ -642,7 +783,11 @@ INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgre
 (5, '2023-04-07 23:48:23', 'Barriles Vino', 460500, 5),
 (6, '2023-04-18 23:49:14', 'Subsidio Transporte', 300000, 4),
 (7, '2023-03-23 23:50:34', 'Nomina 2023', 561400, 2),
-(8, '2023-03-31 23:52:22', 'Curso Empleados', 240000, 3);
+(8, '2023-03-31 23:52:22', 'Curso Empleados', 240000, 3),
+(9, '2023-05-01 00:09:55', 'Arriendo', 2000000, 1),
+(10, '2023-05-01 00:10:26', 'Pago a empleados', 2000000, 2),
+(11, '2023-05-01 00:10:52', 'Reparacion nevera', 150000, 5),
+(12, '2023-05-01 00:11:25', '...', 2000000, 3);
 
 -- --------------------------------------------------------
 
@@ -681,7 +826,12 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (18, '2023-04-26 15:39:00', 0, 1, 50000, 14),
 (19, '2023-04-26 15:46:24', 0, 1, 50000, 13),
 (20, '2023-04-27 12:17:29', 1000, 1, 35000, 7),
-(21, '2023-04-27 12:27:56', 0, 1, 6000, 7);
+(21, '2023-04-27 12:27:56', 0, 1, 6000, 7),
+(22, '2023-04-27 17:25:55', 2000, 1, 140000, 8),
+(23, '2023-04-28 13:05:32', 2000, 1, 48000, 8),
+(24, '2023-04-30 16:04:37', 0, 2, 71000, 11),
+(25, '2023-04-30 16:04:51', 0, 1, 12000, 4),
+(26, '2023-04-30 13:05:06', 0, 4, 50000, 8);
 
 -- --------------------------------------------------------
 
@@ -779,18 +929,18 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 0, 21),
-(2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 8, 20),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 7, 21),
+(2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 12, 20),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3000, 5500, 44, 19),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
-(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 20, 9),
-(6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 0, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 0, 16),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 0, 15),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 17, 14),
-(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 0, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 0, 12),
-(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 0, 11);
+(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 35, 9),
+(6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 28, 16),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 12, 15),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 32, 14),
+(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 12, 13),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 46, 12),
+(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 13, 11);
 
 -- --------------------------------------------------------
 
@@ -981,19 +1131,19 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
-  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
-  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `imagen`

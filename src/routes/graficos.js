@@ -302,32 +302,57 @@ router.post('/reportesClientes:tiempo', async (req, res, next) => {
 
 })
 
-// router.get('/acordeon', async (req, res) => {
 
-//     try {
+router.post('/reportesVentas/:tiempo', async (req, res, next) => {
 
-//         let datosAcordeon = {
-//             mejoresClientes: await objAcordeon.traerMejoresClientes(),
-//             productosMasVendidos: await objAcordeon.traerProductosMasVendidos(),
-//             productosMenosVendidos: await objAcordeon.traerProductosMenosVendidos(),
-//             productosMasRentables: await objAcordeon.traerProductosMasRentables(),
-//             mayorEgreso: await objAcordeon.traerMayorEgreso(),
-//             menorEgreso: await objAcordeon.traerMenorEgreso(),
-//             productosMayorStock: await objAcordeon.traerProducMayorStock(),
-//             productosMenorStock: await objAcordeon.traerProducMenorStock()
-//         }
+    try {
 
-//         // console.log(datosAcordeon);
+        if (req.params.tiempo == "horas") {
+            let datosTotalVentasHoras, datosMejoresVentasHoras, datosMenoresVentasHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
 
-//         res.send(datosAcordeon).status(200);
-//     } catch (error) {
-//         console.log(error);
-//         res.send(JSON.stringify({
-//             error: true
-//         })).status(500);
-//     }
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalVentasHoras = await objGraficos.traerDatosVentas(`CALL totalVentasPorHora('${dia}')`);
+            datosMejoresVentasHoras = await objGraficos.traerDatosVentas(`CALL mejoresVentasPorHora('${dia}')`);
+            datosMenoresVentasHoras = await objGraficos.traerDatosVentas(`CALL menoresVentasPorHora('${dia}')`);
+            
+            let datosVentas = {
+                datosTotalVentasHoras,
+                datosMejoresVentasHoras,
+                datosMenoresVentasHoras
+            };
 
-// });
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosVentas);
+        }
+        else{
+            let datosTotalVentasDias, datosMejoresVentasDias, datosMenoresVentasDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalVentasDias = await objGraficos.traerDatosVentas(`CALL totalVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresVentasDias = await objGraficos.traerDatosVentas(`CALL mejoresVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresVentasDias = await objGraficos.traerDatosVentas(`CALL menoresVentasDias('${diaInicio}', '${diaFin}')`);
+            
+            let datosVentas = {
+                datosTotalVentasDias,
+                datosMejoresVentasDias,
+                datosMenoresVentasDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosVentas);
+
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+
+})
 
 // Middleware de error
 router.use((err, req, res, next) => {

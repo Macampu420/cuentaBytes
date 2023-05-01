@@ -66,51 +66,11 @@
 
                 <div class="row">
 
-                    <div class="col-12 col-lg-10 accordion mx-auto mb-5" id="accordionExample">
-                        <div class="accordion-item">
+                    <div class="col-12 col-lg-10 accordion mx-auto mb-5" id="acordeonBalances">
 
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Ejemplo 1
-                                </button>
-                            </h2>
-
-                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                                data-bs-parent="#accordionExample">
-                                
-                                <div class="accordion-body">
-
-                                    <div class="row col-12 mb-4">
-
-                                        <!-- dropdown tipo balance -->
-                                        <div class="dropdown col-8 col-md-3 mx-auto my-2 mx-lg-1">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Seleccionar reporte
-                                            </button>
-                                            <ul id="containerDropdownProductos" class="dropdown-menu" aria-labelledby="dropdown">
-                                            </ul>
-                                        </div>
-
-                                        <!-- dropdown fecha -->
-                                        <button id="dropdownFecha" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1" type="button" aria-expanded="false">Seleccionar fecha</button>
-                                    
-                                    </div>
-
-                                    <div class="col-12">
-                                        <canvas id="canva1"></canvas>
-                                    </div>
-                                   
-                                    <div class="col-12 mt-2">
-                                        <p id="pFechaGrafico" class="text-center fs-3 questrial my-0">Estas viendo este reporte desde hoy hasta ayer</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        
 
                     </div>
-
                 </div>
 
         </main>
@@ -129,8 +89,7 @@
         <script src="./../../public/js/notas/notas.js"></script>
         <script src="./../../public/js/notas/ctrNotas.js"></script>
         <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
-        <script src="./../../public/js/graficos/acordeon.js"></script>
-        <script src="./../../public/js/graficos/controladorGraficos.js"></script>
+        <script type="module" src="./../../public/js/graficos/controladorGraficos.js"></script>
 </body>
 
 </html>
