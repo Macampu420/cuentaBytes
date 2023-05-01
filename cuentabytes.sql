@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2023 at 02:30 AM
+-- Generation Time: May 01, 2023 at 03:12 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -217,6 +217,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor DESC LIMIT 1;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresComprasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresComprasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+    ORDER BY
+        enccompraproducto.vrTotalCompra
+    DESC
+LIMIT 10;
+        END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
 SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
@@ -295,6 +336,47 @@ LIMIT 10;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso` ()   BEGIN
 SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresComprasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresComprasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+    ORDER BY
+        enccompraproducto.vrTotalCompra
+    ASC
+LIMIT 10;
+        END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
     SELECT
@@ -493,6 +575,41 @@ encegreso.fechaEgreso >= fecha1_ AND encegreso.fechaEgreso <= fecha2_ GROUP BY e
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta` (IN `fecha1_` DATE, IN `fecha2_` DATE)   SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
 encventas.fechaVenta >= fecha1_ AND encventas.fechaVenta <= fecha2_ GROUP BY encventas.idVenta ORDER BY encventas.fechaVenta ASC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalComprasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalComprasPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+     ORDER BY hora ASC;
+        END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
     SELECT
         SUM(encventas.vrTotalVta) AS vrTotalDia,
@@ -671,7 +788,9 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (37, 6, 3500, 24, 11),
 (38, 1, 50000, 24, 6),
 (39, 2, 6000, 25, 7),
-(40, 1, 50000, 26, 6);
+(40, 1, 50000, 26, 6),
+(41, 12, 3500, 27, 11),
+(42, 1, 50000, 27, 12);
 
 -- --------------------------------------------------------
 
@@ -719,7 +838,12 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 (82, 32, 2000, 14, 11),
 (83, 12, 40000, 14, 10),
 (84, 12, 25000, 15, 8),
-(85, 13, 40000, 16, 12);
+(85, 13, 40000, 16, 12),
+(86, 10, 2000, 17, 11),
+(87, 12, 5000, 17, 7),
+(88, 12, 40000, 18, 12),
+(89, 12, 25000, 19, 8),
+(90, 12, 40000, 20, 10);
 
 -- --------------------------------------------------------
 
@@ -753,10 +877,14 @@ INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `i
 (10, 'aaaa', '2023-04-30 16:01:43', 17, 870000, 0),
 (11, 'qqq', '2023-04-30 16:03:27', 16, 800000, 0),
 (12, '223', '2023-04-30 16:03:45', 12, 140000, 0),
-(13, 'wuaaaa', '2023-05-01 00:08:16', 17, 650000, 0),
-(14, 'xdxdxd', '2023-05-01 00:08:43', 16, 919000, 0),
-(15, 'xdxdxd', '2023-05-01 00:08:57', 14, 300000, 0),
-(16, 'wua', '2023-05-01 00:09:15', 11, 520000, 0);
+(13, 'wuaaaa', '2023-04-30 21:09:15', 17, 650000, 0),
+(14, 'xdxdxd', '2023-04-30 19:09:15', 16, 919000, 0),
+(15, 'xdxdxd', '2023-04-30 17:09:15', 14, 300000, 0),
+(16, 'wua', '2023-04-30 15:09:15', 11, 520000, 0),
+(17, 'jijijija', '2023-05-01 16:55:55', 17, 80000, 0),
+(18, 'cunchunfluis', '2023-05-01 15:55:55', 16, 480000, 0),
+(19, 'wuaaaa', '2023-05-01 14:55:55', 12, 300000, 0),
+(20, 'miau', '2023-05-01 13:55:55', 12, 480000, 0);
 
 -- --------------------------------------------------------
 
@@ -831,7 +959,8 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (23, '2023-04-28 13:05:32', 2000, 1, 48000, 8),
 (24, '2023-04-30 16:04:37', 0, 2, 71000, 11),
 (25, '2023-04-30 16:04:51', 0, 1, 12000, 4),
-(26, '2023-04-30 13:05:06', 0, 4, 50000, 8);
+(26, '2023-04-30 13:05:06', 0, 4, 50000, 8),
+(27, '2023-05-01 13:02:27', 2000, 1, 90000, 7);
 
 -- --------------------------------------------------------
 
@@ -935,12 +1064,12 @@ INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, 
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
 (5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 35, 9),
 (6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 28, 16),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 12, 15),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 40, 16),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 24, 15),
 (9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 32, 14),
-(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 12, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 46, 12),
-(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 13, 11);
+(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 24, 13),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 44, 12),
+(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 24, 11);
 
 -- --------------------------------------------------------
 
@@ -1137,13 +1266,13 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
-  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `imagen`

@@ -243,4 +243,67 @@ export default class modeloGraficos {
 
 	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
 
+	//-----------METODOS DEL GRAFICO DE Compras---------------------
+
+	traerDatosCompras = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
+					})
+				});
+	
+				let datosCompras = await resDatosCompras.json();
+				return datosCompras;
+			} else {
+				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosCompras = await resDatosCompras.json();
+				return datosCompras;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosCompras = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataCompras');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let horaCompras = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoCompras.data.labels = horaCompras;
+
+		//se llenan y muestran los datos correspondientes a las compras
+		this.graficoCompras.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoCompras.data.datasets[0].label = labelGrafico;
+
+		this.graficoCompras.update();
+	}
+	
+	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
+	
+
 }

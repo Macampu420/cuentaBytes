@@ -18,6 +18,21 @@ class Graficos {
         }
     }
 
+    async traerDatosCompras(query) {
+
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(query);
+            // Convertir el resultado en un arreglo de objetos
+            let datosCompras = results.map(element => JSON.parse(JSON.stringify(element)));
+
+            return datosCompras;
+        } catch (error) {
+            console.log(error);
+            res.status(500);
+        }
+    }
+
     //metodo para indicar el total de horas a servir (24 o las horas del dia de hoy)
     reemplazarHorasDatos(vHoras, datos) {
         //itera sobre el arreglo con el total de horas a mostrar y si encuentra una coincidencia con

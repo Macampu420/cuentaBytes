@@ -2,7 +2,7 @@ import modeloGraficos from "./acordeon.js";
 const objModeloGraficos = new modeloGraficos();
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
-let datosProductos, datosVentas;
+let datosProductos, datosVentas, datosCompras;
 let swTipoGrafico = 'horas';
 const seccionesAcordeon = [
     {
@@ -74,27 +74,31 @@ const seccionesAcordeon = [
         titulo: "Compras",
         dropdown: {
             id: "dropdownCompras",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total compras", "Mayores compras", "Menores compras"],
             container: "containerDropdownCompras"
         },
         canvasId: "canvaCompras",
         slcpFecha: "slcFechaGraficoCompras",
         pFecha: "pFechaGraficoCompras",
         callbackFecha: async function(pInicio, pFin) {
-            let hoy = moment();
-            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
-            inicio = pInicio.format('YYYY-MM-DD');
-            fin = pFin.format('YYYY-MM-DD');
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                actualizarGrafico(inicio, fin, "horas");
+                datosCompras = await objModeloGraficos.traerDatosCompras(pInicio, pFin, "horas");
+                console.log(datosCompras);
+                objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
+                swTipoGrafico = 'horas';
             } else {
-                actualizarGrafico(inicio, fin, "dias");
+                datosCompras = await objModeloGraficos.traerDatosCompras(inicio, fin, "dias");
+                console.log(datosCompras);
+                objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasDias', 'vrTotalDia', 'Dia', 'Total de Compras', 'Total de Compras');
+                swTipoGrafico = 'dias';
             }
-            mostrarRango(inicio, fin, this.pFecha);
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoCompras");
         }
     },{
         id: "acordionEgresos",
@@ -206,6 +210,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
     objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
 
+    datosCompras = await objModeloGraficos.traerDatosCompras(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosVentas(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total compras');
+
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
@@ -267,5 +274,37 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         }
 
-    })
+    });
+
+    document.getElementById('containerDropdownCompras').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        if (swTipoGrafico == 'horas') {
+            switch (tipoBalance) {
+                case "totalCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
+                    break;
+                case "mayoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMejoresComprasHoras', 'vrTotalCompra', 'hora', 'Mayores Compras');
+                    break;
+                case "menoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMenoresComprasHoras', 'vrTotalCompra', 'hora', 'Menores Compras');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasDias', 'vrTotalDia', 'Dia', 'Total de Compras');
+                    break;
+                case "mayoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMejoresComprasDias', 'vrTotalDia', 'Dia', 'Mayores Compras');
+                    break;
+                case "menoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMenoresComprasDias', 'vrTotalDia', 'Dia', 'Menores Compras');
+                    break;
+            }
+        }
+
+    });
 });

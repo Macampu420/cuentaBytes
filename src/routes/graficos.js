@@ -96,7 +96,7 @@ router.post('/graficos:tiempo', async (req, res, next) => {
         next(error);
     }
 
-})
+});
 
 router.post('/reportesProductos:tiempo', async (req, res, next) => {
     try {
@@ -219,7 +219,7 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
         next(error);
     }
 
-})
+});
 
 router.post('/reportesClientes:tiempo', async (req, res, next) => {
     try {
@@ -300,8 +300,7 @@ router.post('/reportesClientes:tiempo', async (req, res, next) => {
         next(error);
     }
 
-})
-
+});
 
 router.post('/reportesVentas/:tiempo', async (req, res, next) => {
 
@@ -352,7 +351,58 @@ router.post('/reportesVentas/:tiempo', async (req, res, next) => {
         res.status(500);
     }
 
-})
+});
+
+router.post('/reportesCompras/:tiempo', async (req, res, next) => {
+
+    try {
+
+        if (req.params.tiempo == "horas") {
+            let datosTotalComprasHoras, datosMejoresComprasHoras, datosMenoresComprasHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalComprasHoras = await objGraficos.traerDatosCompras(`CALL totalComprasPorHora('${dia}')`);
+            datosMejoresComprasHoras = await objGraficos.traerDatosCompras(`CALL mayoresComprasPorHora('${dia}')`);
+            datosMenoresComprasHoras = await objGraficos.traerDatosCompras(`CALL menoresComprasPorHora('${dia}')`);
+            
+            let datosCompras = {
+                datosTotalComprasHoras,
+                datosMejoresComprasHoras,
+                datosMenoresComprasHoras
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosCompras);
+        }
+        else{
+            let datosTotalComprasDias, datosMejoresComprasDias, datosMenoresComprasDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalComprasDias = await objGraficos.traerDatosCompras(`CALL totalComprasDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresComprasDias = await objGraficos.traerDatosCompras(`CALL mayoresComprasDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresComprasDias = await objGraficos.traerDatosCompras(`CALL menoresComprasDias('${diaInicio}', '${diaFin}')`);
+            
+            let datosCompras = {
+                datosTotalComprasDias,
+                datosMejoresComprasDias,
+                datosMenoresComprasDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosCompras);
+
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+
+});
 
 // Middleware de error
 router.use((err, req, res, next) => {
