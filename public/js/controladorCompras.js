@@ -85,13 +85,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
     divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
 });
 
-// document.getElementById("filaCompras").addEventListener("click", (event) => {
-//     if(event.target.classList.contains("puntosAcciones")){
-//         configModalEdit(event.target);
-//         divModal.classList.add("d-flex");
-//         modalCompras.show();
-//     }
-// })
 
 document.getElementById('filaCompras').addEventListener('click', event => {
     if (event.target.classList.contains("puntosAcciones")) {
@@ -101,21 +94,6 @@ document.getElementById('filaCompras').addEventListener('click', event => {
         numeroItem = 0;
     }
 })
-
-// document.getElementById('btnEliminar').addEventListener("click", async () => {
-//     let idCompra = document.getElementById('btnEliminar').getAttribute('idcompra');
-
-//     if (confirm("¿Deseas eliminar la compra?") == true) {
-
-//         await fetch(`http://localhost:3000/eliminarCompra${idCompra}`)
-//             .then(res => res.text())
-//             .then(data => {
-//                 alert(data);
-//                 location.reload();
-//             });
-
-//     }
-// })
 
 document.getElementById("buscadorCompras").addEventListener("change", () => {
 
@@ -153,5 +131,3 @@ document.getElementById("buscadorCompras").addEventListener("change", () => {
     
     }
 })
-
-// document.getElementById('btnEditar').addEventListener('click', event => document.getElementById('btnGuardar').disabled = false)

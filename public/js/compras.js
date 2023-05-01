@@ -34,7 +34,6 @@ let traerProductos = async () => {
 
         });
 
-        slcProveedor.insertAdjacentHTML('beforeend', `<option value="14">Bavaria</option>`)
 }
 
 //trae todos los encs de las compras de la api y los devuelve como json
@@ -224,7 +223,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
             precioUnitario: productoItem.precioVenta,
             costoProducto: productoItem.costoProducto,
             stockProducto: productoItem.existenciaProducto,
-            unidadesVendidas: 0,
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? 1 : 0,
         }) 
     } else {
         vector[vector.indexOf(item)] = {
@@ -233,7 +232,8 @@ const actualizarCrearItem = (item, disparador, vector) => {
             precioUnitario: productoItem.precioVenta,
             costoProducto: productoItem.costoProducto,
             stockProducto: productoItem.existenciaProducto,
-            unidadesVendidas: document.getElementById(`inpCantidad${nroItemDisparador}`).value
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? document.getElementById(`inpCantidad${nroItemDisparador}`).value : 0,
+
         }
     }
 
@@ -335,4 +335,3 @@ let enviarEditCompra = async () => {
             location.reload();
         });
 }
-
