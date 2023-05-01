@@ -3,7 +3,7 @@ const objModeloGraficos = new modeloGraficos();
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
 let datosProductos, datosVentas, datosCompras;
-let swTipoGrafico = 'horas';
+let swTipoGraficoVentas = 'horas', swTipoGraficoCompras = 'horas';
 const seccionesAcordeon = [
     {
         id: "acordionProductos",
@@ -58,14 +58,12 @@ const seccionesAcordeon = [
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
                 datosVentas = await objModeloGraficos.traerDatosVentas(pInicio, pFin, "horas");
-                console.log(datosVentas);
                 objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
-                swTipoGrafico = 'horas';
+                swTipoGraficoVentas = 'horas';
             } else {
                 datosVentas = await objModeloGraficos.traerDatosVentas(inicio, fin, "dias");
-                console.log(datosVentas);
                 objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia', 'Total de ventas', 'Total de ventas');
-                swTipoGrafico = 'dias';
+                swTipoGraficoVentas = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoVentas");
         }
@@ -89,14 +87,12 @@ const seccionesAcordeon = [
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
                 datosCompras = await objModeloGraficos.traerDatosCompras(pInicio, pFin, "horas");
-                console.log(datosCompras);
                 objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
-                swTipoGrafico = 'horas';
+                swTipoGraficoCompras = 'horas';
             } else {
                 datosCompras = await objModeloGraficos.traerDatosCompras(inicio, fin, "dias");
-                console.log(datosCompras);
                 objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasDias', 'vrTotalDia', 'Dia', 'Total de Compras', 'Total de Compras');
-                swTipoGrafico = 'dias';
+                swTipoGraficoCompras = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoCompras");
         }
@@ -157,8 +153,8 @@ const seccionesAcordeon = [
     }
 ];
 
-
-let configGraficos = {
+// Configuración del gráfico de productos
+let configProductos = {
     type: 'bar',
     data: {
         labels: [],
@@ -173,10 +169,98 @@ let configGraficos = {
                 onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
             }
         }
-        
     }
-}
+};
 
+// Configuración del gráfico de compras
+let configCompras = {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                display: true,
+                onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+            }
+        }
+    }
+};
+
+// Configuración del gráfico de ventas
+let configVentas = {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                display: true,
+                onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+            }
+        }
+    }
+};
+
+// Configuración del gráfico de egresos
+let configEgresos = {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                display: true,
+                onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+            }
+        }
+    }
+};
+
+// Configuración del gráfico de clientes
+let configClientes = {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                display: true,
+                onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+            }
+        }
+    }
+};
+
+let traerDataGraficos = async () => {
+    //se traen los datos para la seccion de productos
+    datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
+    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
+    
+    //se traen los datos para la seccion de ventas
+    datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
+
+    //se traen los datos para la seccion de compra
+    datosCompras = await objModeloGraficos.traerDatosCompras(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total compras');
+}
 
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -195,23 +279,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
-    let graficoProductos = new Chart(document.getElementById('canvaProductos'), configGraficos);
-    let graficoVentas = new Chart(document.getElementById('canvaVentas'), configGraficos);
-    let graficoCompras = new Chart(document.getElementById('canvaCompras'), configGraficos);
-    let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), configGraficos);
-    let graficoClientes = new Chart(document.getElementById('canvaClientes'), configGraficos);
-    
+    let graficoClientes = new Chart(document.getElementById('canvaClientes'), configClientes);
+    let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), configEgresos);
+    let graficoVentas = new Chart(document.getElementById('canvaVentas'), configVentas);
+    let graficoCompras = new Chart(document.getElementById('canvaCompras'), configCompras);
+    let graficoProductos = new Chart(document.getElementById('canvaProductos'), configProductos);
+
     objModeloGraficos.setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes);
     
-    //se traen los datos para la seccion de productos
-    datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
-    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
-
-    datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
-    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
-
-    datosCompras = await objModeloGraficos.traerDatosCompras(hoy, hoy, 'horas');
-    objModeloGraficos.mostrarDatosVentas(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total compras');
+    traerDataGraficos();
 
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
@@ -248,7 +324,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
-        if (swTipoGrafico == 'horas') {
+        if (swTipoGraficoVentas == 'horas') {
             switch (tipoBalance) {
                 case "totalVentas":
                     objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
@@ -280,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
-        if (swTipoGrafico == 'horas') {
+        if (swTipoGraficoVentas == 'horas') {
             switch (tipoBalance) {
                 case "totalCompras":
                     objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');

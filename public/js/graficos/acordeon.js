@@ -23,6 +23,8 @@ export default class modeloGraficos {
 		this.graficoCompras = graficoCompras;
 		this.graficoEgresos = graficoEgresos;
 		this.graficoClientes = graficoClientes;
+
+		console.log(this.graficoProductos.data, this.graficoVentas.data, this.graficoCompras.data, this.graficoEgresos.data, this.graficoClientes.data);
 	}
 
 	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
@@ -72,9 +74,6 @@ export default class modeloGraficos {
 		});    
 	}
 
-	crearGraficos = () => {
-	}
-
 	convertirACamelCase = (str) => {
 		//se separan las palabras (convertidas a minuscula) en un array para poderlas trabajar
 		const palabras = str.toLowerCase().split(" ");
@@ -96,6 +95,13 @@ export default class modeloGraficos {
 	mostrarRango = (inicio, fin, parrafo) => document.querySelector(`#${parrafo}`).innerHTML = ('Estas viendo este reporte Desde: ' + inicio + ' - Hasta: ' + fin);
 
 
+	mostrarTextoNoData = (vector, idElementotexto) => {
+		document.getElementById(idElementotexto).classList.add('d-none');
+
+		if(vector. length == 0){
+			document.getElementById(idElementotexto).classList.remove('d-none');
+		}
+	}
 	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
 	traerDatosProductos = async (inicio, fin, tiempo) => {
@@ -170,7 +176,6 @@ export default class modeloGraficos {
 		// chart.update();
 
 	}
-
 	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
 	//-----------METODOS DEL GRAFICO DE VENTAS---------------------
@@ -211,14 +216,6 @@ export default class modeloGraficos {
 		} catch (error) {
 			console.log(error);
 			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
-		}
-	}
-
-	mostrarTextoNoData = (vector, idElementotexto) => {
-		document.getElementById(idElementotexto).classList.add('d-none');
-
-		if(vector. length == 0){
-			document.getElementById(idElementotexto).classList.remove('d-none');
 		}
 	}
 
