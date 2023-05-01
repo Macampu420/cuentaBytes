@@ -6,7 +6,11 @@ let btnDesplegarNotas = document.getElementById('btnDesplegarNotas');
 var offcanvasNotas = new bootstrap.Offcanvas(document.getElementById('offcanvasNotas'));
 
 btnAgregarNota.onclick = () => {
+    document.getElementById('divAccionesNotas').classList.add('d-none');
+    document.getElementById('formNotas').reset();
     divModalNotas.setAttribute('editar', false);
+    document.getElementById('inpTituloNota').disabled = false;
+    document.getElementById('inpCuerpoNota').disabled = false;
     desplegarModalNotas(divModalNotas);
 }
 
@@ -35,13 +39,20 @@ document.getElementById("filaNotas").addEventListener("click", async event => {
     if (event.target.hasAttribute("btnAcciones")) {
 
         divModalNotas.setAttribute('editar', true);
+        document.getElementById('inpTituloNota').disabled = true;
+        document.getElementById('inpCuerpoNota').disabled = true;
 
         desplegarModalNotas(divModalNotas, event);
 
     }
 })
 
-document.getElementById("btnEditarNotas").addEventListener("click", () => document.getElementById('btnGuardarNotas').disabled = false)
+document.getElementById("btnEditarNotas").addEventListener("click", () => {
+    document.getElementById('btnGuardarNotas').disabled = false;
+    document.getElementById('inpTituloNota').disabled = false;
+    document.getElementById('inpCuerpoNota').disabled = false;
+
+});
 
 document.getElementById("btnEliminarNotas").addEventListener("click", async () => {
 

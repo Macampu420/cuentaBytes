@@ -1,5 +1,4 @@
 import modeloGraficos from "./acordeon.js";
-
 const objModeloGraficos = new modeloGraficos();
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
@@ -154,6 +153,27 @@ const seccionesAcordeon = [
     }
 ];
 
+
+let configGraficos = {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            data: [],
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                display: true,
+                onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+            }
+        }
+        
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", async function () {
 
     //una vez cargado todo el DOM se crean todas las secciones del acordeon dinamicamente
@@ -171,8 +191,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
-    objModeloGraficos.crearGraficos();
-
+    let graficoProductos = new Chart(document.getElementById('canvaProductos'), configGraficos);
+    let graficoVentas = new Chart(document.getElementById('canvaVentas'), configGraficos);
+    let graficoCompras = new Chart(document.getElementById('canvaCompras'), configGraficos);
+    let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), configGraficos);
+    let graficoClientes = new Chart(document.getElementById('canvaClientes'), configGraficos);
+    
+    objModeloGraficos.setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes);
+    
     //se traen los datos para la seccion de productos
     datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
     objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");

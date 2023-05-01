@@ -1,17 +1,9 @@
 import moment from './../moment.js'
 
 export default class modeloGraficos {
-	constructor() {
-		this.graficoProductos = undefined;
-		this.graficoVentas = undefined;
-		this.graficoCompras = undefined;
-		this.graficoEgresos = undefined;
-		this.graficoClientes = undefined;
-	}
 
 	#hoy = moment();
 	#ayer = moment().subtract(1, 'days');
-
 	#configDatePicker = {
 		locale: {
 			format: "YYYY-MM-DD"
@@ -24,24 +16,13 @@ export default class modeloGraficos {
 			'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 		}
 	}
-
-	#configGraficos = {
-		type: 'bar',
-		data: {
-			labels: [],
-			datasets: [{
-				data: [],
-			}]
-		},
-		options: {
-			plugins: {
-				legend: {
-					display: true,
-					onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
-				}
-			}
-			
-		}
+	
+	setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes) {
+		this.graficoProductos = graficoProductos;
+		this.graficoVentas = graficoVentas;
+		this.graficoCompras = graficoCompras;
+		this.graficoEgresos = graficoEgresos;
+		this.graficoClientes = graficoClientes;
 	}
 
 	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
@@ -56,7 +37,7 @@ export default class modeloGraficos {
         <div id="${idCollapse}" class="accordion-collapse collapse" aria-labelledby="${titulo}"
           data-bs-parent="#acordeonBalances">
           <div class="accordion-body">
-            <div class="row col-12 mb-4">
+            <div class="row col-12 mb-4 d-flex align-items-center">
 
               <button id="${idSlcFecha}" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1"
                 type="button" aria-expanded="false">Seleccionar fecha</button>
@@ -87,16 +68,11 @@ export default class modeloGraficos {
 
 	generarReportesDropdown = (vReportesSeccion, dropdown) => {
 		vReportesSeccion.forEach(function(value) {
-			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item" href="#">${value}</a></li>`);
+			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item">${value}</a></li>`);
 		});    
 	}
 
 	crearGraficos = () => {
-		this.graficoProductos = new Chart(document.getElementById('canvaProductos'), this.#configGraficos);
-		this.graficoVentas = new Chart(document.getElementById('canvaVentas'), this.#configGraficos);
-		this.graficoCompras = new Chart(document.getElementById('canvaCompras'), this.#configGraficos);
-		this.graficoEgresos = new Chart(document.getElementById('canvaEgresos'), this.#configGraficos);
-		this.graficoClientes = new Chart(document.getElementById('canvaClientes'), this.#configGraficos);
 	}
 
 	convertirACamelCase = (str) => {
