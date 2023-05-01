@@ -8,96 +8,6 @@ const objAcordeon = new Acordeon();
 const objGraficos = new Graficos();
 moment.tz.setDefault('America/Bogota');
 
-router.post('/graficos:tiempo', async (req, res, next) => {
-
-    try {
-        // bloque para traer los datos de ayer u hoy
-        if (req.params.tiempo == "horas") {
-
-            let { inicio } = req.body;
-            let ventas, compras, egresos;
-
-            // Obtener la fecha de hoy
-            const hoy = moment().format('YYYY-MM-DD');
-            // Obtener la fecha de ayer
-            const ayer = moment().subtract(1, 'days').format('YYYY-MM-DD');
-
-            // Si el inicio es la fecha de hoy trae los datos de hoy sino pregunta y trae los de ayer
-
-            try {
-                if (inicio == hoy) {
-                    let horaActual = moment().format('HH:mm:ss').slice(0, 2);
-                    ventas = await objGraficos.traerDatosVentasHoras(hoy, horaActual);
-                    compras = await objGraficos.traerDatosComprasHoras(hoy, horaActual);
-                    egresos = await objGraficos.traerDatosEgresosHoras(hoy, horaActual);
-                } else if (inicio == ayer) {
-                    ventas = await objGraficos.traerDatosVentasHoras(ayer, 24);
-                    compras = await objGraficos.traerDatosComprasHoras(ayer, 24);
-                    egresos = await objGraficos.traerDatosEgresosHoras(ayer, 24);
-                }
-            } catch (error) {
-                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
-                return;
-            }
-
-            // Validación de datos
-            if (!ventas || !compras || !egresos) {
-                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
-                return;
-            }
-
-            datosGraficos = {
-                ventas,
-                compras,
-                egresos
-            };
-
-            console.log(datosGraficos);
-
-            res.status(200).json(datosGraficos);
-
-        } else if (req.params.tiempo == "dias") {
-
-            let { inicio, fin } = req.body;
-            let ventas, compras, egresos;
-
-            let queryVentas = `CALL ventasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
-            let queryCompras = `CALL comprasPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
-            let queryEgresos = `CALL egresosPorDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
-
-            try {
-                ventas = await objGraficos.traerDatosDias(inicio, fin, queryVentas);
-                compras = await objGraficos.traerDatosDias(inicio, fin, queryCompras);
-                egresos = await objGraficos.traerDatosDias(inicio, fin, queryEgresos);
-            } catch (error) {
-                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
-                return;
-            }
-
-            // Validación de datos
-            if (!ventas || !compras || !egresos) {
-                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
-                return;
-            }
-
-            datosGraficos = {
-                ventas,
-                compras,
-                egresos
-            };
-
-            res.status(200).send(JSON.stringify(datosGraficos));
-        } else {
-            const error = new Error("El parámetro de tiempo no es válido");
-            error.statusCode = 400;
-            throw error;
-        }
-    } catch (error) {
-        next(error);
-    }
-
-});
-
 router.post('/reportesProductos:tiempo', async (req, res, next) => {
     try {
         if (req.params.tiempo == "horas") {
@@ -404,6 +314,56 @@ router.post('/reportesCompras/:tiempo', async (req, res, next) => {
 
 });
 
+router.post('/reportesEgresos/:tiempo', async (req, res, next) => {
+
+    try {
+
+        if (req.params.tiempo == "horas") {
+            let datosTotalEgresosHoras, datosMejoresEgresosHoras, datosMenoresEgresosHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalEgresosHoras = await objGraficos.traerDatosEgresos(`CALL totalEgresosPorHora('${dia}')`);
+            datosMejoresEgresosHoras = await objGraficos.traerDatosEgresos(`CALL mayoresEgresosPorHora('${dia}')`);
+            datosMenoresEgresosHoras = await objGraficos.traerDatosEgresos(`CALL menoresEgresosPorHora('${dia}')`);
+            
+            let datosEgresos = {
+                datosTotalEgresosHoras,
+                datosMejoresEgresosHoras,
+                datosMenoresEgresosHoras
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosEgresos);
+        }
+        else{
+            let datosTotalEgresosDias, datosMejoresEgresosDias, datosMenoresEgresosDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalEgresosDias = await objGraficos.traerDatosEgresos(`CALL totalEgresosDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresEgresosDias = await objGraficos.traerDatosEgresos(`CALL mayoresEgresosDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresEgresosDias = await objGraficos.traerDatosEgresos(`CALL menoresEgresosDias('${diaInicio}', '${diaFin}')`);
+            
+            let datosEgresos = {
+                datosTotalEgresosDias,
+                datosMejoresEgresosDias,
+                datosMenoresEgresosDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosEgresos);
+
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+
+});
 // Middleware de error
 router.use((err, req, res, next) => {
     console.error(err.stack);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2023 at 03:12 PM
+-- Generation Time: May 01, 2023 at 05:12 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -258,6 +258,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresComprasPorHora` (IN `dia` VA
 LIMIT 10;
         END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresEgresosDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+            ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresEgresosPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+    ORDER BY
+        encegreso.vrTotalEgreso
+    DESC
+LIMIT 10;
+        END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
 SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
 FROM encventas
@@ -374,6 +415,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresComprasPorHora` (IN `dia` VA
         DATE(enccompraproducto.fechaCompra) = fecha
     ORDER BY
         enccompraproducto.vrTotalCompra
+    ASC
+LIMIT 10;
+        END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresEgresosDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresEgresosPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+    ORDER BY
+        encegreso.vrTotalEgreso
     ASC
 LIMIT 10;
         END$$
@@ -610,6 +692,41 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `totalComprasPorHora` (IN `dia` VARC
      ORDER BY hora ASC;
         END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalEgresosDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `totalEgresosPorHora` (IN `dia` VARCHAR(10))   BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+     ORDER BY hora ASC;
+        END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasDias` (IN `diaInicio` DATE, IN `diaFin` DATE)   BEGIN
     SELECT
         SUM(encventas.vrTotalVta) AS vrTotalDia,
@@ -739,7 +856,10 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 (25, 1000000, 'Pago a juan', 10),
 (26, 1000000, 'pago a maria', 10),
 (27, 150000, 'mano de obra', 11),
-(28, 2000000, '...', 12);
+(28, 2000000, '...', 12),
+(29, 2000, 'destornillador', 13),
+(30, 10000, 'sacacorchos', 14),
+(31, 15000, 'almuerzo', 15);
 
 -- --------------------------------------------------------
 
@@ -905,17 +1025,20 @@ CREATE TABLE `encegreso` (
 --
 
 INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES
-(2, '2023-04-01 23:40:41', 'Pago Alcantarillado', 242000, 0),
-(3, '2023-03-18 23:44:44', 'Compra de utilería', 342000, 6),
-(4, '2023-03-04 23:45:45', 'Arriendo Local', 2000000, 1),
-(5, '2023-04-07 23:48:23', 'Barriles Vino', 460500, 5),
-(6, '2023-04-18 23:49:14', 'Subsidio Transporte', 300000, 4),
-(7, '2023-03-23 23:50:34', 'Nomina 2023', 561400, 2),
-(8, '2023-03-31 23:52:22', 'Curso Empleados', 240000, 3),
-(9, '2023-05-01 00:09:55', 'Arriendo', 2000000, 1),
-(10, '2023-05-01 00:10:26', 'Pago a empleados', 2000000, 2),
-(11, '2023-05-01 00:10:52', 'Reparacion nevera', 150000, 5),
-(12, '2023-05-01 00:11:25', '...', 2000000, 3);
+(2, '2023-04-07 15:28:03', 'Pago Alcantarillado', 242000, 0),
+(3, '2023-04-18 15:28:03', 'Compra de utilería', 342000, 6),
+(4, '2023-04-30 15:59:23', 'Arriendo Local', 2000000, 1),
+(5, '2023-04-12 16:28:03', 'Barriles Vino', 460500, 5),
+(6, '2023-04-16 13:28:03', 'Subsidio Transporte', 300000, 4),
+(7, '2023-04-17 12:28:03', 'Nomina 2023', 561400, 2),
+(8, '2023-04-06 17:28:03', 'Curso Empleados', 240000, 3),
+(9, '2023-04-16 18:09:55', 'Arriendo', 2000000, 1),
+(10, '2023-04-30 16:59:11', 'Pago a empleados', 2000000, 2),
+(11, '2023-04-30 14:28:03', 'Reparacion nevera', 150000, 5),
+(12, '2023-04-13 19:28:03', '...', 2000000, 3),
+(13, '2023-05-01 15:00:39', 'wya', 2000, 2),
+(14, '2023-05-01 15:00:54', 'ajua', 10000, 0),
+(15, '2023-05-01 15:01:09', 'xdxdxd', 15000, 0);
 
 -- --------------------------------------------------------
 
@@ -1260,7 +1383,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT for table `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
-  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `detalleventa`

@@ -23,8 +23,6 @@ export default class modeloGraficos {
 		this.graficoCompras = graficoCompras;
 		this.graficoEgresos = graficoEgresos;
 		this.graficoClientes = graficoClientes;
-
-		console.log(this.graficoProductos.data, this.graficoVentas.data, this.graficoCompras.data, this.graficoEgresos.data, this.graficoClientes.data);
 	}
 
 	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
@@ -91,7 +89,6 @@ export default class modeloGraficos {
 		$(`#${elemento}`).daterangepicker(this.#configDatePicker, callback);
 	}
 
-	// muestra desde hasta cuando se hara el PyG
 	mostrarRango = (inicio, fin, parrafo) => document.querySelector(`#${parrafo}`).innerHTML = ('Estas viendo este reporte Desde: ' + inicio + ' - Hasta: ' + fin);
 
 
@@ -102,6 +99,7 @@ export default class modeloGraficos {
 			document.getElementById(idElementotexto).classList.remove('d-none');
 		}
 	}
+
 	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
 	traerDatosProductos = async (inicio, fin, tiempo) => {
@@ -178,6 +176,8 @@ export default class modeloGraficos {
 	}
 	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
+
+
 	//-----------METODOS DEL GRAFICO DE VENTAS---------------------
 
 	traerDatosVentas = async (inicio, fin, tiempo) => {
@@ -240,7 +240,8 @@ export default class modeloGraficos {
 
 	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
 
-	//-----------METODOS DEL GRAFICO DE Compras---------------------
+
+	//-----------METODOS DEL GRAFICO DE COMPRAS---------------------
 
 	traerDatosCompras = async (inicio, fin, tiempo) => {
 		try {
@@ -300,7 +301,71 @@ export default class modeloGraficos {
 		this.graficoCompras.update();
 	}
 	
-	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
+	//-----------FIN METODOS DEL GRAFICO DE COMPRAS---------------------
 	
+
+	//-----------METODOS DEL GRAFICO DE CLIENTES---------------------
+
+	traerDatosClientes = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosClientes = await resDatosClientes.json();
+				return datosClientes;
+			} else {
+				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosClientes = await resDatosClientes.json();
+				return datosClientes;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosClientes = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataClientes');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let nombresCliente = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoClientes.data.labels = nombresCliente;
+
+		//se llenan y muestran los datos correspondientes a las Clientes
+		this.graficoClientes.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoClientes.data.datasets[0].label = labelGrafico;
+
+		this.graficoClientes.update();
+	}
+
+
+	//-----------FIN METODOS DEL GRAFICO DE CLIENTES---------------------
 
 }
