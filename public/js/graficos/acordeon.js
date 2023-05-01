@@ -1,17 +1,9 @@
 import moment from './../moment.js'
 
 export default class modeloGraficos {
-	constructor() {
-		this.graficoProductos = undefined;
-		this.graficoVentas = undefined;
-		this.graficoCompras = undefined;
-		this.graficoEgresos = undefined;
-		this.graficoClientes = undefined;
-	}
 
 	#hoy = moment();
 	#ayer = moment().subtract(1, 'days');
-
 	#configDatePicker = {
 		locale: {
 			format: "YYYY-MM-DD"
@@ -24,24 +16,13 @@ export default class modeloGraficos {
 			'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 		}
 	}
-
-	#configGraficos = {
-		type: 'bar',
-		data: {
-			labels: [],
-			datasets: [{
-				data: [],
-			}]
-		},
-		options: {
-			plugins: {
-				legend: {
-					display: true,
-					onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
-				}
-			}
-			
-		}
+	
+	setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes) {
+		this.graficoProductos = graficoProductos;
+		this.graficoVentas = graficoVentas;
+		this.graficoCompras = graficoCompras;
+		this.graficoEgresos = graficoEgresos;
+		this.graficoClientes = graficoClientes;
 	}
 
 	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
@@ -56,7 +37,7 @@ export default class modeloGraficos {
         <div id="${idCollapse}" class="accordion-collapse collapse" aria-labelledby="${titulo}"
           data-bs-parent="#acordeonBalances">
           <div class="accordion-body">
-            <div class="row col-12 mb-4">
+            <div class="row col-12 mb-4 d-flex align-items-center">
 
               <button id="${idSlcFecha}" class="col-8 col-md-3 mx-auto my-2 btn btn-secondary dropdown-toggle mx-lg-1"
                 type="button" aria-expanded="false">Seleccionar fecha</button>
@@ -87,16 +68,8 @@ export default class modeloGraficos {
 
 	generarReportesDropdown = (vReportesSeccion, dropdown) => {
 		vReportesSeccion.forEach(function(value) {
-			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item" href="#">${value}</a></li>`);
+			document.getElementById(dropdown).insertAdjacentHTML("beforeend", `<li><a id="${value.replace(/ /g, "-")}" class="dropdown-item">${value}</a></li>`);
 		});    
-	}
-
-	crearGraficos = () => {
-		this.graficoProductos = new Chart(document.getElementById('canvaProductos'), this.#configGraficos);
-		this.graficoVentas = new Chart(document.getElementById('canvaVentas'), this.#configGraficos);
-		this.graficoCompras = new Chart(document.getElementById('canvaCompras'), this.#configGraficos);
-		this.graficoEgresos = new Chart(document.getElementById('canvaEgresos'), this.#configGraficos);
-		this.graficoClientes = new Chart(document.getElementById('canvaClientes'), this.#configGraficos);
 	}
 
 	convertirACamelCase = (str) => {
@@ -116,9 +89,16 @@ export default class modeloGraficos {
 		$(`#${elemento}`).daterangepicker(this.#configDatePicker, callback);
 	}
 
-	// muestra desde hasta cuando se hara el PyG
 	mostrarRango = (inicio, fin, parrafo) => document.querySelector(`#${parrafo}`).innerHTML = ('Estas viendo este reporte Desde: ' + inicio + ' - Hasta: ' + fin);
 
+
+	mostrarTextoNoData = (vector, idElementotexto) => {
+		document.getElementById(idElementotexto).classList.add('d-none');
+
+		if(vector. length == 0){
+			document.getElementById(idElementotexto).classList.remove('d-none');
+		}
+	}
 
 	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
@@ -194,8 +174,9 @@ export default class modeloGraficos {
 		// chart.update();
 
 	}
-
 	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
+
+
 
 	//-----------METODOS DEL GRAFICO DE VENTAS---------------------
 
@@ -238,14 +219,6 @@ export default class modeloGraficos {
 		}
 	}
 
-	mostrarTextoNoData = (vector, idElementotexto) => {
-		document.getElementById(idElementotexto).classList.add('d-none');
-
-		if(vector. length == 0){
-			document.getElementById(idElementotexto).classList.remove('d-none');
-		}
-	}
-
 	mostrarDatosVentas = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
 
 		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataVentas');
@@ -266,5 +239,198 @@ export default class modeloGraficos {
 	}
 
 	//-----------FIN METODOS DEL GRAFICO DE VENTAS---------------------
+
+
+	//-----------METODOS DEL GRAFICO DE COMPRAS---------------------
+
+	traerDatosCompras = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
+					})
+				});
+	
+				let datosCompras = await resDatosCompras.json();
+				return datosCompras;
+			} else {
+				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosCompras = await resDatosCompras.json();
+				return datosCompras;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosCompras = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataCompras');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let horaCompras = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoCompras.data.labels = horaCompras;
+
+		//se llenan y muestran los datos correspondientes a las compras
+		this.graficoCompras.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoCompras.data.datasets[0].label = labelGrafico;
+
+		this.graficoCompras.update();
+	}
+	
+	//-----------FIN METODOS DEL GRAFICO DE COMPRAS---------------------
+
+	
+	//-----------METODOS DEL GRAFICO DE EGRESOS---------------------
+
+	traerDatosEgresos = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
+					})
+				});
+	
+				let datosEgresos = await resDatosEgresos.json();
+				return datosEgresos;
+			} else {
+				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosEgresos = await resDatosEgresos.json();
+				return datosEgresos;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosEgresos = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataEgresos');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let nombresCliente = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoEgresos.data.labels = nombresCliente;
+
+		//se llenan y muestran los datos correspondientes a las Egresos
+		this.graficoEgresos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoEgresos.data.datasets[0].label = labelGrafico;
+
+		this.graficoEgresos.update();
+	}
+
+
+	//-----------FIN METODOS DEL GRAFICO DE EGRESOS---------------------
+	
+
+
+	//-----------METODOS DEL GRAFICO DE CLIENTES---------------------
+
+	traerDatosClientes = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosClientes = await resDatosClientes.json();
+				return datosClientes;
+			} else {
+				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosClientes = await resDatosClientes.json();
+				return datosClientes;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosClientes = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataClientes');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let nombresCliente = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoClientes.data.labels = nombresCliente;
+
+		//se llenan y muestran los datos correspondientes a las Clientes
+		this.graficoClientes.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoClientes.data.datasets[0].label = labelGrafico;
+
+		this.graficoClientes.update();
+	}
+
+
+	//-----------FIN METODOS DEL GRAFICO DE CLIENTES---------------------
 
 }

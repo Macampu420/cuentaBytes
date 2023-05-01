@@ -1,10 +1,13 @@
 import modeloGraficos from "./acordeon.js";
 
-const objModeloGraficos = new modeloGraficos();
+let datosProductos, datosVentas, datosCompras, datosClientes, datosEgresos;
+let swTipoGraficoVentas = 'horas';
+let swTipoGraficoCompras = 'horas';  
+let swTipoGraficoEgresos = 'horas';
+
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
-let datosProductos, datosVentas;
-let swTipoGrafico = 'horas';
+const objModeloGraficos = new modeloGraficos();
 const seccionesAcordeon = [
     {
         id: "acordionProductos",
@@ -59,14 +62,12 @@ const seccionesAcordeon = [
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
                 datosVentas = await objModeloGraficos.traerDatosVentas(pInicio, pFin, "horas");
-                console.log(datosVentas);
                 objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
-                swTipoGrafico = 'horas';
+                swTipoGraficoVentas = 'horas';
             } else {
                 datosVentas = await objModeloGraficos.traerDatosVentas(inicio, fin, "dias");
-                console.log(datosVentas);
                 objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia', 'Total de ventas', 'Total de ventas');
-                swTipoGrafico = 'dias';
+                swTipoGraficoVentas = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoVentas");
         }
@@ -75,54 +76,58 @@ const seccionesAcordeon = [
         titulo: "Compras",
         dropdown: {
             id: "dropdownCompras",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total compras", "Mayores compras", "Menores compras"],
             container: "containerDropdownCompras"
         },
         canvasId: "canvaCompras",
         slcpFecha: "slcFechaGraficoCompras",
         pFecha: "pFechaGraficoCompras",
         callbackFecha: async function(pInicio, pFin) {
-            let hoy = moment();
-            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
-            inicio = pInicio.format('YYYY-MM-DD');
-            fin = pFin.format('YYYY-MM-DD');
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                actualizarGrafico(inicio, fin, "horas");
+                datosCompras = await objModeloGraficos.traerDatosCompras(pInicio, pFin, "horas");
+                objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
+                swTipoGraficoCompras = 'horas';
             } else {
-                actualizarGrafico(inicio, fin, "dias");
+                datosCompras = await objModeloGraficos.traerDatosCompras(inicio, fin, "dias");
+                objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasDias', 'vrTotalDia', 'Dia', 'Total de Compras');
+                swTipoGraficoCompras = 'dias';
             }
-            mostrarRango(inicio, fin, this.pFecha);
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
         }
     },{
         id: "acordionEgresos",
         titulo: "Egresos",
         dropdown: {
             id: "dropdownEgresos",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total egresos", "Mayores egresos", "Menores egresos"],
             container: "containerDropdownEgresos"
         },
         canvasId: "canvaEgresos",
         slcpFecha: "slcFechaGraficoEgresos",
         pFecha: "pFechaGraficoEgresos",
         callbackFecha: async function(pInicio, pFin) {
-            let hoy = moment();
-            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
-            inicio = pInicio.format('YYYY-MM-DD');
-            fin = pFin.format('YYYY-MM-DD');
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                actualizarGrafico(inicio, fin, "horas");
+                datosEgresos = await objModeloGraficos.traerDatosEgresos(pInicio, pFin, "horas");
+                objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total de Egresos');
+                swTipoGraficoEgresos = 'horas';
             } else {
-                actualizarGrafico(inicio, fin, "dias");
+                datosEgresos = await objModeloGraficos.traerDatosEgresos(inicio, fin, "dias");
+                objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosDias', 'vrTotalDia', 'Dia', 'Total de Egresos');
+                swTipoGraficoEgresos = 'dias';
             }
-            mostrarRango(inicio, fin, this.pFecha);
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
         }
     },{
         id: "acordionClientes",
@@ -136,23 +141,142 @@ const seccionesAcordeon = [
         slcpFecha: "slcFechaGraficoClientes",
         pFecha: "pFechaGraficoClientes",
         callbackFecha: async function(pInicio, pFin) {
-            let hoy = moment();
-            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
-            inicio = pInicio.format('YYYY-MM-DD');
-            fin = pFin.format('YYYY-MM-DD');
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                actualizarGrafico(inicio, fin, "horas");
+                datosClientes = await objModeloGraficos.traerDatosClientes(pInicio, pFin, "horas");
+                objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesHoras', 'vrTotalCompra', 'hora', 'Total de Clientes');
+                swTipoGraficoClientes = 'horas';
             } else {
-                actualizarGrafico(inicio, fin, "dias");
+                datosClientes = await objModeloGraficos.traerDatosClientes(inicio, fin, "dias");
+                objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesDias', 'vrTotalDia', 'Dia', 'Total de Clientes');
+                swTipoGraficoClientes = 'dias';
             }
-            mostrarRango(inicio, fin, this.pFecha);
-    } 
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
+        }
     }
 ];
+const conficInicialGraficos = {
+    // Configuración del gráfico de productos
+    configProductos: {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                }
+            }
+        }
+    },
+    // Configuración del gráfico de compras
+    configCompras: {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                }
+            }
+        }
+    },
+    // Configuración del gráfico de ventas
+    configVentas: {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                }
+            }
+        }
+    },
+    // Configuración del gráfico de egresos
+    configEgresos: {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                }
+            }
+        }
+    },
+    // Configuración del gráfico de clientes
+    configClientes: {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                }
+            }
+        }
+    }
+}
+
+let traerDataGraficos = async () => {
+    //se traen los datos para la seccion de productos
+    datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
+    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
+    
+    //se traen los datos para la seccion de ventas
+    datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
+
+    //se traen los datos para la seccion de compra
+    datosCompras = await objModeloGraficos.traerDatosCompras(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total compras');
+
+    //se traen los datos para la seccion de Egreso
+    datosEgresos = await objModeloGraficos.traerDatosEgresos(hoy, hoy, 'horas');
+    console.log(datosEgresos);
+    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total egresos');
+
+
+    //se traen los datos para la seccion de Cliente
+    // datosClientes = await objModeloGraficos.traerDatosClientes(hoy, hoy, 'horas');
+    // objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesHoras', 'vrTotalCompra', 'hora', 'Total clientes');
+    
+}
 
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -171,14 +295,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
-    objModeloGraficos.crearGraficos();
+    let graficoClientes = new Chart(document.getElementById('canvaClientes'), conficInicialGraficos.configClientes);
+    let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), conficInicialGraficos.configEgresos);
+    let graficoVentas = new Chart(document.getElementById('canvaVentas'), conficInicialGraficos.configVentas);
+    let graficoCompras = new Chart(document.getElementById('canvaCompras'), conficInicialGraficos.configCompras);
+    let graficoProductos = new Chart(document.getElementById('canvaProductos'), conficInicialGraficos.configProductos);
 
-    //se traen los datos para la seccion de productos
-    datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
-    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
-
-    datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
-    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
+    objModeloGraficos.setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes);
+    
+    traerDataGraficos();
 
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
@@ -215,7 +340,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
-        if (swTipoGrafico == 'horas') {
+        if (swTipoGraficoVentas == 'horas') {
             switch (tipoBalance) {
                 case "totalVentas":
                     objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
@@ -241,5 +366,70 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         }
 
-    })
+    });
+
+    document.getElementById('containerDropdownCompras').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        if (swTipoGraficoCompras == 'horas') {
+            switch (tipoBalance) {
+                case "totalCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
+                    break;
+                case "mayoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMejoresComprasHoras', 'vrTotalCompra', 'hora', 'Mayores Compras');
+                    break;
+                case "menoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMenoresComprasHoras', 'vrTotalCompra', 'hora', 'Menores Compras');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasDias', 'vrTotalDia', 'Dia', 'Total de Compras');
+                    break;
+                case "mayoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMejoresComprasDias', 'vrTotalDia', 'Dia', 'Mayores Compras');
+                    break;
+                case "menoresCompras":
+                    objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosMenoresComprasDias', 'vrTotalDia', 'Dia', 'Menores Compras');
+                    break;
+            }
+        }
+
+    });
+
+    document.getElementById('containerDropdownEgresos').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        if (swTipoGraficoEgresos == 'horas') {
+            switch (tipoBalance) {
+                case "totalEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total de Egresos');
+                    break;
+                case "mayoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMejoresEgresosHoras', 'vrTotalEgreso', 'hora', 'Mayores Egresos');
+                    break;
+                case "menoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMenoresEgresosHoras', 'vrTotalEgreso', 'hora', 'Menores Egresos');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosDias', 'vrTotalDia', 'Dia', 'Total de Egresos');
+                    break;
+                case "mayoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMejoresEgresosDias', 'vrTotalDia', 'Dia', 'Mayores Egresos');
+                    break;
+                case "menoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMenoresEgresosDias', 'vrTotalDia', 'Dia', 'Menores Egresos');
+                    break;
+            }
+        }
+
+    });
+
 });
