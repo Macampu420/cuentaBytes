@@ -302,7 +302,72 @@ export default class modeloGraficos {
 	}
 	
 	//-----------FIN METODOS DEL GRAFICO DE COMPRAS---------------------
+
 	
+	//-----------METODOS DEL GRAFICO DE EGRESOS---------------------
+
+	traerDatosEgresos = async (inicio, fin, tiempo) => {
+		try {
+			if (tiempo == "horas") {
+
+				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
+					})
+				});
+	
+				let datosEgresos = await resDatosEgresos.json();
+				return datosEgresos;
+			} else {
+				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						diaInicio: inicio,
+						diaFin: fin
+					})
+				});
+	
+				let datosEgresos = await resDatosEgresos.json();
+				return datosEgresos;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalos mas tarde");
+		}
+	}
+
+	mostrarDatosEgresos = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataEgresos');
+
+		//se obtienen todos los valores de las horas correspondientes
+		let nombresCliente = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
+
+		//se le dice al grafico que use las horas (convertidas a formato de 12 por el metodo) como etiquetas
+		this.graficoEgresos.data.labels = nombresCliente;
+
+		//se llenan y muestran los datos correspondientes a las Egresos
+		this.graficoEgresos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
+
+		//se setea el label de los datos que se estan mostrando
+		this.graficoEgresos.data.datasets[0].label = labelGrafico;
+
+		this.graficoEgresos.update();
+	}
+
+
+	//-----------FIN METODOS DEL GRAFICO DE EGRESOS---------------------
+	
+
 
 	//-----------METODOS DEL GRAFICO DE CLIENTES---------------------
 

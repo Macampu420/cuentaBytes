@@ -1,7 +1,9 @@
 import modeloGraficos from "./acordeon.js";
 
 let datosProductos, datosVentas, datosCompras, datosClientes, datosEgresos;
-let swTipoGraficoVentas = 'horas', swTipoGraficoCompras = 'horas';
+let swTipoGraficoVentas = 'horas';
+let swTipoGraficoCompras = 'horas';  
+let swTipoGraficoEgresos = 'horas';
 
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
@@ -103,27 +105,29 @@ const seccionesAcordeon = [
         titulo: "Egresos",
         dropdown: {
             id: "dropdownEgresos",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total egresos", "Mayores egresos", "Menores egresos"],
             container: "containerDropdownEgresos"
         },
         canvasId: "canvaEgresos",
         slcpFecha: "slcFechaGraficoEgresos",
         pFecha: "pFechaGraficoEgresos",
         callbackFecha: async function(pInicio, pFin) {
-            let hoy = moment();
-            let ayer =  moment().subtract(1, 'day').format('YYYY-MM-DD');
-            inicio = pInicio.format('YYYY-MM-DD');
-            fin = pFin.format('YYYY-MM-DD');
+            let inicio = pInicio.format('YYYY-MM-DD');
+            let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
     
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                actualizarGrafico(inicio, fin, "horas");
+                datosEgresos = await objModeloGraficos.traerDatosEgresos(pInicio, pFin, "horas");
+                objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total de Egresos');
+                swTipoGraficoEgresos = 'horas';
             } else {
-                actualizarGrafico(inicio, fin, "dias");
+                datosEgresos = await objModeloGraficos.traerDatosEgresos(inicio, fin, "dias");
+                objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosDias', 'vrTotalDia', 'Dia', 'Total de Egresos');
+                swTipoGraficoEgresos = 'dias';
             }
-            mostrarRango(inicio, fin, this.pFecha);
+            objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
         }
     },{
         id: "acordionClientes",
@@ -262,6 +266,12 @@ let traerDataGraficos = async () => {
     datosCompras = await objModeloGraficos.traerDatosCompras(hoy, hoy, 'horas');
     objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total compras');
 
+    //se traen los datos para la seccion de Egreso
+    datosEgresos = await objModeloGraficos.traerDatosEgresos(hoy, hoy, 'horas');
+    console.log(datosEgresos);
+    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total egresos');
+
+
     //se traen los datos para la seccion de Cliente
     // datosClientes = await objModeloGraficos.traerDatosClientes(hoy, hoy, 'horas');
     // objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesHoras', 'vrTotalCompra', 'hora', 'Total clientes');
@@ -362,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
-        if (swTipoGraficoVentas == 'horas') {
+        if (swTipoGraficoCompras == 'horas') {
             switch (tipoBalance) {
                 case "totalCompras":
                     objModeloGraficos.mostrarDatosCompras(datosCompras, 'datosTotalComprasHoras', 'vrTotalCompra', 'hora', 'Total de Compras');
@@ -389,4 +399,37 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
     });
+
+    document.getElementById('containerDropdownEgresos').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        if (swTipoGraficoEgresos == 'horas') {
+            switch (tipoBalance) {
+                case "totalEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total de Egresos');
+                    break;
+                case "mayoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMejoresEgresosHoras', 'vrTotalEgreso', 'hora', 'Mayores Egresos');
+                    break;
+                case "menoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMenoresEgresosHoras', 'vrTotalEgreso', 'hora', 'Menores Egresos');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosDias', 'vrTotalDia', 'Dia', 'Total de Egresos');
+                    break;
+                case "mayoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMejoresEgresosDias', 'vrTotalDia', 'Dia', 'Mayores Egresos');
+                    break;
+                case "menoresEgresos":
+                    objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMenoresEgresosDias', 'vrTotalDia', 'Dia', 'Menores Egresos');
+                    break;
+            }
+        }
+
+    });
+
 });
