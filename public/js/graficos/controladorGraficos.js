@@ -4,7 +4,7 @@ const objModeloGraficos = new modeloGraficos();
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
 let datosProductos, datosVentas;
-let swTipoGrafico = 'dias';
+let swTipoGrafico = 'horas';
 const seccionesAcordeon = [
     {
         id: "acordionProductos",
@@ -60,12 +60,12 @@ const seccionesAcordeon = [
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
                 datosVentas = await objModeloGraficos.traerDatosVentas(pInicio, pFin, "horas");
                 console.log(datosVentas);
-                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
                 swTipoGrafico = 'horas';
             } else {
                 datosVentas = await objModeloGraficos.traerDatosVentas(inicio, fin, "dias");
                 console.log(datosVentas);
-                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia');
+                objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia', 'Total de ventas', 'Total de ventas');
                 swTipoGrafico = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoVentas");
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
 
     datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
-    console.log(datosVentas);
+    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
 
     document.getElementById("containerDropdownProductos").addEventListener("click", event => {
 
@@ -218,25 +218,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (swTipoGrafico == 'horas') {
             switch (tipoBalance) {
                 case "totalVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasHoras', 'vrTotalVta', 'hora', 'Total de ventas');
                     break;
                 case "mejoresVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasHoras', 'vrTotalVta', 'hora');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasHoras', 'vrTotalVta', 'hora', 'Mejores ventas');
                     break;
                 case "menoresVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasHoras', 'vrTotalVta', 'hora');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasHoras', 'vrTotalVta', 'hora', 'Menores ventas');
                     break;
             }
         } else {
             switch (tipoBalance) {
                 case "totalVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosTotalVentasDias', 'vrTotalDia', 'Dia', 'Total de ventas');
                     break;
                 case "mejoresVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasDias', 'vrTotalDia', 'Dia');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMejoresVentasDias', 'vrTotalDia', 'Dia', 'Mejores ventas');
                     break;
                 case "menoresVentas":
-                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasDias', 'vrTotalDia', 'Dia');
+                    objModeloGraficos.mostrarDatosVentas(datosVentas, 'datosMenoresVentasDias', 'vrTotalDia', 'Dia', 'Menores ventas');
                     break;
             }
         }

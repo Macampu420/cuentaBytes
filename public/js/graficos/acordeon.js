@@ -25,6 +25,25 @@ export default class modeloGraficos {
 		}
 	}
 
+	#configGraficos = {
+		type: 'bar',
+		data: {
+			labels: [],
+			datasets: [{
+				data: [],
+			}]
+		},
+		options: {
+			plugins: {
+				legend: {
+					display: true,
+					onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+				}
+			}
+			
+		}
+	}
+
 	generarSeccionAccordion = (titulo, idCollapse, idDropdown, idSlcFecha, idpFecha, idCanvas, containerDropdown) => {
 		return `
       <div class="accordion-item">
@@ -51,6 +70,8 @@ export default class modeloGraficos {
                 </ul>
               </div>
 
+			  <div id="pNoData${titulo}" class="d-none questrial col-8 col-md-5 mx-auto text-center">No hay datos para el reporte y/o fecha seleccionados!</div>
+
             </div>
             <div class="col-12">
               <canvas id="${idCanvas}"></canvas>
@@ -71,67 +92,11 @@ export default class modeloGraficos {
 	}
 
 	crearGraficos = () => {
-
-		this.graficoProductos = new Chart(document.getElementById('canvaProductos'), {
-			type: 'bar',
-			data: {
-				labels: [],
-				datasets: [{
-					data: [],
-				}]
-			},
-			options: {
-				plugins: {
-					legend: {
-						display: false
-					}
-				}
-			}
-		});
-
-		this.graficoVentas = new Chart(document.getElementById('canvaVentas'), {
-			type: 'bar',
-			data: {
-				labels: [],
-				datasets: [{
-					label: "Ventas",
-					data: [],
-				}]
-			}
-		});
-
-		this.graficoCompras = new Chart(document.getElementById('canvaCompras'), {
-			type: 'bar',
-			data: {
-				labels: [],
-				datasets: [{
-					label: "Compras",
-					data: [],
-				}]
-			}
-		});
-
-		this.graficoEgresos = new Chart(document.getElementById('canvaEgresos'), {
-			type: 'bar',
-			data: {
-				labels: [],
-				datasets: [{
-					label: "",
-					data: [],
-				}]
-			}
-		});
-
-		this.graficoClientes = new Chart(document.getElementById('canvaClientes'), {
-			type: 'bar',
-			data: {
-				labels: [],
-				datasets: [{
-					label: "",
-					data: [],
-				}]
-			}
-		});
+		this.graficoProductos = new Chart(document.getElementById('canvaProductos'), this.#configGraficos);
+		this.graficoVentas = new Chart(document.getElementById('canvaVentas'), this.#configGraficos);
+		this.graficoCompras = new Chart(document.getElementById('canvaCompras'), this.#configGraficos);
+		this.graficoEgresos = new Chart(document.getElementById('canvaEgresos'), this.#configGraficos);
+		this.graficoClientes = new Chart(document.getElementById('canvaClientes'), this.#configGraficos);
 	}
 
 	convertirACamelCase = (str) => {
@@ -273,7 +238,17 @@ export default class modeloGraficos {
 		}
 	}
 
-	mostrarDatosVentas = (vectorDatos, tipoBalance, propiedadData, propiedadLabels) => {
+	mostrarTextoNoData = (vector, idElementotexto) => {
+		document.getElementById(idElementotexto).classList.add('d-none');
+
+		if(vector. length == 0){
+			document.getElementById(idElementotexto).classList.remove('d-none');
+		}
+	}
+
+	mostrarDatosVentas = (vectorDatos, tipoBalance, propiedadData, propiedadLabels, labelGrafico) => {
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataVentas');
 
 		//se obtienen todos los valores de las horas correspondientes
 		let horaVentas = vectorDatos[tipoBalance].map(elemento => elemento[propiedadLabels]);
@@ -284,7 +259,8 @@ export default class modeloGraficos {
 		//se llenan y muestran los datos correspondientes a las compras
 		this.graficoVentas.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
 
-		console.log(this.graficoVentas.data.datasets[0].data, this.graficoVentas.data.labels);
+		//se setea el label de los datos que se estan mostrando
+		this.graficoVentas.data.datasets[0].label = labelGrafico;
 
 		this.graficoVentas.update();
 	}
