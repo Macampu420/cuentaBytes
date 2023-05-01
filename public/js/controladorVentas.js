@@ -88,6 +88,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
 
     if (vItemsVta.length != 0) {
         registrarVenta(); 
+        generarPdf();
     } else {
         window.alert("Debes seleccionar algún producto para registrar la venta");
     }

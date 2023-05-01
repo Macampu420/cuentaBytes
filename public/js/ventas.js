@@ -9,6 +9,7 @@ let vObjsEncVentas = [];
 let vItemsEditar = [];
 let vItemsElim = [];
 let vObjsMetodosPago;
+let vPDF = [];
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 //METODOS PARA TRAER DE LA BD LA INFORMACION NECESARIA
@@ -16,7 +17,7 @@ const traerMetodosPago = async () => {
 
     try {
         let resMetodosPago = await fetch('http://localhost:3000/listarMetodoPago');
-        vObjsMetodosPago = await resMetodosPago.json();    
+        vObjsMetodosPago = await resMetodosPago.json();
     } catch (error) {
         console.log(error);
     }
@@ -56,7 +57,7 @@ const traerClientes = async () => {
 
             //se renderizan todos los clientes
             vObjsCliente.forEach(cliente => {
-                document.getElementById("slcClientes").innerHTML += `<option value="${cliente.idCliente}">${cliente.nombresCliente+" "+ cliente.apellidosCliente}</option>`
+                document.getElementById("slcClientes").innerHTML += `<option value="${cliente.idCliente}">${cliente.nombresCliente + " " + cliente.apellidosCliente}</option>`
             })
         })
         .catch(err => console.log(err));
@@ -73,7 +74,7 @@ const vrTotalRegistar = (vItems) => {
 
     vrTot -= dto;
 
-    document.getElementById("pValorTotal").innerHTML = "$"+conversorColombia.format(vrTot);
+    document.getElementById("pValorTotal").innerHTML = "$" + conversorColombia.format(vrTot);
 }
 
 const renderItem = () => {
@@ -116,11 +117,11 @@ const renderItem = () => {
 }
 
 const actualizarCrearItem = (item, disparador, vector) => {
-    
+
     let nroItemDisparador = parseInt(disparador.id.slice(-1));
     let productoItem = vObjsProductos.find(producto => producto.idProducto == disparador.value);
 
-    if(item == undefined){
+    if (item == undefined) {
         vector.push({
             idItem: nroItemDisparador,
             idProducto: productoItem.idProducto,
@@ -140,7 +141,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
     document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
     document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
 
-    if(productoItem.existenciaProducto == 0){
+    if (productoItem.existenciaProducto == 0) {
         disparador.nextElementSibling.innerHTML = `No hay unidades disponibles.`;
         document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute("readonly", "");
         document.getElementById(`inpCantidad${nroItemDisparador}`).value = 0;
@@ -172,23 +173,24 @@ const registrarVenta = () => {
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let descuento = parseInt(document.getElementById("inpDescuento").value);
     let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    let fecha = document.getElementById("inpFecha").value
     vrTotal = vrTotal.slice(1);
 
     let itemsConUnidades = vItemsVta.some(item => {
-        if(parseInt(item.unidadesVendidas) <= 0){
+        if (parseInt(item.unidadesVendidas) <= 0) {
             return false;
         }
         return true;
     });
-    
+
 
     //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
     if (idMetPago == "" || idCliente == "" || descuento == NaN || vrTotal == NaN || vItemsVta.length == 0) {
         alert("Por favor llena todos los campos y añade items a la venta");
     }
-    else if(!itemsConUnidades){
+    else if (!itemsConUnidades) {
         window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados pafra registrar la venta");
-    } 
+    }
     else {
 
         let ventaActual = {
@@ -196,9 +198,11 @@ const registrarVenta = () => {
             idCliente,
             descuento,
             vrTotal,
+            fecha,
             itemsVta: vItemsVta,
         };
 
+        vPDF.push(ventaActual)
         enviarRegVenta(ventaActual);
     }
 }
@@ -206,13 +210,13 @@ const registrarVenta = () => {
 const enviarRegVenta = async (ventaActual_) => {
 
     await fetch('http://localhost:3000/guardarVta', {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ventaActual_)
-        })
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ventaActual_)
+    })
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
@@ -311,7 +315,7 @@ const iniciarModalRegistrar = () => {
     document.getElementById('slcClientes').disabled = false;
     document.getElementById('slcMetodoPago').disabled = false;
     document.getElementById('inpDescuento').disabled = false;
-    
+
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
     document.getElementById('tblItemsVta').innerHTML = "";
     document.getElementById('inpDescuento').value = 0;
@@ -338,7 +342,7 @@ const iniciarModalDetallesVenta = async (disparador) => {
     document.getElementById("slcMetodoPago").disabled = true;
     document.getElementById("slcClientes").disabled = true;
     document.getElementById("inpDescuento").disabled = true;
-    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(venta[0].vrTotalVta)}`;    
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(venta[0].vrTotalVta)}`;
 
     venta.forEach(detalle => {
         document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
@@ -347,11 +351,7 @@ const iniciarModalDetallesVenta = async (disparador) => {
             <td class="align-middle">
                 <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
             </td>
-            <td class="align-middle">
-                <div class="row">
-                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.uniVendidas}" disabled required>
-                </div>                                    
-            </td>
+            <td class="align-middle"><p id="inpCantidad${numeroItem}" class="text-center">${detalle.uniVendidas}</p></td>                                                                
             <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
             <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.uniVendidas)}</p></td>
             <td class="align-middle">
@@ -366,18 +366,14 @@ const iniciarModalDetallesVenta = async (disparador) => {
 }
 
 const generarPdf = () => {
-    vItemsEditar.forEach(element => {
-        subtotal = element.vrTotalVta + element.descuentoVenta;
-        total = element.vrTotalVta + element.vrtotalIva;
-        // crea un nuevo objeto `Date`
-        let fecha = new Date();
+    console.log(vPDF);
+    vPDF.forEach(element => {
+        total = vPDF[0].vrTotal - vPDF[0].descuento;
 
-        // obtener la fecha y la hora
-        let fechaAhora = fecha.toLocaleString();
         props = {
             outputType: jsPDFInvoiceTemplate.OutputType.Save,
             returnJsPDFDocObject: true,
-            fileName: "Invoice 2021",
+            fileName: `Factura ${vPDF[0].fecha}`,
             orientationLandscape: false,
             compress: true,
             logo: {
@@ -414,12 +410,13 @@ const generarPdf = () => {
                 name: "Cliente: " + element.nombresCliente + " " + element.apellidosCliente,
                 phone: "Telefono: " + element.telefonoCliente,
                 otherInfo: "Cedula: " + element.cedulaCliente,
+                otherInfo: "Metodo de Pago: " + element.cedulaCliente
             },
             invoice: {
                 label: "Invoice #: ",
-                num: 19,
-                invDate: "Fecha Venta: " + element.fechaVenta,
-                invGenDate: "Fecha Factura: " + fechaAhora,
+                num: vPDF[0].idVenta,
+                invDate: "Fecha Venta: " + vPDF[0].fecha,
+                invGenDate: "Fecha Factura: " + vPDF[0].fecha,
                 headerBorder: false,
                 tableBodyBorder: false,
                 header: [{
@@ -428,13 +425,13 @@ const generarPdf = () => {
                         width: 20
                     }
                 },
-                {
-                    title: "Producto",
-                    style: {
-                        width: 50,
+                // {
+                //     title: "Producto",
+                //     style: {
+                //         width: 50,
 
-                    }
-                },
+                //     }
+                // },
                 {
                     title: "Precio"
                 },
@@ -445,44 +442,37 @@ const generarPdf = () => {
                     title: "Total"
                 }
                 ],
-                table: Array.from(Array(vItemsEditar.length), (item, index) => ([
-                    parseInt(vItemsEditar[index].idProducto),
-                    vItemsEditar[index].nombreProducto,
-                    parseInt(vItemsEditar[index].precioUnitario),
-                    parseInt(vItemsEditar[index].uniVendidas),
-                    parseInt(vItemsEditar[index].precioUnitario) * parseInt(vItemsEditar[index].uniVendidas)
+                table: Array.from(Array(vItemsVta.length), (item, index) => ([
+                    vItemsVta[index].idProducto,
+                    // vItemsEditar[index].nombreProducto,
+                    parseInt(vItemsVta[index].precioUnitario),
+                    parseInt(vItemsVta[index].unidadesVendidas),
+                    parseInt(vItemsVta[index].precioUnitario) * parseInt(vItemsVta[index].unidadesVendidas)
                 ])),
                 additionalRows: [{
                     col1: 'Subtotal:',
-                    col2: subtotal.toString(),
-                    style: {
-                        fontSize: 10 //optional, default 12
-                    }
-                },
-                {
-                    col1: 'IVA:',
-                    col2: element.vrtotalIva.toString(),
+                    col2: vPDF[0].vrTotal,
                     style: {
                         fontSize: 10 //optional, default 12
                     }
                 },
                 {
                     col1: 'Descuento:',
-                    col2: element.descuentoVenta.toString(),
+                    col2: vPDF[0].descuento,
                     style: {
                         fontSize: 10 //optional, default 12
                     }
                 },
                 {
                     col1: 'Total:',
-                    col2: total.toString(),
+                    col2: total,
                     style: {
                         fontSize: 14 //optional, default 12
                     }
                 }
                 ],
-                // invDescLabel: "Invoice Note",
-                // invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+                invDesc: "Subtotal : " + vPDF[0].vrTotal + "             Descuento : " + vPDF[0].descuento,
+                invDescLabel: "Total : " + total,
             },
             footer: {
                 text: "The invoice is created on a computer and is valid without the signature and stamp.",
