@@ -36,7 +36,7 @@
 
         <!-- navbar  -->
         <div class="col-2 d-none d-xl-block nav aside py-5 overflow-hidden">
-            <?php include 'partials/navbar.php'?>
+        <?php $parametro = 'linkInicio'; include 'partials/navbar.php';?>
         </div>
 
         <!-- contenido principal -->
@@ -68,9 +68,8 @@
 
                     <div class="col-12 col-lg-10 accordion mx-auto mb-5" id="acordeonBalances">
 
-                        
-
                     </div>
+
                 </div>
 
         </main>
