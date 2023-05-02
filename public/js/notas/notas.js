@@ -82,6 +82,43 @@ const desplegarModalNotas = (modal, event) => {
 
 }
 
+document.getElementById("buscadorNotas").addEventListener("change", () => {
+
+    let notas = document.querySelectorAll("[cartaItem]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alert");
+
+    console.log(alert);
+
+    notas.forEach(element => {
+
+        let tituloNota = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!tituloNota.includes(document.getElementById("buscadorNotas").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(notas);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
+    }
+})
+
 const modalEditarNota = async event => {
     document.getElementById('divAccionesNotas').classList.remove("d-none");
     //desabilita el btn guardar que se habilitara cuando el usuario clickee editar
