@@ -295,6 +295,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
+    document.getElementById('acordionProductos').classList.add('show');
+
     let graficoClientes = new Chart(document.getElementById('canvaClientes'), conficInicialGraficos.configClientes);
     let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), conficInicialGraficos.configEgresos);
     let graficoVentas = new Chart(document.getElementById('canvaVentas'), conficInicialGraficos.configVentas);
