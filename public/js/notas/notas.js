@@ -22,7 +22,7 @@ const renderizarNotas = async () => {
 
             document.getElementById("filaNotas").insertAdjacentHTML('beforeend', `
 
-            <div id="${element.idNota}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
+            <div id="${element.idNota}" cartaItemNota="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
             <div class="card-body mt-2 mx-auto">
                 <h5 btnAcciones idNota="${element.idNota}" class="puntosAcciones m-2 w-25">...</h5>
                 <h5 class="text-center" idNota="${element.idNota}">${element.tituloNota}</h5>
@@ -84,9 +84,9 @@ const desplegarModalNotas = (modal, event) => {
 
 document.getElementById("buscadorNotas").addEventListener("change", () => {
 
-    let notas = document.querySelectorAll("[cartaItem]");
+    let notas = document.querySelectorAll("[cartaItemNota]");
     let swNoCoinc = false;
-    var alert = document.getElementById("alert");
+    var alert = document.getElementById("alertNoNotas");
 
     console.log(alert);
 

@@ -10,7 +10,7 @@
 
         <div id="filaNotas" class="row">
 
-            <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+            <div id="alertNoNotas" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto mt-3" role="alert">
                 No se encontraron coincidencias
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
