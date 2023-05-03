@@ -2,17 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
-<<<<<<< HEAD
--- Host: 127.0.0.1
--- Generation Time: May 01, 2023 at 05:48 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
-=======
 -- Servidor: 127.0.0.1
 -- Tiempo de generación: 02-05-2023 a las 18:42:13
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
->>>>>>> 89eb970ee98a4fc1677f87f6956ea0d72c124d67
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -173,18 +166,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
 SELECT * FROM clientes;
 END$$
 
-<<<<<<< HEAD
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
-proveedor.nombreProveedor, proveedor.idProveedor,
-detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
-productos.nombreProducto, productos.idProducto, productos.stockProducto
-=======
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, 
 proveedor.nombreProveedor, proveedor.idProveedor,
 detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
 productos.nombreProducto, productos.idProducto, productos.existenciaProducto,
 imagen.nombreImagen
->>>>>>> 89eb970ee98a4fc1677f87f6956ea0d72c124d67
 FROM enccompraproducto 
 INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
 INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
