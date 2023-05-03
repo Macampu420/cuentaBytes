@@ -1,133 +1,338 @@
-let divModal = document.getElementById("modalCompras");
-let modalCompras = new bootstrap.Modal(divModal);
+const Graficos = require('../models/graficos');
+const Acordeon = require('../models/acordeon');
+const express = require('express');
+const moment = require('moment-timezone');
+const router = express.Router();
 
-traerCompras();
-traerProductos();
-traerProveedores();
-mostrarProveedores();
-// guardarProductos();
-mostrarCompras();
+const objAcordeon = new Acordeon();
+const objGraficos = new Graficos();
+moment.tz.setDefault('America/Bogota');
 
-//inicializacion y despliegue del modal
-document.getElementById('btnAnadirCompra').addEventListener('click', async event => {
-    divModal.setAttribute("editar", "false")
+router.post('/reportesProductos:tiempo', async (req, res, next) => {
+    try {
+        if (req.params.tiempo == "horas") {
 
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        reiniciarModal();
-        // renderItemReg();
-        modalCompras.show();
-        numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
-        
-    }
+            let { inicio, fin } = req.body;
+            let totalProductos, mejoresProductos, peoresProductos,
+                rentabilidadProductos, mayorRentabilidad, peorRentabilidad,
+                existenciaProductos, mayorExistencia, menorExistencia;
 
-});
+            let queryTotal = `CALL productosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejores = `CALL mejoresProductosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeores = `CALL peoresProductosFacturasHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryRentabilidad = `CALL productosRentabilidadHoras('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejorRentabilidad = `CALL productosMayorRentabilidadHora('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeorRentabilidad = `CALL productosMenorRentabilidadHora('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryExistencia = `CALL productoExistencia()`;
+            let queryMayorExistencia = `CALL productoExistenciaMayor()`;
+            let queryMenorExistencia = `CALL productoExistenciaMenor()`;
 
-document.getElementById("tblItemsVta").addEventListener("change", (event) => {
+            try {
+                totalProductos = await objGraficos.traerProductosFacturas(queryTotal);
+                mejoresProductos = await objGraficos.traerProductosFacturas(queryMejores);
+                peoresProductos = await objGraficos.traerProductosFacturas(queryPeores);
+                rentabilidadProductos = await objGraficos.traerProductosFacturas(queryRentabilidad);
+                mayorRentabilidad = await objGraficos.traerProductosFacturas(queryMejorRentabilidad);
+                peorRentabilidad = await objGraficos.traerProductosFacturas(queryPeorRentabilidad);
+                existenciaProductos = await objGraficos.traerProductosFacturas(queryExistencia);
+                mayorExistencia = await objGraficos.traerProductosFacturas(queryMayorExistencia);
+                menorExistencia = await objGraficos.traerProductosFacturas(queryMenorExistencia);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
+                return;
+            }
 
-    let disparador = event.target;
+            // Validación de datos
+            if (!totalProductos || !mejoresProductos || !peoresProductos) {
+                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
+                return;
+            }
 
-    if (disparador.tagName == "SELECT") {
+            datosGraficos = {
+                totalProductos,
+                mejoresProductos,
+                peoresProductos,
+                rentabilidadProductos,
+                mayorRentabilidad,
+                peorRentabilidad,
+                existenciaProductos,
+                mayorExistencia,
+                menorExistencia
+            };
 
-        let item = vItemsCompra.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem ==  parseInt(disparador.id.slice(-1)));
+            console.log(datosGraficos);
 
-        actualizarCrearItem(item, event.target, vItemsCompra);
-        
-        disparador.nextElementSibling.classList.remove("d-none");
-    }   
+            res.status(200).send(JSON.stringify(datosGraficos));
+        } else if (req.params.tiempo == "dias") {
 
-});
-
-document.getElementById('btnAnadir').addEventListener('click', event => {
-
-        divModal.getAttribute('editar') == 'false' ? renderItemReg(numeroItem, vProductos) : renderItemEdit(vProductos);
-        numeroItem++; 
-
-});
-
-document.getElementById("tblItemsVta").addEventListener("click", (event) => {
-
-    if(event.target.id == "" && event.target.nodeName == "A"){
-        eliminarItem(event.target.parentElement, vItemsCompra);
-    }
-    if(event.target.id.includes("btnEliminarItem")){
-        eliminarItem(event.target, vItemsCompra);
-    };
-
-});
-
-document.getElementById("tblItemsVta").addEventListener("input", (event) => {
-    //codigo a ejecutar si el diparador es un inpCantidad producto
-    if (event.target.id.includes("inpCantidad")) {
-        //si el valor digitado es mayor que las unidades disponibles setea el valor del
-        //input como este numero de unidades
-        if (event.target.value > parseInt(event.target.getAttribute("max")))
-            event.target.value = parseInt(event.target.getAttribute("max"));
-
-        //si el valor digitado es menor a  setea el valor del
-        //input como 0
-        if (event.target.value < 0) event.target.value = 0;
-
-        actualizarUnidadesVendidas(event.target, vItemsCompra);
-    }
-
-    vrTotal(vItemsCompra);
-
-});
-
-document.querySelector("form").addEventListener("submit", (event) => {
-
-    //evita que la pagina se recargue
-    event.preventDefault();
-
-    divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
-});
+            let { inicio, fin } = req.body;
+            let totalProductos, mejoresProductos, peoresProductos,
+                rentabilidadProductos, mayorRentabilidad, peorRentabilidad,
+                existenciaProductos, mayorExistencia, menorExistencia;
 
 
-document.getElementById('filaCompras').addEventListener('click', event => {
-    if (event.target.classList.contains("puntosAcciones")) {
-        divModal.setAttribute("editar", "true");
-        divModal.getAttribute("editar") == "false" ? configModalReg() : configModalEdit(event, vProductos);
-        modalCompras.show();
-        numeroItem = 0;
-    }
-})
+            let queryTotal = `CALL productosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejores = `CALL mejoresProductosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeores = `CALL peoresProductosFacturasDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryRentabilidad = `CALL productosRentabilidadDias('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryMejorRentabilidad = `CALL productosMayorRentabilidadDia('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryPeorRentabilidad = `CALL productosMenorRentabilidadDia('${inicio} 00:00:00', '${fin} 23:59:59')`;
+            let queryExistencia = `CALL productoExistencia()`;
+            let queryMayorExistencia = `CALL productoExistenciaMayor()`;
+            let queryMenorExistencia = `CALL productoExistenciaMenor()`;
 
-document.getElementById("buscadorCompras").addEventListener("change", () => {
+            try {
+                totalProductos = await objGraficos.traerProductosFacturas(queryTotal);
+                mejoresProductos = await objGraficos.traerProductosFacturas(queryMejores);
+                peoresProductos = await objGraficos.traerProductosFacturas(queryPeores);
+                rentabilidadProductos = await objGraficos.traerProductosFacturas(queryRentabilidad);
+                mayorRentabilidad = await objGraficos.traerProductosFacturas(queryMejorRentabilidad);
+                peorRentabilidad = await objGraficos.traerProductosFacturas(queryPeorRentabilidad);
+                existenciaProductos = await objGraficos.traerProductosFacturas(queryExistencia);
+                mayorExistencia = await objGraficos.traerProductosFacturas(queryMayorExistencia);
+                menorExistencia = await objGraficos.traerProductosFacturas(queryMenorExistencia);
 
-    let compras = document.querySelectorAll("[cartaItem]");
-    let swNoCoinc = false;
-    var alert = document.getElementById("alert");
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Hubo un problema al traer los datos.' });
+                return;
+            }
 
-    console.log(alert);
+            // Validación de datos
+            if (!totalProductos || !mejoresProductos || !peoresProductos) {
+                res.status(500).json({ error: 'Los datos solicitados no están disponibles.' });
+                return;
+            }
 
-    compras.forEach(element => {
+            datosGraficos = {
+                totalProductos,
+                mejoresProductos,
+                peoresProductos,
+                rentabilidadProductos,
+                mayorRentabilidad,
+                peorRentabilidad,
+                existenciaProductos,
+                mayorExistencia,
+                menorExistencia
+            };
 
-        let conceptoCompra = element.firstElementChild.innerHTML.toLowerCase();
+            console.log(datosGraficos);
 
-        if (!conceptoCompra.includes(document.getElementById("buscadorCompras").value.toLowerCase())) {
-            element.classList.add("d-none");
-            
+            res.status(200).send(JSON.stringify(datosGraficos));
         } else {
-            
-            swNoCoinc = true;
-            element.classList.remove("d-none");
+            const error = new Error("El parámetro de tiempo no es válido");
+            error.statusCode = 400;
+            throw error;
+        }
+    } catch (error) {
+        next(error);
+    }
+
+});
+
+router.post('/reportesClientes:tiempo', async (req, res, next) => {
+    try {
+        if (req.params.tiempo == "horas") {
+
+            let { dia } = req.body;
+            let totalClientes, mejoresClientes, peoresClientes;
+
+
+            totalClientes = await objGraficos.traerClientesFacturas(`CALL clientesFacturasHoras('${dia}')`);
+            mejoresClientes = await objGraficos.traerClientesFacturas(`CALL mejoresClientesFacturasHoras('${dia}')`);
+            peoresClientes = await objGraficos.traerClientesFacturas(`CALL peoresClientesFacturasHoras('${dia}')`);
+
+            datosGraficos = {
+                totalClientes,
+                mejoresClientes,
+                peoresClientes
+            };
+
+            console.log(datosGraficos);
+
+            res.status(200).send(datosGraficos);
+        } else if (req.params.tiempo == "dias") {
+
+            let { inicio, fin } = req.body;
+            let totalClientes, mejoresClientes, peoresClientes;
+
+            totalClientes = await objGraficos.traerProductosFacturas(`CALL clientesFacturasDias('${inicio}', '${fin}')`);
+            mejoresClientes = await objGraficos.traerProductosFacturas(`CALL mejoresClientesFacturasDias('${inicio}', '${fin}')`);
+            peoresClientes = await objGraficos.traerProductosFacturas(`CALL peoresClientesFacturasDias('${inicio}', '${fin}')`);
+
+            datosGraficos = {
+                totalClientes,
+                mejoresClientes,
+                peoresClientes
+            };
+
+            console.log(datosGraficos);
+
+            res.status(200).send(datosGraficos);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+});
+
+router.post('/reportesVentas/:tiempo', async (req, res, next) => {
+
+    try {
+
+        if (req.params.tiempo == "horas") {
+            let datosTotalVentasHoras, datosMejoresVentasHoras, datosMenoresVentasHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalVentasHoras = await objGraficos.traerDatosVentas(`CALL totalVentasPorHora('${dia}')`);
+            datosMejoresVentasHoras = await objGraficos.traerDatosVentas(`CALL mejoresVentasPorHora('${dia}')`);
+            datosMenoresVentasHoras = await objGraficos.traerDatosVentas(`CALL menoresVentasPorHora('${dia}')`);
+
+            let datosVentas = {
+                datosTotalVentasHoras,
+                datosMejoresVentasHoras,
+                datosMenoresVentasHoras
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosVentas);
+        }
+        else {
+            let datosTotalVentasDias, datosMejoresVentasDias, datosMenoresVentasDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalVentasDias = await objGraficos.traerDatosVentas(`CALL totalVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresVentasDias = await objGraficos.traerDatosVentas(`CALL mejoresVentasDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresVentasDias = await objGraficos.traerDatosVentas(`CALL menoresVentasDias('${diaInicio}', '${diaFin}')`);
+
+            let datosVentas = {
+                datosTotalVentasDias,
+                datosMejoresVentasDias,
+                datosMenoresVentasDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosVentas);
+
         }
 
-    })
-
-    console.log(compras);
-
-    if (swNoCoinc == false) {
-
-        //hay coincidencias
-        alert.classList.remove("d-none");
-        
-    } 
-    else{
-        alert.classList.add("d-none");
-    
+    } catch (error) {
+        console.log(error);
+        res.status(500);
     }
-})
+
+});
+
+router.post('/reportesCompras/:tiempo', async (req, res, next) => {
+
+    try {
+
+        if (req.params.tiempo == "horas") {
+            let datosTotalComprasHoras, datosMejoresComprasHoras, datosMenoresComprasHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalComprasHoras = await objGraficos.traerDatosCompras(`CALL totalComprasPorHora('${dia}')`);
+            datosMejoresComprasHoras = await objGraficos.traerDatosCompras(`CALL mayoresComprasPorHora('${dia}')`);
+            datosMenoresComprasHoras = await objGraficos.traerDatosCompras(`CALL menoresComprasPorHora('${dia}')`);
+
+            let datosCompras = {
+                datosTotalComprasHoras,
+                datosMejoresComprasHoras,
+                datosMenoresComprasHoras
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosCompras);
+        }
+        else {
+            let datosTotalComprasDias, datosMejoresComprasDias, datosMenoresComprasDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalComprasDias = await objGraficos.traerDatosCompras(`CALL totalComprasDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresComprasDias = await objGraficos.traerDatosCompras(`CALL mayoresComprasDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresComprasDias = await objGraficos.traerDatosCompras(`CALL menoresComprasDias('${diaInicio}', '${diaFin}')`);
+
+            let datosCompras = {
+                datosTotalComprasDias,
+                datosMejoresComprasDias,
+                datosMenoresComprasDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosCompras);
+
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+
+});
+
+router.post('/reportesEgresos/:tiempo', async (req, res, next) => {
+
+    try {
+
+        if (req.params.tiempo == "horas") {
+            let datosTotalEgresosHoras, datosMejoresEgresosHoras, datosMenoresEgresosHoras;
+            //se define si se van a traer los datos de ayer o de hoy
+            let { dia } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el dia que mando el cliente
+            datosTotalEgresosHoras = await objGraficos.traerDatosEgresos(`CALL totalEgresosPorHora('${dia}')`);
+            datosMejoresEgresosHoras = await objGraficos.traerDatosEgresos(`CALL mayoresEgresosPorHora('${dia}')`);
+            datosMenoresEgresosHoras = await objGraficos.traerDatosEgresos(`CALL menoresEgresosPorHora('${dia}')`);
+
+            let datosEgresos = {
+                datosTotalEgresosHoras,
+                datosMejoresEgresosHoras,
+                datosMenoresEgresosHoras
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosEgresos);
+        }
+        else {
+            let datosTotalEgresosDias, datosMejoresEgresosDias, datosMenoresEgresosDias;
+            //se definen los dias entre los cuales se van a traer los datos
+            let { diaInicio, diaFin } = req.body;
+
+            //se guarda el resultado de cada consulta de datos segun el rango que mando el cliente
+            datosTotalEgresosDias = await objGraficos.traerDatosEgresos(`CALL totalEgresosDias('${diaInicio}', '${diaFin}')`);
+            datosMejoresEgresosDias = await objGraficos.traerDatosEgresos(`CALL mayoresEgresosDias('${diaInicio}', '${diaFin}')`);
+            datosMenoresEgresosDias = await objGraficos.traerDatosEgresos(`CALL menoresEgresosDias('${diaInicio}', '${diaFin}')`);
+
+            let datosEgresos = {
+                datosTotalEgresosDias,
+                datosMejoresEgresosDias,
+                datosMenoresEgresosDias
+            };
+
+            //se envian los datos junto con el codigo 200
+            res.status(200).send(datosEgresos);
+
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+    }
+
+});
+// Middleware de error
+router.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Error interno del servidor');
+});
+
+module.exports = router;
