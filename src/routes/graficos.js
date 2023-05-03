@@ -1,10 +1,8 @@
 const Graficos = require('../models/graficos');
-const Acordeon = require('../models/acordeon');
 const express = require('express');
 const moment = require('moment-timezone');
 const router = express.Router();
 
-const objAcordeon = new Acordeon();
 const objGraficos = new Graficos();
 moment.tz.setDefault('America/Bogota');
 
@@ -131,7 +129,7 @@ router.post('/reportesProductos:tiempo', async (req, res, next) => {
 
 });
 
-router.post('/reportesClientes:tiempo', async (req, res, next) => {
+router.post('/reportesClientes/:tiempo', async (req, res, next) => {
     try {
         if (req.params.tiempo == "horas") {
 

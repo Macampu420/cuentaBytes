@@ -4,6 +4,7 @@ let datosProductos, datosVentas, datosCompras, datosClientes, datosEgresos;
 let swTipoGraficoVentas = 'horas';
 let swTipoGraficoCompras = 'horas';  
 let swTipoGraficoEgresos = 'horas';
+let swTipoGraficoClientes = 'horas';
 
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
@@ -134,7 +135,7 @@ const seccionesAcordeon = [
         titulo: "Clientes",
         dropdown: {
             id: "dropdownClientes",
-            opciones: ["Opción 1", "Opción 2", "Opción 3"],
+            opciones: ["Total clientes por facturas", "Mayores clientes por facturas", "Menores clientes por facturas"],
             container: "containerDropdownClientes"
         },
         canvasId: "canvaClientes",
@@ -149,11 +150,11 @@ const seccionesAcordeon = [
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
                 datosClientes = await objModeloGraficos.traerDatosClientes(pInicio, pFin, "horas");
-                objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesHoras', 'vrTotalCompra', 'hora', 'Total de Clientes');
+                objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
                 swTipoGraficoClientes = 'horas';
             } else {
                 datosClientes = await objModeloGraficos.traerDatosClientes(inicio, fin, "dias");
-                objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesDias', 'vrTotalDia', 'Dia', 'Total de Clientes');
+                objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
                 swTipoGraficoClientes = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
@@ -271,10 +272,9 @@ let traerDataGraficos = async () => {
     console.log(datosEgresos);
     objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total egresos');
 
-
     //se traen los datos para la seccion de Cliente
-    // datosClientes = await objModeloGraficos.traerDatosClientes(hoy, hoy, 'horas');
-    // objModeloGraficos.mostrarDatosClientes(datosClientes, 'datosTotalClientesHoras', 'vrTotalCompra', 'hora', 'Total clientes');
+    datosClientes = await objModeloGraficos.traerDatosClientes(hoy, hoy, 'horas');
+    objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
     
 }
 
@@ -428,6 +428,40 @@ document.addEventListener("DOMContentLoaded", async function () {
                     break;
                 case "menoresEgresos":
                     objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosMenoresEgresosDias', 'vrTotalDia', 'Dia', 'Menores Egresos');
+                    break;
+            }
+        }
+
+    });
+
+    document.getElementById('containerDropdownClientes').addEventListener('click', event => {
+
+        let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
+
+        console.log(tipoBalance);
+
+        if (swTipoGraficoClientes == 'horas') {
+            switch (tipoBalance) {
+                case "totalClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
+                    break;
+                case "mayoresClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'mejoresClientes', 'nroFacturas', 'nombres', 'Mejores Clientes por factura');
+                    break;
+                case "menoresClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'peoresClientes', 'nroFacturas', 'nombres', 'Menores Clientes por factura');
+                    break;
+            }
+        } else {
+            switch (tipoBalance) {
+                case "totalClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
+                    break;
+                case "mayoresClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'mejoresClientes', 'nroFacturas', 'nombres', 'Mejores Clientes por factura');
+                    break;
+                case "menoresClientesPorFacturas":
+                    objModeloGraficos.mostrarDatosClientes(datosClientes, 'peoresClientes', 'nroFacturas', 'nombres', 'Menores Clientes por factura');
                     break;
             }
         }

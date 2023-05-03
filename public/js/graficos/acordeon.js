@@ -1,7 +1,8 @@
 import moment from './../moment.js'
 
 export default class modeloGraficos {
-
+	
+	#urlBaseNode = 'http://localhost:3000'
 	#hoy = moment();
 	#ayer = moment().subtract(1, 'days');
 	#configDatePicker = {
@@ -16,7 +17,8 @@ export default class modeloGraficos {
 			'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 		}
 	}
-	
+
+
 	setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes) {
 		this.graficoProductos = graficoProductos;
 		this.graficoVentas = graficoVentas;
@@ -105,7 +107,7 @@ export default class modeloGraficos {
 	traerDatosProductos = async (inicio, fin, tiempo) => {
 		// se consumen los datos de la API y se le pasan al metodo para que los setee,
 		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-		let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
+		let resGraficos = await fetch(`${this.#urlBaseNode}/reportesProductos${tiempo}`, {
 			method: "POST",
 			credentials: "same-origin",
 			headers: {
@@ -149,7 +151,7 @@ export default class modeloGraficos {
 
 		// se consumen los datos de la API y se le pasan al metodo para que los setee,
 		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-		let resGraficos = await fetch(`http://localhost:3000/reportesProductos${tiempo}`, {
+		let resGraficos = await fetch(`${this.#urlBaseNode}/reportesProductos${tiempo}`, {
 			method: "POST",
 			credentials: "same-origin",
 			headers: {
@@ -184,7 +186,7 @@ export default class modeloGraficos {
 		try {
 			if (tiempo == "horas") {
 
-				let resDatosVentas = await fetch(`http://localhost:3000/reportesVentas/${tiempo}`, {
+				let resDatosVentas = await fetch(`${this.#urlBaseNode}/reportesVentas/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -198,7 +200,7 @@ export default class modeloGraficos {
 				let datosVentas = await resDatosVentas.json();
 				return datosVentas;
 			} else {
-				let resDatosVentas = await fetch(`http://localhost:3000/reportesVentas/${tiempo}`, {
+				let resDatosVentas = await fetch(`${this.#urlBaseNode}/reportesVentas/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -247,7 +249,7 @@ export default class modeloGraficos {
 		try {
 			if (tiempo == "horas") {
 
-				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+				let resDatosCompras = await fetch(`${this.#urlBaseNode}/reportesCompras/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -261,7 +263,7 @@ export default class modeloGraficos {
 				let datosCompras = await resDatosCompras.json();
 				return datosCompras;
 			} else {
-				let resDatosCompras = await fetch(`http://localhost:3000/reportesCompras/${tiempo}`, {
+				let resDatosCompras = await fetch(`${this.#urlBaseNode}/reportesCompras/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -310,7 +312,7 @@ export default class modeloGraficos {
 		try {
 			if (tiempo == "horas") {
 
-				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+				let resDatosEgresos = await fetch(`${this.#urlBaseNode}/reportesEgresos/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -324,7 +326,7 @@ export default class modeloGraficos {
 				let datosEgresos = await resDatosEgresos.json();
 				return datosEgresos;
 			} else {
-				let resDatosEgresos = await fetch(`http://localhost:3000/reportesEgresos/${tiempo}`, {
+				let resDatosEgresos = await fetch(`${this.#urlBaseNode}/reportesEgresos/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
@@ -375,22 +377,21 @@ export default class modeloGraficos {
 		try {
 			if (tiempo == "horas") {
 
-				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+				let resDatosClientes = await fetch(`${this.#urlBaseNode}/reportesClientes/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						diaInicio: inicio,
-						diaFin: fin
+						dia: this.#hoy.date() == inicio.date() ? 'hoy' : 'ayer'
 					})
 				});
 	
 				let datosClientes = await resDatosClientes.json();
 				return datosClientes;
 			} else {
-				let resDatosClientes = await fetch(`http://localhost:3000/reportesClientes${tiempo}`, {
+				let resDatosClientes = await fetch(`${this.#urlBaseNode}/reportesClientes/${tiempo}`, {
 					method: "POST",
 					credentials: "same-origin",
 					headers: {

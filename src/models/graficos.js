@@ -66,10 +66,8 @@ class Graficos {
     async traerClientesFacturas(procedimiento) {
         try {
             let [results] = await pool.query(procedimiento);
-            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+            let vClientes = results.map(element => JSON.parse(JSON.stringify(element)));
 
-            // Obtener la hora actual en formato 24 horas
-            let vClientes = datos
 
             return vClientes;
         } catch (error) {
