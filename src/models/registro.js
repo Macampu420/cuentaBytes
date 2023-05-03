@@ -52,22 +52,38 @@ class moduloRegistro {
 
         if (codigo == this.codigoEnv) {
 
-        const contrasena = CryptoJS.SHA256(this.contrasena).toString(CryptoJS.enc.Hex);
-            
-            await pool.query("CALL registrarEmpresa(?, ?, ?)",[this.nombreEmpresa, this.email, contrasena],
-            (err, rows) => {
-                //si hay error lo imprime y lo envia como respuesta
-                if (err) {
-                    console.log("internal error", err);
-                    res.write(err);
-                    res.end();
-                }else{                 
-                    res.send({
-                        status: 200,
-                        messaje: "Registrado Correctamente"
-                    })
-                }
-            });
+            const contrasena = CryptoJS.SHA256(this.contrasena).toString(CryptoJS.enc.Hex);
+
+            await pool.query("CALL registrarEmpresa(?, ?, ?)", [this.nombreEmpresa, this.email, contrasena],
+                (err, rows) => {
+                    //si hay error lo imprime y lo envia como respuesta
+                    if (err) {
+                        console.log("internal error", err);
+                        res.write(err);
+                        res.end();
+                    } else {
+                        res.send({
+                            status: 200,
+                            messaje: "Registrado Correctamente"
+                        })
+
+                        pool.query("CALL insertarAjustes(?)", [this.nombreEmpresa],
+                            (err, rows) => {
+                                if (err) {
+                                    console.log("internal error", err);
+                                    res.write(err);
+                                    res.end();
+                                }
+                                else {
+                                    res.send({
+                                        status: 200,
+                                        messaje: "Registrado Correctamente"
+                                    })
+                                }
+                            }
+                        )
+                    }
+                });
 
 
         } else {
