@@ -14,7 +14,7 @@
 </div>
 <script>
     let itemActive = "<?php echo $parametro;?>";
-    document.getElementById(itemActive).classList.add("active");
+    document.getElementById(itemActive).classList.add("itemNavActive");
 </script>
 <style>
     *{
@@ -54,7 +54,7 @@
     transform: translateX(40px);
 }
 
-.active {
+.itemNavActive {
     border-bottom: solid 3px #1CB3D3;
     animation: desplazar-right 1s;
     transform: translateX(40px);

@@ -398,8 +398,8 @@ export default class modeloGraficos {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						diaInicio: inicio,
-						diaFin: fin
+						inicio: inicio,
+						fin: fin
 					})
 				});
 	

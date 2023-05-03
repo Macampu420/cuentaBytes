@@ -157,6 +157,9 @@ const seccionesAcordeon = [
                 objModeloGraficos.mostrarDatosClientes(datosClientes, 'totalClientes', 'nroFacturas', 'nombres', 'Total de Clientes');
                 swTipoGraficoClientes = 'dias';
             }
+
+            console.log(datosClientes);
+
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
         }
     }
