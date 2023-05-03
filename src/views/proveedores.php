@@ -20,7 +20,7 @@
 
             <!-- navbar  -->
             <div class="col-2 d-none d-xl-block vh-100 py-5 overflow-hidden" style="background-color: #218DA3">
-                <?php include 'partials/navbar.php' ?>
+            <?php $parametro = 'linkProveedores'; include 'partials/navbar.php';?>
             </div>
 
             <!-- contenido principal -->

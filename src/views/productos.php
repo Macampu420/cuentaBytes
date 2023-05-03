@@ -20,7 +20,7 @@
 
             <!-- navbar  -->
             <div class="col-2 d-none d-xl-block nav vh-100 py-5 overflow-hidden">
-                <?php include 'partials/navbar.php' ?>
+            <?php $parametro = 'linkInventario'; include 'partials/navbar.php';?>
             </div>
 
             <!-- contenido principal -->

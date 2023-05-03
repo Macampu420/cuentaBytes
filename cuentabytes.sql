@@ -2,10 +2,17 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
+<<<<<<< HEAD
 -- Host: 127.0.0.1
 -- Generation Time: May 01, 2023 at 05:48 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
+=======
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 02-05-2023 a las 18:42:13
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
+>>>>>>> 89eb970ee98a4fc1677f87f6956ea0d72c124d67
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -53,19 +60,41 @@ UPDATE `proveedor` SET `nombreProveedor`=_nombreProveedor,`direccionProveedor`=_
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
-FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas DESC;
+	SELECT 
+		COUNT(encventas.idCliente) as nroFacturas, 
+		    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+	FROM 
+    	encventas
+	INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+    	encventas.fechaVenta BETWEEN inicio AND fin
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasHoras` (IN `dia` VARCHAR(30))   BEGIN
+DECLARE
+        fecha DATE;
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+SELECT
+    COUNT(encventas.idCliente) as nroFacturas,
+    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS 				nombres
 FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+INNER JOIN
+clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN
+    ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE
+DATE(encVentas.fechaVenta) = fecha
 GROUP BY clientes.nombresCliente
 ORDER BY nroFacturas DESC;
 END$$
@@ -141,17 +170,26 @@ SELECT * FROM ajustes;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes` ()   BEGIN
-SELECT nombresCliente,apellidosCliente, idCliente FROM clientes;
+SELECT * FROM clientes;
 END$$
 
+<<<<<<< HEAD
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, enccompraproducto.vrTotalIva, 
 proveedor.nombreProveedor, proveedor.idProveedor,
 detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
 productos.nombreProducto, productos.idProducto, productos.stockProducto
+=======
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra` (IN `_idCompra` INT(11))   SELECT enccompraproducto.idCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, 
+proveedor.nombreProveedor, proveedor.idProveedor,
+detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioUnitario, 
+productos.nombreProducto, productos.idProducto, productos.existenciaProducto,
+imagen.nombreImagen
+>>>>>>> 89eb970ee98a4fc1677f87f6956ea0d72c124d67
 FROM enccompraproducto 
 INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
 INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
 INNER JOIN productos ON productos.idProducto = detcompraproducto.idProducto
+INNER JOIN imagen ON imagen.idImagen = productos.idImagen
 WHERE enccompraproducto.idCompra = _idCompra$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompras` ()   SELECT enccompraproducto.*, proveedor.nombreProveedor FROM enccompraproducto INNER JOIN proveedor on proveedor.idProveedor = enccompraproducto.idProveedor ORDER BY enccompraproducto.idCompra DESC$$
@@ -300,19 +338,34 @@ LIMIT 10;
         END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+SELECT
+COUNT(encventas.idCliente) as nroFacturas,
+    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE encventas.fechaVenta BETWEEN inicio AND fin
 GROUP BY clientes.nombresCliente
 ORDER BY nroFacturas desc limit 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasHoras` (IN `dia` VARCHAR(10))   BEGIN
+DECLARE
+        fecha DATE;
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+SELECT
+COUNT(encventas.idCliente) as nroFacturas,     CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
 FROM encventas
 INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE
+DATE(encVentas.fechaVenta) = fecha
 GROUP BY clientes.nombresCliente
 ORDER BY nroFacturas desc limit 10;
 END$$
@@ -521,21 +574,44 @@ ON productos.idImagen = imagen.idImagen
 WHERE productos.idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia,COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
-FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas ASC limit 10;
+	SELECT 
+        COUNT(encventas.idCliente) as nroFacturas, 
+            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres	
+	FROM 
+    	encventas
+	INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+    	encventas.fechaVenta BETWEEN inicio AND fin
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas ASC limit 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasHoras` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   BEGIN
-SELECT HOUR(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) as hora, COUNT(encventas.idCliente) as nroFacturas, clientes.nombresCliente
-FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas ASC limit 10;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasHoras` (IN `dia` VARCHAR(10))   BEGIN
+	DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+	SELECT  
+        COUNT(encventas.idCliente) as nroFacturas, 
+            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+	FROM 
+    	encventas
+    INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+	INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+		DATE(encVentas.fechaVenta) = fecha
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas ASC limit 10;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasDias` (IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))   SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
@@ -910,7 +986,23 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (39, 2, 6000, 25, 7),
 (40, 1, 50000, 26, 6),
 (41, 12, 3500, 27, 11),
-(42, 1, 50000, 27, 12);
+(42, 1, 50000, 27, 12),
+(43, 1, 42000, 28, 2),
+(44, 1, 50000, 28, 12),
+(45, 7, 3500, 28, 11),
+(46, 2, 6000, 28, 7),
+(47, 1, 3500, 29, 11),
+(48, 1, 3500, 30, 11),
+(49, 1, 3500, 31, 11),
+(50, 1, 6000, 32, 7),
+(51, 1, 6000, 33, 7),
+(52, 1, 20000, 34, 5),
+(53, 2, 50000, 34, 9),
+(54, 4, 3500, 34, 11),
+(55, 1, 50000, 50, 12),
+(56, 1, 3500, 50, 11),
+(57, 6, 3500, 51, 11),
+(58, 1, 50000, 51, 12);
 
 -- --------------------------------------------------------
 
@@ -1083,7 +1175,31 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (24, '2023-04-30 16:04:37', 0, 2, 71000, 11),
 (25, '2023-04-30 16:04:51', 0, 1, 12000, 4),
 (26, '2023-04-30 13:05:06', 0, 4, 50000, 8),
-(27, '2023-05-01 13:02:27', 2000, 1, 90000, 7);
+(27, '2023-05-01 13:02:27', 2000, 1, 90000, 7),
+(28, '2023-05-01 16:41:43', 500, 1, 128000, 10),
+(29, '2023-05-01 16:43:51', 500, 1, 3000, 14),
+(30, '2023-05-01 16:46:48', 500, 1, 3000, 14),
+(31, '2023-05-01 17:10:49', 0, 1, 3500, 4),
+(32, '2023-05-02 12:41:09', 0, 1, 6000, 6),
+(33, '2023-05-02 13:03:29', 0, 1, 6000, 6),
+(34, '2023-05-02 14:55:14', 0, 1, 134000, 4),
+(35, '2023-05-02 15:01:41', 0, 1, 50000, 10),
+(36, '2023-05-02 15:01:41', 0, 1, 50000, 8),
+(37, '2023-05-02 15:01:41', 0, 1, 50000, 9),
+(38, '2023-05-02 15:01:41', 0, 1, 50000, 7),
+(39, '2023-05-02 15:01:41', 0, 1, 50000, 11),
+(40, '2023-05-02 15:01:41', 0, 1, 50000, 13),
+(41, '2023-05-02 15:01:41', 0, 1, 50000, 4),
+(42, '2023-05-02 15:01:41', 0, 1, 50000, 9),
+(43, '2023-05-02 15:01:41', 0, 1, 50000, 9),
+(44, '2023-05-02 15:01:41', 0, 1, 50000, 6),
+(45, '2023-05-02 15:01:41', 0, 1, 50000, 10),
+(46, '2023-05-02 15:01:41', 0, 1, 50000, 13),
+(47, '2023-05-02 15:01:41', 0, 1, 50000, 9),
+(48, '2023-05-02 15:01:41', 0, 1, 50000, 6),
+(49, '2023-05-02 15:01:41', 0, 1, 50000, 9),
+(50, '2023-05-02 16:30:28', 0, 1, 53500, 4),
+(51, '2023-05-02 16:31:06', 1000, 1, 70000, 4);
 
 -- --------------------------------------------------------
 
@@ -1182,17 +1298,17 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES
 (1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 7, 21),
-(2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 12, 20),
+(2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 11, 20),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3000, 5500, 44, 19),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
-(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 35, 9),
+(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 34, 9),
 (6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 40, 16),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 36, 16),
 (8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 24, 15),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 32, 14),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 30, 14),
 (10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 24, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 44, 12),
-(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 24, 11);
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 23, 12),
+(12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 21, 11);
 
 -- --------------------------------------------------------
 
@@ -1389,7 +1505,7 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `detcompraproducto`

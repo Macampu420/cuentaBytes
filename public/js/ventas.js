@@ -10,6 +10,7 @@ let vItemsEditar = [];
 let vItemsElim = [];
 let vObjsMetodosPago;
 let vPDF = [];
+let idUltimaVenta;
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 //METODOS PARA TRAER DE LA BD LA INFORMACION NECESARIA
@@ -127,13 +128,16 @@ const actualizarCrearItem = (item, disparador, vector) => {
             idProducto: productoItem.idProducto,
             precioUnitario: productoItem.precioVenta,
             unidadesVendidas: productoItem.existenciaProducto > 0 ? 1 : 0,
-        }) 
+            nombreProducto: productoItem.nombreProducto,
+        })
     } else {
         vector[vector.indexOf(item)] = {
             idItem: nroItemDisparador,
             idProducto: productoItem.idProducto,
-            precioUnitario: productoItem.precioVenta,
-            unidadesVendidas:  productoItem.existenciaProducto > 0 ? document.getElementById(`inpCantidad${nroItemDisparador}`).value : 0,
+            precioUnitario: productoItem.precioVenta,          
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? document.getElementById(`inpCantidad${nroItemDisparador}`).value : 0,
+            nombreProducto: productoItem.nombreProducto,
+
         }
     }
 
@@ -150,7 +154,7 @@ const actualizarCrearItem = (item, disparador, vector) => {
         document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("readonly");
         document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
         document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.existenciaProducto);
-        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.existenciaProducto} unidades.`;    
+        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.existenciaProducto} unidades.`;
     }
 
     vrTotalRegistar(vector);
@@ -199,10 +203,10 @@ const registrarVenta = () => {
             descuento,
             vrTotal,
             fecha,
-            itemsVta: vItemsVta,
+            itemsVta: vItemsVta
         };
 
-        vPDF.push(ventaActual)
+        llenarPDF();
         enviarRegVenta(ventaActual);
     }
 }
@@ -267,6 +271,7 @@ const renderVentas = async () => {
                     element.fechaVenta = element.fechaVenta.slice(0, 10);
 
                     vObjsEncVentas.push(element);
+                    idUltimaVenta = data[0][0].idVenta;
                 })
             }
         })
@@ -365,15 +370,57 @@ const iniciarModalDetallesVenta = async (disparador) => {
 
 }
 
+const llenarPDF = async () => {
+    let nombreCliente, apellidoCliente, telefonoCliente, cedulaCliente, metodoPago;
+    let idMetPago = document.getElementById("slcMetodoPago").value;
+    let idCliente = parseInt(document.getElementById("slcClientes").value);
+    let descuento = parseInt(document.getElementById("inpDescuento").value);
+    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    let fecha = document.getElementById("inpFecha").value
+    vrTotal = vrTotal.slice(1);
+
+    vObjsCliente.forEach(cliente => {
+        if (cliente.idCliente == idCliente) {
+            nombreCliente = cliente.nombresCliente;
+            apellidoCliente = cliente.apellidosCliente;
+        }
+    })
+
+    vObjsMetodosPago.forEach(element => {
+        if (element.idMetodoPago == idMetPago) {
+            metodoPago = element.metodoPago
+        }
+    })
+
+
+    let PDFActual = {
+        descuento,
+        vrTotal,
+        fecha,
+        nombreCliente,
+        apellidoCliente,
+        cedulaCliente,
+        telefonoCliente,
+        metodoPago,
+        itemsVta: vItemsVta,
+    };
+
+    vPDF.push(PDFActual);
+    console.log(vPDF);
+
+}
+
 const generarPdf = () => {
     console.log(vPDF);
     vPDF.forEach(element => {
-        total = vPDF[0].vrTotal - vPDF[0].descuento;
+        descuento = parseInt(vPDF[0].descuento)
+        total = parseInt(vPDF[0].vrTotal)
+        subtotal = total + descuento;
 
         props = {
             outputType: jsPDFInvoiceTemplate.OutputType.Save,
             returnJsPDFDocObject: true,
-            fileName: `Factura ${vPDF[0].fecha}`,
+            fileName: `Factura ${idUltimaVenta}`,
             orientationLandscape: false,
             compress: true,
             logo: {
@@ -407,14 +454,12 @@ const generarPdf = () => {
             },
             contact: {
                 label: "Factura venta",
-                name: "Cliente: " + element.nombresCliente + " " + element.apellidosCliente,
-                phone: "Telefono: " + element.telefonoCliente,
-                otherInfo: "Cedula: " + element.cedulaCliente,
-                otherInfo: "Metodo de Pago: " + element.cedulaCliente
+                name: "Cliente: " + vPDF[0].nombreCliente + " " + vPDF[0].apellidoCliente,
+                otherInfo: "Metodo de Pago: " + vPDF[0].metodoPago
             },
             invoice: {
-                label: "Invoice #: ",
-                num: vPDF[0].idVenta,
+                label: "Factura #: ",
+                num: idUltimaVenta + 1,
                 invDate: "Fecha Venta: " + vPDF[0].fecha,
                 invGenDate: "Fecha Factura: " + vPDF[0].fecha,
                 headerBorder: false,
@@ -425,13 +470,13 @@ const generarPdf = () => {
                         width: 20
                     }
                 },
-                // {
-                //     title: "Producto",
-                //     style: {
-                //         width: 50,
+                {
+                    title: "Producto",
+                    style: {
+                        width: 50,
 
-                //     }
-                // },
+                    }
+                },
                 {
                     title: "Precio"
                 },
@@ -444,14 +489,14 @@ const generarPdf = () => {
                 ],
                 table: Array.from(Array(vItemsVta.length), (item, index) => ([
                     vItemsVta[index].idProducto,
-                    // vItemsEditar[index].nombreProducto,
+                    vItemsVta[index].nombreProducto,
                     parseInt(vItemsVta[index].precioUnitario),
                     parseInt(vItemsVta[index].unidadesVendidas),
                     parseInt(vItemsVta[index].precioUnitario) * parseInt(vItemsVta[index].unidadesVendidas)
                 ])),
                 additionalRows: [{
                     col1: 'Subtotal:',
-                    col2: vPDF[0].vrTotal,
+                    col2: subtotal,
                     style: {
                         fontSize: 10 //optional, default 12
                     }
@@ -465,14 +510,14 @@ const generarPdf = () => {
                 },
                 {
                     col1: 'Total:',
-                    col2: total,
+                    col2: vPDF[0].vrTotal,
                     style: {
                         fontSize: 14 //optional, default 12
                     }
                 }
                 ],
-                invDesc: "Subtotal : " + vPDF[0].vrTotal + "             Descuento : " + vPDF[0].descuento,
-                invDescLabel: "Total : " + total,
+                invDesc: "Subtotal : " + subtotal + "             Descuento : " + vPDF[0].descuento,
+                invDescLabel: "Total : " + vPDF[0].vrTotal,
             },
             footer: {
                 text: "The invoice is created on a computer and is valid without the signature and stamp.",

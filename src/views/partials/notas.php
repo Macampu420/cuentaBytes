@@ -5,20 +5,17 @@
     </div>
     <div class="offcanvas-body">
         <div class="row">
-            <input id="buscadorVtas" class="col-12 col-lg-10 mx-auto h-auto search__input" type="text" placeholder="Buscar nota">
+            <input id="buscadorNotas" class="col-12 col-lg-10 mx-auto h-auto search__input" type="text" placeholder="Buscar nota">
         </div>
 
-        <hr>
-
-        
         <div id="filaNotas" class="row">
 
-            <div id="alert" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto" role="alert">
+            <div id="alertNoNotas" class="d-none alert alert-danger alert-dismissible fade show w-50 mx-auto mt-3" role="alert">
                 No se encontraron coincidencias
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
         </div>
- 
+        
     </div>
 </div>
