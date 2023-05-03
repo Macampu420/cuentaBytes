@@ -42,7 +42,7 @@
 
 
                         <div class="row d-flex px-4 mt-3 d-none">
-                            <button id="btnFactura" class="btn-dark btn col-4 mt-3 ms-0">Factura</button>                           
+                            <button id="btnFactura" class="btn-secondary btn col-4 mt-3 ms-0">Factura</button>                           
                         </div>
                     </form>
                 </div>

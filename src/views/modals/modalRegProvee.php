@@ -37,7 +37,7 @@
 
                     </div>
                         <div class="row col-8 p-0 m-0 justify-content-end">
-                            <button id="btnGuardar" type="submit" class="btn-dark btn col-6 mt-3">Guardar</button>
+                            <button id="btnGuardar" type="submit" class="btn-secondary btn col-6 mt-3">Guardar</button>
                         </div>
                     </div>
                 </form>
