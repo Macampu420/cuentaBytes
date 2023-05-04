@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-05-2023 a las 15:35:49
+-- Tiempo de generación: 04-05-2023 a las 18:17:38
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -852,8 +852,7 @@ CREATE TABLE `ajustes` (
 --
 
 INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES
-('Licorera Elite', '08:00:00', '22:00:00', 'barras'),
-('Los Pollos hermanos', '07:00:00', '17:00:00', 'barras');
+('Licorera Elite', '08:00:00', '22:00:00', 'line');
 
 -- --------------------------------------------------------
 
@@ -998,7 +997,12 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (60, 2, 3500, 53, 11),
 (61, 1, 3500, 54, 11),
 (62, 2, 6000, 54, 7),
-(63, 1, 50000, 54, 9);
+(63, 1, 50000, 54, 9),
+(64, 5, 4500, 55, 11),
+(65, 1, 50000, 55, 6),
+(66, 1, 50000, 56, 9),
+(67, 1, 50000, 56, 1),
+(68, 12, 4500, 57, 11);
 
 -- --------------------------------------------------------
 
@@ -1198,7 +1202,10 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (51, '2023-05-02 16:31:06', 1000, 1, 70000, 4),
 (52, '2023-05-03 22:44:53', 0, 1, 3500, 11),
 (53, '2023-05-04 12:34:47', 0, 1, 7000, 4),
-(54, '2023-05-04 12:35:35', 500, 1, 65000, 7);
+(54, '2023-05-04 12:35:35', 500, 1, 65000, 7),
+(55, '2023-05-04 15:17:34', 500, 1, 72000, 4),
+(56, '2023-05-04 15:18:01', 0, 2, 100000, 6),
+(57, '2023-05-04 15:18:24', 0, 2, 54000, 8);
 
 -- --------------------------------------------------------
 
@@ -1296,17 +1303,17 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES
-(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 7, 21),
+(1, 'Vino gato negro', 'Vino Tinto merlot 2020', 42000, 50000, 6, 21),
 (2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 11, 20),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3000, 5500, 44, 19),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
 (5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 34, 9),
-(6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
+(6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 17, 17),
 (7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 34, 16),
 (8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 24, 15),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 29, 14),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 28, 14),
 (10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 30, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 3000, 4500, 30, 12),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 3000, 4500, 13, 12),
 (12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 21, 11);
 
 -- --------------------------------------------------------
@@ -1505,7 +1512,7 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de la tabla `detcompraproducto`
