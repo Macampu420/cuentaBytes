@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 04, 2023 at 12:58 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 04-05-2023 a las 15:35:49
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,16 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cuentabytes`
+-- Base de datos: `cuentabytes`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procedimientos
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCliente` (IN `_idCliente` INT(11), IN `_nombresCliente` VARCHAR(30), IN `_apellidosCliente` VARCHAR(30), IN `_telefonoCliente` VARCHAR(15), IN `_cedulaCliente` INT(11))   UPDATE `clientes` SET `idCliente`=_idCliente,`nombresCliente`=_nombresCliente,`apellidosCliente`=_apellidosCliente,`telefonoCliente`=_telefonoCliente,`cedulaCliente`=_cedulaCliente WHERE idCliente = _idCliente$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_idProducto` INT)   UPDATE productos SET existenciaProducto = existenciaProducto + _stockProducto, costoProducto = _costoProducto WHERE idProducto = _idProducto$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarCostoProducto` (IN `_stockProducto` INT(7), IN `_costoProducto` INT(8), IN `_precioVenta` INT(7), IN `_idProducto` INT)   UPDATE productos SET existenciaProducto = existenciaProducto + _stockProducto, costoProducto = _costoProducto, precioVenta = _precioVenta WHERE idProducto = _idProducto$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarDetEgreso` (IN `_idDetEgreso` INT(11), IN `_valorEgreso` INT(8), IN `_descripcion` VARCHAR(100))   UPDATE `detalleegreso` SET `idDetEgreso`=_idDetEgreso,`valorEgreso`=_valorEgreso,`descripcion`=_descripcion WHERE idDetEgreso = _idDetEgreso$$
 
@@ -151,8 +151,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetEgreso` (IN `_valorEgres
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetVenta` (IN `_uniVendidas` INT(8), IN `precioUnit` INT(11), IN `_idVenta` INT(11), IN `idProducto` INT(11))   BEGIN
 INSERT INTO `detalleventa` (`uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES (_uniVendidas, precioUnit, _idVenta, idProducto); END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncCompra` (IN `_idCompra` INT(11), IN `_conceptoCompra` VARCHAR(50), IN `_idProveedor` INT(11), IN `_vrTotalCompra` INT(11), IN `_vrTotalIva` INT(11))   INSERT INTO enccompraproducto(idCompra, conceptoCompra, fechaCompra, idProveedor, vrTotalCompra, vrTotalIva) 
-VALUES (_idCompra,_conceptoCompra, now(),_idProveedor,_vrTotalCompra,_vrTotalIva)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncCompra` (IN `_idCompra` INT(11), IN `_idProveedor` INT(11), IN `_vrTotalCompra` INT(11))   INSERT INTO enccompraproducto(idCompra, fechaCompra, idProveedor, vrTotalCompra) 
+VALUES (_idCompra, now(),_idProveedor,_vrTotalCompra)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncEgreso` (IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))   INSERT INTO `encegreso`(`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES (_idEgreso, now(),_tituloEgreso,_vrTotalEgreso,_idTipoEgreso)$$
 
@@ -837,7 +837,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ajustes`
+-- Estructura de tabla para la tabla `ajustes`
 --
 
 CREATE TABLE `ajustes` (
@@ -848,7 +848,7 @@ CREATE TABLE `ajustes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `ajustes`
+-- Volcado de datos para la tabla `ajustes`
 --
 
 INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES
@@ -858,7 +858,7 @@ INSERT INTO `ajustes` (`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafi
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clientes`
+-- Estructura de tabla para la tabla `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -870,7 +870,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `clientes`
+-- Volcado de datos para la tabla `clientes`
 --
 
 INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `telefonoCliente`, `cedulaCliente`) VALUES
@@ -886,7 +886,7 @@ INSERT INTO `clientes` (`idCliente`, `nombresCliente`, `apellidosCliente`, `tele
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalleegreso`
+-- Estructura de tabla para la tabla `detalleegreso`
 --
 
 CREATE TABLE `detalleegreso` (
@@ -897,7 +897,7 @@ CREATE TABLE `detalleegreso` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `detalleegreso`
+-- Volcado de datos para la tabla `detalleegreso`
 --
 
 INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgreso`) VALUES
@@ -932,7 +932,7 @@ INSERT INTO `detalleegreso` (`idDetEgreso`, `valorEgreso`, `descripcion`, `idEgr
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalleventa`
+-- Estructura de tabla para la tabla `detalleventa`
 --
 
 CREATE TABLE `detalleventa` (
@@ -944,7 +944,7 @@ CREATE TABLE `detalleventa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `detalleventa`
+-- Volcado de datos para la tabla `detalleventa`
 --
 
 INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES
@@ -994,12 +994,16 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (56, 1, 3500, 50, 11),
 (57, 6, 3500, 51, 11),
 (58, 1, 50000, 51, 12),
-(59, 1, 3500, 52, 11);
+(59, 1, 3500, 52, 11),
+(60, 2, 3500, 53, 11),
+(61, 1, 3500, 54, 11),
+(62, 2, 6000, 54, 7),
+(63, 1, 50000, 54, 9);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detcompraproducto`
+-- Estructura de tabla para la tabla `detcompraproducto`
 --
 
 CREATE TABLE `detcompraproducto` (
@@ -1011,7 +1015,7 @@ CREATE TABLE `detcompraproducto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `detcompraproducto`
+-- Volcado de datos para la tabla `detcompraproducto`
 --
 
 INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitario`, `idCompra`, `idProducto`) VALUES
@@ -1047,53 +1051,56 @@ INSERT INTO `detcompraproducto` (`idDetCompra`, `cantidadCompra`, `precioUnitari
 (87, 12, 5000, 17, 7),
 (88, 12, 40000, 18, 12),
 (89, 12, 25000, 19, 8),
-(90, 12, 40000, 20, 10);
+(90, 12, 40000, 20, 10),
+(91, 11, 3000, 23, 11),
+(92, 6, 40000, 23, 10);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `enccompraproducto`
+-- Estructura de tabla para la tabla `enccompraproducto`
 --
 
 CREATE TABLE `enccompraproducto` (
   `idCompra` int(11) NOT NULL,
-  `conceptoCompra` varchar(50) DEFAULT NULL,
   `fechaCompra` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `idProveedor` int(11) DEFAULT NULL,
-  `vrTotalCompra` int(11) NOT NULL,
-  `vrTotalIva` int(11) NOT NULL
+  `vrTotalCompra` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `enccompraproducto`
+-- Volcado de datos para la tabla `enccompraproducto`
 --
 
-INSERT INTO `enccompraproducto` (`idCompra`, `conceptoCompra`, `fechaCompra`, `idProveedor`, `vrTotalCompra`, `vrTotalIva`) VALUES
-(1, 'Cervezas', '2023-04-15 17:26:14', 15, 110000, 18900),
-(2, 'licor fuerte', '2023-04-04 17:27:17', 17, 400000, 84000),
-(3, 'Guaro', '2023-03-20 17:28:20', 14, 250000, 52500),
-(4, 'Vino', '2023-04-15 17:28:50', 11, 989000, 207690),
-(5, 'Cerveza', '2023-03-21 17:29:38', 12, 101000, 10830),
-(6, 'Champaña', '2023-03-31 17:30:07', 11, 150000, 31500),
-(7, 'Trago fuerte', '2023-03-17 17:31:04', 11, 600000, 126000),
-(8, 'Champaña', '2023-04-08 17:32:14', 15, 150000, 31500),
-(9, 'aaaa', '2023-04-27 17:24:36', 17, 125000, 0),
-(10, 'aaaa', '2023-04-30 16:01:43', 17, 870000, 0),
-(11, 'qqq', '2023-04-30 16:03:27', 16, 800000, 0),
-(12, '223', '2023-04-30 16:03:45', 12, 140000, 0),
-(13, 'wuaaaa', '2023-04-30 21:09:15', 17, 650000, 0),
-(14, 'xdxdxd', '2023-04-30 19:09:15', 16, 919000, 0),
-(15, 'xdxdxd', '2023-04-30 17:09:15', 14, 300000, 0),
-(16, 'wua', '2023-04-30 15:09:15', 11, 520000, 0),
-(17, 'jijijija', '2023-05-01 16:55:55', 17, 80000, 0),
-(18, 'cunchunfluis', '2023-05-01 15:55:55', 16, 480000, 0),
-(19, 'wuaaaa', '2023-05-01 14:55:55', 12, 300000, 0),
-(20, 'miau', '2023-05-01 13:55:55', 12, 480000, 0);
+INSERT INTO `enccompraproducto` (`idCompra`, `fechaCompra`, `idProveedor`, `vrTotalCompra`) VALUES
+(1, '2023-04-15 17:26:14', 15, 110000),
+(2, '2023-04-04 17:27:17', 17, 400000),
+(3, '2023-03-20 17:28:20', 14, 250000),
+(4, '2023-04-15 17:28:50', 11, 989000),
+(5, '2023-03-21 17:29:38', 12, 101000),
+(6, '2023-03-31 17:30:07', 11, 150000),
+(7, '2023-03-17 17:31:04', 11, 600000),
+(8, '2023-04-08 17:32:14', 15, 150000),
+(9, '2023-04-27 17:24:36', 17, 125000),
+(10, '2023-04-30 16:01:43', 17, 870000),
+(11, '2023-04-30 16:03:27', 16, 800000),
+(12, '2023-04-30 16:03:45', 12, 140000),
+(13, '2023-04-30 21:09:15', 17, 650000),
+(14, '2023-04-30 19:09:15', 16, 919000),
+(15, '2023-04-30 17:09:15', 14, 300000),
+(16, '2023-04-30 15:09:15', 11, 520000),
+(17, '2023-05-01 16:55:55', 17, 80000),
+(18, '2023-05-01 15:55:55', 16, 480000),
+(19, '2023-05-01 14:55:55', 12, 300000),
+(20, '2023-05-01 13:55:55', 12, 480000),
+(21, '2023-05-04 13:30:29', 12, 8000),
+(22, '2023-05-04 13:31:35', 12, 5000),
+(23, '2023-05-04 13:35:22', 12, 273000);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `encegreso`
+-- Estructura de tabla para la tabla `encegreso`
 --
 
 CREATE TABLE `encegreso` (
@@ -1105,7 +1112,7 @@ CREATE TABLE `encegreso` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `encegreso`
+-- Volcado de datos para la tabla `encegreso`
 --
 
 INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgreso`, `idTipoEgreso`) VALUES
@@ -1127,7 +1134,7 @@ INSERT INTO `encegreso` (`idEgreso`, `fechaEgreso`, `tituloEgreso`, `vrTotalEgre
 -- --------------------------------------------------------
 
 --
--- Table structure for table `encventas`
+-- Estructura de tabla para la tabla `encventas`
 --
 
 CREATE TABLE `encventas` (
@@ -1140,7 +1147,7 @@ CREATE TABLE `encventas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `encventas`
+-- Volcado de datos para la tabla `encventas`
 --
 
 INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPago`, `vrTotalVta`, `idCliente`) VALUES
@@ -1189,12 +1196,14 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (49, '2023-05-02 15:01:41', 0, 1, 50000, 9),
 (50, '2023-05-02 16:30:28', 0, 1, 53500, 4),
 (51, '2023-05-02 16:31:06', 1000, 1, 70000, 4),
-(52, '2023-05-03 22:44:53', 0, 1, 3500, 11);
+(52, '2023-05-03 22:44:53', 0, 1, 3500, 11),
+(53, '2023-05-04 12:34:47', 0, 1, 7000, 4),
+(54, '2023-05-04 12:35:35', 500, 1, 65000, 7);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `imagen`
+-- Estructura de tabla para la tabla `imagen`
 --
 
 CREATE TABLE `imagen` (
@@ -1204,7 +1213,7 @@ CREATE TABLE `imagen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `imagen`
+-- Volcado de datos para la tabla `imagen`
 --
 
 INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
@@ -1227,7 +1236,7 @@ INSERT INTO `imagen` (`idImagen`, `rutaImagen`, `nombreImagen`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `metodopago`
+-- Estructura de tabla para la tabla `metodopago`
 --
 
 CREATE TABLE `metodopago` (
@@ -1236,7 +1245,7 @@ CREATE TABLE `metodopago` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `metodopago`
+-- Volcado de datos para la tabla `metodopago`
 --
 
 INSERT INTO `metodopago` (`idMetodoPago`, `metodoPago`) VALUES
@@ -1248,7 +1257,7 @@ INSERT INTO `metodopago` (`idMetodoPago`, `metodoPago`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notas`
+-- Estructura de tabla para la tabla `notas`
 --
 
 CREATE TABLE `notas` (
@@ -1258,7 +1267,7 @@ CREATE TABLE `notas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `notas`
+-- Volcado de datos para la tabla `notas`
 --
 
 INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
@@ -1269,7 +1278,7 @@ INSERT INTO `notas` (`idNota`, `tituloNota`, `contenidoNota`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `productos`
+-- Estructura de tabla para la tabla `productos`
 --
 
 CREATE TABLE `productos` (
@@ -1283,7 +1292,7 @@ CREATE TABLE `productos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `productos`
+-- Volcado de datos para la tabla `productos`
 --
 
 INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, `costoProducto`, `precioVenta`, `existenciaProducto`, `idImagen`) VALUES
@@ -1293,17 +1302,17 @@ INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, 
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
 (5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 34, 9),
 (6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 36, 16),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 34, 16),
 (8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 24, 15),
-(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 30, 14),
-(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 24, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2000, 3500, 22, 12),
+(9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 29, 14),
+(10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 30, 13),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 3000, 4500, 30, 12),
 (12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 21, 11);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `proveedor`
+-- Estructura de tabla para la tabla `proveedor`
 --
 
 CREATE TABLE `proveedor` (
@@ -1314,7 +1323,7 @@ CREATE TABLE `proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `proveedor`
+-- Volcado de datos para la tabla `proveedor`
 --
 
 INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`, `telefonoProveedor`) VALUES
@@ -1329,7 +1338,7 @@ INSERT INTO `proveedor` (`idProveedor`, `nombreProveedor`, `direccionProveedor`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipoegreso`
+-- Estructura de tabla para la tabla `tipoegreso`
 --
 
 CREATE TABLE `tipoegreso` (
@@ -1338,7 +1347,7 @@ CREATE TABLE `tipoegreso` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tipoegreso`
+-- Volcado de datos para la tabla `tipoegreso`
 --
 
 INSERT INTO `tipoegreso` (`idTipoEgreso`, `nombreTipoEgreso`) VALUES
@@ -1353,7 +1362,7 @@ INSERT INTO `tipoegreso` (`idTipoEgreso`, `nombreTipoEgreso`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -1364,7 +1373,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) VALUES
@@ -1373,30 +1382,30 @@ INSERT INTO `usuarios` (`idUsuario`, `nombreUsuario`, `correoUsuario`, `contrase
 (3, 'Los Pollos hermanos', 'bedoyi5849@in2reach.com', '0177a5ce06c50e390c083b965e4160373829723f97c64cc60cbf03db7a554d99');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `ajustes`
+-- Indices de la tabla `ajustes`
 --
 ALTER TABLE `ajustes`
   ADD PRIMARY KEY (`nombreEmpresa`);
 
 --
--- Indexes for table `clientes`
+-- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`idCliente`);
 
 --
--- Indexes for table `detalleegreso`
+-- Indices de la tabla `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   ADD PRIMARY KEY (`idDetEgreso`),
   ADD KEY `detalleEgreso` (`idEgreso`);
 
 --
--- Indexes for table `detalleventa`
+-- Indices de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
   ADD PRIMARY KEY (`idDetVenta`),
@@ -1404,7 +1413,7 @@ ALTER TABLE `detalleventa`
   ADD KEY `detEncVta` (`idVenta`);
 
 --
--- Indexes for table `detcompraproducto`
+-- Indices de la tabla `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
   ADD PRIMARY KEY (`idDetCompra`),
@@ -1412,21 +1421,21 @@ ALTER TABLE `detcompraproducto`
   ADD KEY `detalleCompraProducto` (`idProducto`);
 
 --
--- Indexes for table `enccompraproducto`
+-- Indices de la tabla `enccompraproducto`
 --
 ALTER TABLE `enccompraproducto`
   ADD PRIMARY KEY (`idCompra`),
   ADD KEY `encCompraProductos` (`idProveedor`);
 
 --
--- Indexes for table `encegreso`
+-- Indices de la tabla `encegreso`
 --
 ALTER TABLE `encegreso`
   ADD PRIMARY KEY (`idEgreso`),
   ADD KEY `egresosTipo` (`idTipoEgreso`);
 
 --
--- Indexes for table `encventas`
+-- Indices de la tabla `encventas`
 --
 ALTER TABLE `encventas`
   ADD PRIMARY KEY (`idVenta`),
@@ -1434,163 +1443,163 @@ ALTER TABLE `encventas`
   ADD KEY `metodoPago` (`idMetodoPago`);
 
 --
--- Indexes for table `imagen`
+-- Indices de la tabla `imagen`
 --
 ALTER TABLE `imagen`
   ADD PRIMARY KEY (`idImagen`);
 
 --
--- Indexes for table `metodopago`
+-- Indices de la tabla `metodopago`
 --
 ALTER TABLE `metodopago`
   ADD PRIMARY KEY (`idMetodoPago`);
 
 --
--- Indexes for table `notas`
+-- Indices de la tabla `notas`
 --
 ALTER TABLE `notas`
   ADD PRIMARY KEY (`idNota`);
 
 --
--- Indexes for table `productos`
+-- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`idProducto`),
   ADD KEY `productoImagen` (`idImagen`);
 
 --
--- Indexes for table `proveedor`
+-- Indices de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`idProveedor`);
 
 --
--- Indexes for table `tipoegreso`
+-- Indices de la tabla `tipoegreso`
 --
 ALTER TABLE `tipoegreso`
   ADD PRIMARY KEY (`idTipoEgreso`);
 
 --
--- Indexes for table `usuarios`
+-- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`idUsuario`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `clientes`
+-- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `detalleegreso`
+-- AUTO_INCREMENT de la tabla `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   MODIFY `idDetEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT for table `detalleventa`
+-- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
--- AUTO_INCREMENT for table `detcompraproducto`
+-- AUTO_INCREMENT de la tabla `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
-  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `idDetCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
--- AUTO_INCREMENT for table `imagen`
+-- AUTO_INCREMENT de la tabla `imagen`
 --
 ALTER TABLE `imagen`
   MODIFY `idImagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `metodopago`
+-- AUTO_INCREMENT de la tabla `metodopago`
 --
 ALTER TABLE `metodopago`
   MODIFY `idMetodoPago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `notas`
+-- AUTO_INCREMENT de la tabla `notas`
 --
 ALTER TABLE `notas`
   MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `productos`
+-- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
   MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `proveedor`
+-- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `tipoegreso`
+-- AUTO_INCREMENT de la tabla `tipoegreso`
 --
 ALTER TABLE `tipoegreso`
   MODIFY `idTipoEgreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `detalleegreso`
+-- Filtros para la tabla `detalleegreso`
 --
 ALTER TABLE `detalleegreso`
   ADD CONSTRAINT `detalleEgreso` FOREIGN KEY (`idEgreso`) REFERENCES `encegreso` (`idEgreso`) ON DELETE CASCADE;
 
 --
--- Constraints for table `detalleventa`
+-- Filtros para la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
   ADD CONSTRAINT `EncDetVta` FOREIGN KEY (`idVenta`) REFERENCES `encventas` (`idVenta`) ON DELETE CASCADE,
   ADD CONSTRAINT `ventaProducto` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`);
 
 --
--- Constraints for table `detcompraproducto`
+-- Filtros para la tabla `detcompraproducto`
 --
 ALTER TABLE `detcompraproducto`
   ADD CONSTRAINT `compraProducto` FOREIGN KEY (`idCompra`) REFERENCES `enccompraproducto` (`idCompra`) ON DELETE CASCADE,
   ADD CONSTRAINT `detalleCompraProducto` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`);
 
 --
--- Constraints for table `enccompraproducto`
+-- Filtros para la tabla `enccompraproducto`
 --
 ALTER TABLE `enccompraproducto`
   ADD CONSTRAINT `encCompraProductos` FOREIGN KEY (`idProveedor`) REFERENCES `proveedor` (`idProveedor`) ON DELETE CASCADE;
 
 --
--- Constraints for table `encegreso`
+-- Filtros para la tabla `encegreso`
 --
 ALTER TABLE `encegreso`
   ADD CONSTRAINT `egresosTipo` FOREIGN KEY (`idTipoEgreso`) REFERENCES `tipoegreso` (`idTipoEgreso`) ON DELETE CASCADE;
 
 --
--- Constraints for table `encventas`
+-- Filtros para la tabla `encventas`
 --
 ALTER TABLE `encventas`
   ADD CONSTRAINT `encClientes` FOREIGN KEY (`idCliente`) REFERENCES `clientes` (`idCliente`),
   ADD CONSTRAINT `metodoPago` FOREIGN KEY (`idMetodoPago`) REFERENCES `metodopago` (`idMetodoPago`);
 
 --
--- Constraints for table `productos`
+-- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
   ADD CONSTRAINT `productoImagen` FOREIGN KEY (`idImagen`) REFERENCES `imagen` (`idImagen`) ON DELETE CASCADE;

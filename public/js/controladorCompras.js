@@ -79,6 +79,7 @@ document.getElementById("tblItemsVta").addEventListener("input", (event) => {
     }
     else if(event.target.id.includes("pCostoUnitario")){
         actualizarPropiedadItem(event.target, vItemsCompra, "costoProducto");
+        subtotal(event.target, vItemsCompra);
     }
     else if(event.target.id.includes("pPrecioCompra")){
         actualizarPropiedadItem(event.target, vItemsCompra, "precioCompra");

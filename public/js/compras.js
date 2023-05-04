@@ -122,7 +122,7 @@ let renderItemReg = () => {
     </td>
     <td class="align-middle">
         <div class="row">
-            <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="0" disabled
+            <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled
                 required>
         </div>
     </td>
@@ -188,13 +188,21 @@ const actualizarUnidadesCompradas = (disparador, vector) => {
         * item.costoProducto)}`;
 
 }
+
 const actualizarPropiedadItem = (disparador, vector, propiedad) => {
 
     let nroIdItem = disparador.id.slice(-1);
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     vector[vector.indexOf(item)][propiedad] = parseInt(disparador.value);
+}
 
+const subtotal = (disparador, vector) => {
+    let nroIdItem = disparador.id.slice(-1);
+    let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
+
+    document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesCompradas
+        * item.costoProducto)}`;
 }
 const actualizarCrearItem = (item, disparador, vector) => {
 
