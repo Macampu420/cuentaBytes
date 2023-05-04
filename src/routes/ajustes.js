@@ -1,12 +1,12 @@
-const express = require('express')
+const express = require('express');
 const clsModuloAjustes = require('../models/ajustes');
 const Ajustes = require('../models/ajustes');
-const router = express.Router()
+const router = express.Router();
 
 const objModuloAjustes = new clsModuloAjustes();
 
 router.get('/ajustes', (req, res) => {
-    objModuloAjustes.servirAjustes(req, res)
+    objModuloAjustes.servirAjustes(req, res);
 });
 
 router.post('/cambiarNombre', async (req, res) => {
@@ -15,7 +15,9 @@ router.post('/cambiarNombre', async (req, res) => {
         let horaApertura = req.body.horaApertura;
         let horaCierre = req.body.horaCierre;
 
-        totalClientes = await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
+        await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
+        res.status(200);
+
     }
     catch (error) {
         console.log(error);
@@ -29,7 +31,8 @@ router.post('/cambiarHoras', async (req, res) => {
         let horaApertura = req.body.horaApertura;
         let horaCierre = req.body.horaCierre;
 
-        totalClientes = await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
+        await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
+        res.status(200);
     }
     catch (error) {
         console.log(error);

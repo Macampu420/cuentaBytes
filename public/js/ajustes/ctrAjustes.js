@@ -26,14 +26,22 @@ document.getElementById('btnEnviarNuevoNombreEmpresa').addEventListener('click',
             horaApertura,
             horaCierre
         }
-        await fetch(`http://localhost:3000/cambiarNombre`, {
+        let resNuevoNombre = await fetch(`http://localhost:3000/cambiarNombre`, {
             method: "POST",
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(ajustesEnv)
-        })
+        });
+
+        if (resNuevoNombre.status == 200) {
+            window.alert("El nombre del negocio se ha actualizado correctamente.");
+            location.reload();
+        }
+        else {
+            window.alert("Ocurrió un error al actualizar el nombre del negocio.");
+        }     
     }
 })
 
@@ -43,23 +51,28 @@ document.getElementById('btnEnviarNuevoHoraEmpresa').addEventListener('click', a
         let nombreEmpresa = ajustes.nombreEmpresa
         let horaApertura = document.getElementById('inpHoraApertura').value;
         let horaCierre = document.getElementById('inpHoraCierre').value;
-        
+
 
         let ajustesEnv = {
             nombreEmpresa,
             horaApertura,
             horaCierre
         }
-
-        console.log(ajustesEnv);
-        await fetch(`http://localhost:3000/cambiarHoras`, {
+        let resNuevoHorario = await fetch(`http://localhost:3000/cambiarHoras`, {
             method: "POST",
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(ajustesEnv)
-        })
+        });
+        if(resNuevoHorario.status == 200){
+            window.alert("El horario de atención se ha actualizado correctamente.");
+            location.reload();
+        }
+        else{
+            window.alert("Ocurrió un error al actualizar el horario de atención.");
+        }
     }
 })
 
