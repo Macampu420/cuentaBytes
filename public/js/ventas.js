@@ -1,4 +1,5 @@
 let vObjsProductos = [];
+let vObjAjustes;
 let vObjsCliente = [];
 let vObjsVentaActual = [];
 let vItemsVta = [];
@@ -14,6 +15,14 @@ let idUltimaVenta;
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
 //METODOS PARA TRAER DE LA BD LA INFORMACION NECESARIA
+
+const traerAjustesVta = async () => {
+    //se consume el API de los ajustes
+    let resAjustes = await fetch('http://localhost:3000/ajustes');
+    vObjAjustes = await resAjustes.json();
+    console.log(vObjAjustes);
+}
+
 const traerMetodosPago = async () => {
 
     try {
@@ -22,6 +31,7 @@ const traerMetodosPago = async () => {
     } catch (error) {
         console.log(error);
     }
+
 
     vObjsMetodosPago.forEach(metodoPago => {
         document.getElementById("slcMetodoPago").insertAdjacentHTML('beforeend', `
@@ -445,12 +455,12 @@ const generarPdf = () => {
             //     }
             // },
             business: {
-                name: "CuentaBytes",
-                address: "Albania, Tirane ish-Dogana, Durres 2001",
-                phone: "(+355) 069 11 11 111",
-                email: "email@example.com",
-                email_1: "info@example.al",
-                website: "www.example.al",
+                name: vObjAjustes.nombreEmpresa,
+                // address: "Albania, Tirane ish-Dogana, Durres 2001",
+                // phone: "(+355) 069 11 11 111",
+                // email: "email@example.com",
+                // email_1: "info@example.al",
+                // website: "www.example.al",
             },
             contact: {
                 label: "Factura venta",
