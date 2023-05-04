@@ -75,7 +75,13 @@ document.getElementById("tblItemsVta").addEventListener("input", (event) => {
         //input como 0
         if (event.target.value < 0) event.target.value = 0;
 
-        actualizarUnidadesVendidas(event.target, vItemsCompra);
+        actualizarUnidadesCompradas(event.target, vItemsCompra);
+    }
+    else if(event.target.id.includes("pCostoUnitario")){
+        actualizarPropiedadItem(event.target, vItemsCompra, "costoProducto");
+    }
+    else if(event.target.id.includes("pPrecioCompra")){
+        actualizarPropiedadItem(event.target, vItemsCompra, "precioCompra");
     }
 
     vrTotal(vItemsCompra);

@@ -51,7 +51,8 @@
                                 <th class="text-center questrial">Imagen</th>
                                 <th class="text-center questrial">Producto</th>
                                 <th class="text-center questrial">Cantidad</th>
-                                <th class="text-center questrial">Precio Unitario</th>
+                                <th class="text-center questrial">Costo Unitario</th>
+                                <th class="text-center questrial">Precio Venta</th>
                                 <th class="text-center questrial">Subtotal</th>
                                 <th class="text-center questrial">Eliminar</th>
                             </tr>
