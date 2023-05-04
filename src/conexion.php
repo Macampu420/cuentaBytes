@@ -1,11 +1,10 @@
 <?php 
 
-$host = 'localhost:8012';
+$host = 'localhost';
 $user = 'root';
 $pass = '';
 $db = 'cuentabytes';
-$port = 3308;
 
-$connection = new mysqli($host,$user,$pass,$db,$port);
+$connection = new mysqli($host,$user,$pass,$db);
 
 ?>
