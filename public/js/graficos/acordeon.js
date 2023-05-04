@@ -105,35 +105,50 @@ export default class modeloGraficos {
 	//-----------METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
 	traerDatosProductos = async (inicio, fin, tiempo) => {
-		// se consumen los datos de la API y se le pasan al metodo para que los setee,
-		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-		let resGraficos = await fetch(`${this.#urlBaseNode}/reportesProductos${tiempo}`, {
-			method: "POST",
-			credentials: "same-origin",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				inicio,
-				fin
-			})
-		});
+		try {
+			if (tiempo == "horas") {
 
-		let datosProductos = await resGraficos.json();
-
-		return datosProductos;
-
-		// if(tiempo == 'horas'){
-		//     mostrarDatosGraficoHora(datosGraficos);
-		// } else {
-		//     mostrarDatosGraficoDia(datosGraficos);
-		// }
-
-		// chart.update();
-
+				let resDatosProductos = await fetch(`${this.#urlBaseNode}/reportesProductos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						inicio: inicio,
+						fin: fin
+					})
+				});
+	
+				let datosProductos = await resDatosProductos.json();
+				return datosProductos;
+			} else {
+				let resDatosProductos = await fetch(`${this.#urlBaseNode}/reportesProductos/${tiempo}`, {
+					method: "POST",
+					credentials: "same-origin",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						inicio: inicio,
+						fin: fin
+					})
+				});
+	
+				let datosProductos = await resDatosProductos.json();
+				return datosProductos;
+			}
+		} catch (error) {
+			console.log(error);
+			window.alert("Ha ocurrido un error consultando la informacion, por favor intentalo mas tarde");
+		}
 	}
 
-	mostrarDatosProductoHora = (vectorDatos, tipoBalance, propiedadData) => {
+	mostrarDatosProductos = (vectorDatos, tipoBalance, propiedadData, labelGrafico) => {
+
+		console.log(vectorDatos);
+
+		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataProductos');
 
 		//se obtienen todos los valores de las horas correspondientes
 		let nombresProductos = vectorDatos[tipoBalance].map(elemento => elemento.nombreProducto);
@@ -144,38 +159,12 @@ export default class modeloGraficos {
 		//se llenan y muestran los datos correspondientes a las compras
 		this.graficoProductos.data.datasets[0].data = vectorDatos[tipoBalance].map(elemento => elemento[propiedadData]);
 
+		//se setea el label de los datos que se estan mostrando
+		this.graficoProductos.data.datasets[0].label = labelGrafico;
+
 		this.graficoProductos.update();
 	}
 
-	actualizarGraficoProductos = async (inicio, fin, tiempo) => {
-
-		// se consumen los datos de la API y se le pasan al metodo para que los setee,
-		//  despues se invoca al metodo update del grafico para que los cambios se vean reflejados
-		let resGraficos = await fetch(`${this.#urlBaseNode}/reportesProductos${tiempo}`, {
-			method: "POST",
-			credentials: "same-origin",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				inicio,
-				fin
-			})
-		});
-
-		let datosGraficos = await resGraficos.json();
-
-		console.log(datosGraficos);
-
-		// if(tiempo == 'horas'){
-		//     mostrarDatosGraficoHora(datosGraficos);
-		// } else {
-		//     mostrarDatosGraficoDia(datosGraficos);
-		// }
-
-		// chart.update();
-
-	}
 	//-----------FIN METODOS DEL GRAFICO DE PRODUCTOS---------------------
 
 

@@ -4,7 +4,8 @@ const  database = {
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'cuentabytes'
+    database: 'cuentabytes',
+    port: 3308
 }
 
 const { promisify } = require('util');
