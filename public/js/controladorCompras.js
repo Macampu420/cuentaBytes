@@ -14,12 +14,17 @@ document.getElementById('btnAnadirCompra').addEventListener('click', async event
 
     if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
         reiniciarModal();
+        divModal.classList.add("d-flex");
         // renderItemReg();
         modalCompras.show();
         numeroItem = (divModal.getAttribute('editar') == 'false' ? 0 : null);
         
     }
 
+});
+
+divModal.addEventListener('hidden.bs.modal', () => {
+    divModal.classList.remove("d-flex");
 });
 
 document.getElementById("tblItemsVta").addEventListener("change", (event) => {

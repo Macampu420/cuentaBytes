@@ -55,8 +55,16 @@
                     </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionAjustes">
-                    <div class="accordion-body">
+                    <div class="accordion-body row">
                         <!-- Contenido de la copia de seguridad -->
+                        <div class="btn-group mx-auto" role="group" aria-label="Tipo de gráfico">
+                            <input type="radio" class="btn-check" name="tipoGrafico" id="btnGraficoBarras" autocomplete="off">
+                            <label class="btn btn-outline-secondary" for="btnGraficoBarras">Barras</label>
+
+                            <input type="radio" class="btn-check" name="tipoGrafico" id="btnGraficoLineas" autocomplete="off">
+                            <label class="btn btn-outline-secondary" for="btnGraficoLineas">Líneas</label>
+                        </div>
+
                     </div>
                     </div>
                 </div>

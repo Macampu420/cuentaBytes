@@ -158,7 +158,7 @@ const seccionesAcordeon = [
                 swTipoGraficoClientes = 'dias';
             }
 
-            console.log(datosClientes);
+            console.log(datosCliente);
 
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoClientes");
         }
