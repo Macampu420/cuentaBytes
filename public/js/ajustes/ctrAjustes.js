@@ -52,7 +52,6 @@ document.getElementById('btnEnviarNuevoHoraEmpresa').addEventListener('click', a
         let horaApertura = document.getElementById('inpHoraApertura').value;
         let horaCierre = document.getElementById('inpHoraCierre').value;
 
-
         let ajustesEnv = {
             nombreEmpresa,
             horaApertura,
@@ -75,8 +74,5 @@ document.getElementById('btnEnviarNuevoHoraEmpresa').addEventListener('click', a
         }
     }
 })
-
-
-
 
 document.addEventListener("DOMContentLoaded", () => traerAjustes());

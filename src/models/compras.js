@@ -27,7 +27,7 @@ class moduloCompras {
                     if (req.body.vItemsCompra != undefined && req.body.vItemsCompra.length > 0) {
 
                         req.body.vItemsCompra.forEach(element => {
-                            pool.query("CALL insertarDetCompra(?,?,?,?)", [element.unidadesVendidas, element.costoProducto, this.idUltimaCompra, element.idProducto],
+                            pool.query("CALL insertarDetCompra(?,?,?,?)", [element.unidadesCompradas, element.costoProducto, this.idUltimaCompra, element.idProducto],
                                 (err, rows) => {
 
                                     //si hay error lo imprime y termina la peticion
@@ -36,7 +36,7 @@ class moduloCompras {
                                         res.write(err);
                                         res.end();
                                     } else {
-                                        pool.query("CALL actualizarCostoProducto(?,?,?)", [element.unidadesVendidas, element.costoProducto, element.idProducto],
+                                        pool.query("CALL actualizarCostoProducto(?,?,?,?)", [element.unidadesCompradas, element.costoProducto, element.precioCompra,element.idProducto],
                                             err => {
                                                 if (err) {
                                                     console.log(err);

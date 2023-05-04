@@ -25,9 +25,6 @@ let mostrarProveedores = async () => {
 };
 
 let traerProductos = async () => {
-
-    slcProveedor.insertAdjacentHTML('beforeend', `<option value="12">FLA</option>`)
-
     //se piden todos los productos y se guardan en el vector correspondiente
     fetch("http://localhost:3000/listarProductos")
         .then(res => res.json())
@@ -35,9 +32,7 @@ let traerProductos = async () => {
 
             //cada producto se pone en el vector correspondiente para poderse usar posteriormente en el resto del programa
             data.forEach(element => vProductos.push(element));
-
         });
-
 }
 
 //trae todos los encs de las compras de la api y los devuelve como json
@@ -122,7 +117,7 @@ let renderItemReg = () => {
     </td>
     <td class="align-middle">
         <div class="row">
-            <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="0" disabled
+            <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled
                 required>
         </div>
     </td>
@@ -188,13 +183,21 @@ const actualizarUnidadesCompradas = (disparador, vector) => {
         * item.costoProducto)}`;
 
 }
+
 const actualizarPropiedadItem = (disparador, vector, propiedad) => {
 
     let nroIdItem = disparador.id.slice(-1);
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     vector[vector.indexOf(item)][propiedad] = parseInt(disparador.value);
+}
 
+const subtotal = (disparador, vector) => {
+    let nroIdItem = disparador.id.slice(-1);
+    let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
+
+    document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesCompradas
+        * item.costoProducto)}`;
 }
 const actualizarCrearItem = (item, disparador, vector) => {
 
