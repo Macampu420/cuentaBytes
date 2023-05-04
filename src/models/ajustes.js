@@ -1,3 +1,4 @@
+const { query } = require('express');
 const pool = require('./../conexion');
 
 class Ajustes {
@@ -6,8 +7,8 @@ class Ajustes {
         try {
 
             //se traen los datos de la bd y si todo sale bien se sirve la API
-            let resAjutes = await pool.query("CALL listarAjustes");
-            let ajustes = JSON.stringify(resAjutes[0][0]);
+            let resAjustes = await pool.query("CALL listarAjustes");
+            let ajustes = JSON.stringify(resAjustes[0][0]);
             res.status(200).send(ajustes);
 
         } catch (error) {
@@ -17,6 +18,10 @@ class Ajustes {
                 error: "Ha ocurrido un error al consultar los ajustes"
             }));
         }
+    }
+
+    cambiarAjustes = async (query)=>{
+        await pool.query(query);
     }
 
 }

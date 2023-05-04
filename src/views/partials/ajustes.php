@@ -42,7 +42,7 @@
                         <input id="inpHoraCierre" class="form-control" type="time" name="inpNuevoNombreEmpresa" placeholder="Nuevo nombre empresa">
                         </div>
                         <div class="col-4 mx-auto mt-4">
-                        <button id="btnEnviarNuevoNombreEmpresa" class="btn btn-secondary" type="button">Enviar</button>
+                        <button id="btnEnviarNuevoHoraEmpresa" class="btn btn-secondary" type="button">Enviar</button>
                         </div>
                     </div>
                     </div>

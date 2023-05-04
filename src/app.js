@@ -6,7 +6,6 @@ const morgan = require('morgan');
 let  corsOptions = { origin: 'http://localhost'}
 
 const app = express();
-const objAjustes = new Ajustes();
 
 //configuraciones
 app.set('port', process.env.PORT || 3000);
@@ -31,7 +30,7 @@ app.use(require('./routes/compras'));
 app.use(require('./routes/notas'))
 app.use(require('./routes/inicioSesion'))
 app.use(require('./routes/mailer'));
-app.get('/ajustes', (req, res) => objAjustes.servirAjustes(req, res));
+app.use(require('./routes/ajustes'));
 
 
 //inicializacion del servidor
