@@ -5,6 +5,7 @@ traerClientes();
 traerProductos();
 renderVentas();
 traerMetodosPago();
+traerAjustesVta();
 
 document.getElementById('btnAnadirVta').addEventListener('click', event => {
 
