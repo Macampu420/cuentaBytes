@@ -416,12 +416,10 @@ const llenarPDF = async () => {
     };
 
     vPDF.push(PDFActual);
-    console.log(vPDF);
 
 }
 
 const generarPdf = () => {
-    console.log(vPDF);
     vPDF.forEach(element => {
         descuento = parseInt(vPDF[0].descuento)
         total = parseInt(vPDF[0].vrTotal)
@@ -443,24 +441,8 @@ const generarPdf = () => {
                     left: 0 //negative or positive num, from the current position
                 }
             },
-            // stamp: {
-            //     inAllPages: true, //by default = false, just in the last page
-            //     src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
-            //     type: 'JPG', //optional, when src= data:uri (nodejs case)
-            //     width: 20, //aspect ratio = width/height
-            //     height: 20,
-            //     margin: {
-            //         top: 0, //negative or positive num, from the current position
-            //         left: 0 //negative or positive num, from the current position
-            //     }
-            // },
             business: {
                 name: vObjAjustes.nombreEmpresa,
-                // address: "Albania, Tirane ish-Dogana, Durres 2001",
-                // phone: "(+355) 069 11 11 111",
-                // email: "email@example.com",
-                // email_1: "info@example.al",
-                // website: "www.example.al",
             },
             contact: {
                 label: "Factura venta",
@@ -500,40 +482,35 @@ const generarPdf = () => {
                 table: Array.from(Array(vItemsVta.length), (item, index) => ([
                     vItemsVta[index].idProducto,
                     vItemsVta[index].nombreProducto,
-                    parseInt(vItemsVta[index].precioUnitario),
-                    parseInt(vItemsVta[index].unidadesVendidas),
-                    parseInt(vItemsVta[index].precioUnitario) * parseInt(vItemsVta[index].unidadesVendidas)
+                    conversorColombia.format(vItemsVta[index].precioUnitario),
+                    conversorColombia.format(vItemsVta[index].unidadesVendidas),
+                    conversorColombia.format(parseInt(vItemsVta[index].precioUnitario) * parseInt(vItemsVta[index].unidadesVendidas))
                 ])),
                 additionalRows: [{
-                    col1: 'Subtotal:',
-                    col2: subtotal,
+                    col1: 'Subtotal: $',
+                    col2: conversorColombia.format(subtotal),
                     style: {
                         fontSize: 10 //optional, default 12
                     }
                 },
                 {
-                    col1: 'Descuento:',
-                    col2: vPDF[0].descuento,
+                    col1: 'Descuento: $',
+                    col2: conversorColombia.format(vPDF[0].descuento),
                     style: {
                         fontSize: 10 //optional, default 12
                     }
                 },
                 {
-                    col1: 'Total:',
-                    col2: vPDF[0].vrTotal,
+                    col1: 'Total: $',
+                    col2: conversorColombia.format(vPDF[0].vrTotal),
                     style: {
                         fontSize: 14 //optional, default 12
                     }
                 }
                 ],
-                invDesc: "Subtotal : " + subtotal + "             Descuento : " + vPDF[0].descuento,
-                invDescLabel: "Total : " + vPDF[0].vrTotal,
-            },
-            footer: {
-                text: "The invoice is created on a computer and is valid without the signature and stamp.",
-            },
-            pageEnable: true,
-            pageLabel: "Page ",
+                invDescLabel: "Total : $" + conversorColombia.format(vPDF[0].vrTotal),
+                invDesc: "Subtotal : $" + conversorColombia.format(subtotal) + "      Descuento : $" + conversorColombia.format(vPDF[0].descuento),
+            }
         };
     })
 
