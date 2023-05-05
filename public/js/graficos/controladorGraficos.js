@@ -222,16 +222,6 @@ const conficInicialGraficos = {
                 legend: {
                     display: true,
                     onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
-                },
-                datalabels: {
-                    display: true, // Habilitar las etiquetas de datos
-                    color: 'white', // Color de las etiquetas de datos
-                    font: {
-                        weight: 'bold' // Estilo de la fuente de las etiquetas de datos
-                    },
-                    formatter: function(value, context) { // Función que define el contenido de las etiquetas de datos
-                        return value.toFixed(2); // Por ejemplo, redondear los valores a dos decimales
-                    }
                 }
             }
         }
