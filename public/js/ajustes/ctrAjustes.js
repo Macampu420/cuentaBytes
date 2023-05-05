@@ -16,32 +16,38 @@ let traerAjustes = async () => {
 
 document.getElementById('btnEnviarNuevoNombreEmpresa').addEventListener('click', async () => {
 
-    if (confirm("¿Deseas cambiar el nombre?") == true) {
-        let nombreEmpresa = document.getElementById('inpNuevoNombreEmpresa').value;
-        let horaApertura = ajustes.horaApertura;
-        let horaCierre = ajustes.horaCierre;
-
-        let ajustesEnv = {
-            nombreEmpresa,
-            horaApertura,
-            horaCierre
+    try {
+        if (confirm("¿Deseas cambiar el nombre?") == true) {
+            let nombreEmpresa = document.getElementById('inpNuevoNombreEmpresa').value;
+            let horaApertura = ajustes.horaApertura;
+            let horaCierre = ajustes.horaCierre;
+    
+            let ajustesEnv = {
+                nombreEmpresa,
+                horaApertura,
+                horaCierre
+            }
+            let resNuevoNombre = await fetch(`http://localhost:3000/cambiarNombre`, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(ajustesEnv)
+            });
+    
+            console.log(resNuevoNombre);
+    
+            if (resNuevoNombre.status == 200) {
+                window.alert("El nombre del negocio se ha actualizado correctamente.");
+                location.reload();
+            }
+            else {
+                window.alert("Ocurrió un error al actualizar el nombre del negocio.");
+            }     
         }
-        let resNuevoNombre = await fetch(`http://localhost:3000/cambiarNombre`, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ajustesEnv)
-        });
-
-        if (resNuevoNombre.status == 200) {
-            window.alert("El nombre del negocio se ha actualizado correctamente.");
-            location.reload();
-        }
-        else {
-            window.alert("Ocurrió un error al actualizar el nombre del negocio.");
-        }     
+    } catch (error) {
+        console.log(error);
     }
 })
 

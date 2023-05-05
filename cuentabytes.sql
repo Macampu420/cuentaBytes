@@ -1002,7 +1002,11 @@ INSERT INTO `detalleventa` (`idDetVenta`, `uniVendidas`, `precioUnitario`, `idVe
 (58, 1, 50000, 51, 12),
 (59, 1, 3500, 52, 11),
 (60, 2, 3500, 53, 11),
-(61, 1, 42000, 54, 2);
+(61, 1, 42000, 54, 2),
+(62, 6, 4000, 55, 11),
+(63, 1, 20000, 55, 5),
+(64, 3, 6000, 56, 7),
+(65, 1, 36000, 57, 8);
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1207,10 @@ INSERT INTO `encventas` (`idVenta`, `fechaVenta`, `descuentoVenta`, `idMetodoPag
 (51, '2023-05-02 16:31:06', 1000, 1, 70000, 4),
 (52, '2023-05-03 23:25:31', 0, 2, 3500, 6),
 (53, '2023-05-03 23:28:13', 0, 1, 7000, 4),
-(54, '2023-05-04 00:02:19', 0, 2, 42000, 14);
+(54, '2023-05-04 00:02:19', 0, 2, 42000, 14),
+(55, '2023-05-05 15:42:00', 0, 1, 44000, 11),
+(56, '2023-05-05 15:42:13', 0, 1, 18000, 9),
+(57, '2023-05-05 15:42:26', 0, 2, 36000, 6);
 
 -- --------------------------------------------------------
 
@@ -1305,13 +1312,13 @@ INSERT INTO `productos` (`idProducto`, `nombreProducto`, `descripcionProducto`, 
 (2, 'Crema de whiskey', 'Crema dulce', 30000, 42000, 10, 20),
 (3, 'Pilsenon litro', 'Cerveza pilsen litro', 3000, 5500, 44, 19),
 (4, 'Pilsenon 750', 'Pilsenon 750ml\r\n', 2500, 5000, 0, 18),
-(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 34, 9),
+(5, 'Media de guaro', 'Media de guaro tapa roja', 25000, 20000, 33, 9),
 (6, 'litro de ron caldas', 'Litro de ron caldas', 40000, 50000, 18, 17),
-(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 36, 16),
-(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 24, 15),
+(7, 'Aguilon litro', 'Aguilon litro', 5000, 6000, 33, 16),
+(8, 'Vino Vientos del sur', 'Cavernet vientos del sur 750ml', 25000, 36000, 23, 15),
 (9, 'Botella de champaña', 'Botella de champaña blanca, espumosa ', 30000, 50000, 30, 14),
 (10, 'Botella de gin', 'Botella de ginebra ', 40000, 55000, 24, 13),
-(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2500, 4000, 25, 12),
+(11, 'Aguila lata', 'Lata de aguila negra 330cm3', 2500, 4000, 19, 12),
 (12, 'Botella de vodka', 'botella de vodka smirnoff', 40000, 50000, 21, 11);
 
 -- --------------------------------------------------------
@@ -1509,7 +1516,7 @@ ALTER TABLE `detalleegreso`
 -- AUTO_INCREMENT de la tabla `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `idDetVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `detcompraproducto`

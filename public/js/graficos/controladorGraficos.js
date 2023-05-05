@@ -5,6 +5,7 @@ let swTipoGraficoVentas = 'horas';
 let swTipoGraficoCompras = 'horas';  
 let swTipoGraficoEgresos = 'horas';
 let swTipoGraficoClientes = 'horas';
+let swTipoGraficoProductos = 'horas';
 
 const hoy = moment();
 const ayer = moment().subtract(1, 'days');
@@ -19,8 +20,10 @@ const seccionesAcordeon = [
                 "Existencia productos",
                 "Mayor existencia",
                 "Menor existencia",
+                "Rentabilidad productos",
                 "Mayor rentabilidad",
-                "Menor rentabilidad",
+                "Peor rentabilidad",
+                "Productos vendidos",
                 "Productos mas vendidos",
                 "Productos menos vendidos"
             ],
@@ -29,20 +32,24 @@ const seccionesAcordeon = [
         canvasId: "canvaProductos",
         slcpFecha: "slcFechaGraficoProductos",
         pFecha: "pFechaGraficoProductos",
-        callbackFecha: async function(pInicio, pFin){
+        callbackFecha: async function(pInicio, pFin) {
             let inicio = pInicio.format('YYYY-MM-DD');
             let fin = pFin.format('YYYY-MM-DD');
     
             let fechaSeleccionada = pInicio.clone().startOf('day');
-                
+    
             // Compara la fecha seleccionada con las fechas de hoy y ayer
             if (fechaSeleccionada.isSame(hoy, 'd') || fechaSeleccionada.isSame(ayer, 'd')) {
-                objModeloGraficos.actualizarGraficoProductos(inicio, fin, "horas");
+                datosProductos = await objModeloGraficos.traerDatosProductos(pInicio, pFin, "horas");
+                objModeloGraficos.mostrarDatosProductos(datosProductos, 'productosVendidos', 'nroFacturas', 'Total de Productos por factura');
+                swTipoGraficoProductos = 'horas';
             } else {
-                objModeloGraficos.actualizarGraficoProductos(inicio, fin, "dias");
+                datosProductos = await objModeloGraficos.traerDatosProductos(pInicio, pFin, "dias");
+                objModeloGraficos.mostrarDatosProductos(datosProductos, 'productosVendidos', 'nroFacturas', 'Total de Productos por factura');
+                swTipoGraficoProductos = 'dias';
             }
             objModeloGraficos.mostrarRango(inicio, fin, "pFechaGraficoProductos");
-        },
+        }
     }, {
         id: "acordionVentas",
         titulo: "Ventas",
@@ -258,9 +265,10 @@ const conficInicialGraficos = {
 }
 
 let traerDataGraficos = async () => {
+    
     //se traen los datos para la seccion de productos
-    datosProductos = await objModeloGraficos.traerDatosProductos(hoy, ayer, 'dias');
-    objModeloGraficos.mostrarDatosProductoHora(datosProductos, "existenciaProductos", "existencia");
+    datosProductos = await objModeloGraficos.traerDatosProductos(hoy.toISOString().slice(0, 10), hoy.toISOString().slice(0, 10), 'horas');
+    objModeloGraficos.mostrarDatosProductos(datosProductos, "productosVendidos", "nroFacturas", "Total productos por facturas");
     
     //se traen los datos para la seccion de ventas
     datosVentas = await objModeloGraficos.traerDatosVentas(hoy, hoy, 'horas');
@@ -272,7 +280,6 @@ let traerDataGraficos = async () => {
 
     //se traen los datos para la seccion de Egreso
     datosEgresos = await objModeloGraficos.traerDatosEgresos(hoy, hoy, 'horas');
-    console.log(datosEgresos);
     objModeloGraficos.mostrarDatosEgresos(datosEgresos, 'datosTotalEgresosHoras', 'vrTotalEgreso', 'hora', 'Total egresos');
 
     //se traen los datos para la seccion de Cliente
@@ -314,28 +321,42 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         let tipoBalance = objModeloGraficos.convertirACamelCase(event.target.id.replace(/-/g, " "));
 
+        console.log(tipoBalance);
+
         switch (tipoBalance) {
-            case "existenciaProductos":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existencia");
+
+            //casos para balances productos por ventas
+            case "productosVendidos":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "nroFacturas", "Total productos por facturas");
                 break;
-            case "mayorExistencia":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+            case "productosMasVendidos":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "nroFacturas", "Productos mas vendidos");
                 break;
+            case "productosMenosVendidos":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "nroFacturas", "Productos menos vendidos");
+                break;   
+
+            //casos para balances productos por rentabilidad
+            case "rentabilidadProductos":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "Rentabilidad", "Rentabilidad productos");
+                break; 
             case "mayorRentabilidad":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
-                break;
-            case "mejoresProductos":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
-                break;
-            case "menorExistencia":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "menorExistencia");
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "Rentabilidad", "Mayor rentabilidad");
                 break;
             case "peorRentabilidad":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "Rentabilidad", "Peor rentabilidad");
                 break;
-            case "peoresProductos":
-                objModeloGraficos.mostrarDatosProductoHora(datosProductos, tipoBalance, "existenciaMayor");
+
+            //casos para balances productos por existencia
+            case "existenciaProductos":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "existencia", "Existencia productos");
                 break;
+            case "mayorExistencia":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "existenciaMayor", "Mayor existencia");
+                break;
+            case "menorExistencia":
+                objModeloGraficos.mostrarDatosProductos(datosProductos, tipoBalance, "menorExistencia", "Menor existencia");
+                break;           
 
         }
 

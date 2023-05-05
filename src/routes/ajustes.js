@@ -16,7 +16,7 @@ router.post('/cambiarNombre', async (req, res) => {
         let horaCierre = req.body.horaCierre;
 
         await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
-        res.status(200);
+        res.status(200).send();
 
     }
     catch (error) {
@@ -32,7 +32,7 @@ router.post('/cambiarHoras', async (req, res) => {
         let horaCierre = req.body.horaCierre;
 
         await objModuloAjustes.cambiarAjustes(`CALL actualizarAjustes('${nombreEmpresa}','${horaApertura}','${horaCierre}')`);
-        res.status(200);
+        res.status(200).send();
     }
     catch (error) {
         console.log(error);
@@ -40,4 +40,7 @@ router.post('/cambiarHoras', async (req, res) => {
     }
 })
 
+router.get('/backup', (req, res) => {
+    objModuloAjustes.encriptarArchivo(req, res);
+} )
 module.exports = router
