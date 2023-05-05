@@ -32,7 +32,7 @@ class Ajustes {
 
 	encriptarArchivo = (req, res) =>{
 		try {
-			const clave = 'clave-secreta'; // clave original de 16 caracteres
+			const clave = 'encriptacionCuentabyes420ñ'; // clave original de 16 caracteres
 			const claveEncriptado = crypto.createHash('sha256').update(clave).digest('hex').substr(0, 32); // clave de 256 bits generada a partir de la clave original
 			const iv = crypto.randomBytes(16);
 
@@ -59,6 +59,41 @@ class Ajustes {
 			res.status(500);
 		}
 	}
+
+	desencriptarArchivo = (req, res) => {
+		try {
+		  const clave = 'encriptacionCuentabyes420ñ'; // clave original de 16 caracteres
+		  const claveEncriptado = crypto.createHash('sha256').update(clave).digest('hex').substr(0, 32); // clave de 256 bits generada a partir de la clave original
+	  
+		  const archivoEntrada = fs.createReadStream(path.join(__dirname, '../../', 'cuentabytesEncriptado.sql'));
+		  const archivoSalida = fs.createWriteStream(path.join(__dirname, '../../', 'cuentabytesDesencriptado.sql'));
+	  
+		  // Leer el IV del principio del archivo encriptado
+		  let iv;
+		  archivoEntrada.once('readable', () => {
+			iv = archivoEntrada.read(16);
+		  });
+	  
+		  // Crear objeto Decipher después de que el IV sea leído
+		  archivoEntrada.on('readable', () => {
+			const decipher = crypto.createDecipheriv('aes-256-cbc', claveEncriptado, iv);
+	  
+			// Pipe data de ReadStream a Decipher y luego a WriteStream
+			archivoEntrada.pipe(decipher).pipe(archivoSalida);
+		  });
+	  
+		  // Cuando termine, cerrar los objetos
+		  archivoSalida.on('finish', () => {
+			console.log('Archivo desencriptado y guardado correctamente');
+			archivoEntrada.close();
+			archivoSalida.end();
+		  });
+		} catch (error) {
+		  console.log(error);
+		  res.status(500);
+		}
+	  }
+	  
 
 	callbackCmdBackup = (error, stdout, stderr) => {
 		if (error) {

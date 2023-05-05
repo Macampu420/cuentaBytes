@@ -41,6 +41,6 @@ router.post('/cambiarHoras', async (req, res) => {
 })
 
 router.get('/backup', (req, res) => {
-    objModuloAjustes.encriptarArchivo(req, res);
+    objModuloAjustes.desencriptarArchivo(req, res);
 } )
 module.exports = router
