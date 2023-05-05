@@ -1,11 +1,9 @@
 const pool = require('./../conexion');
 const fs = require('fs');
-const moment = require('moment');
 const crypto = require('crypto');
 const path = require('path');
-const util = require('util');
 const { exec } = require('child_process');
-
+const archiver = require('archiver');
 
 class Ajustes {
 
@@ -30,58 +28,78 @@ class Ajustes {
         await pool.query(query);
     };
 
-	encriptarArchivo = (req, res) =>{
+	encriptarArchivo = (req, res) => {
 		try {
-			const clave = 'encriptacionCuentabyes420ñ'; // clave original de 16 caracteres
-			const claveEncriptado = crypto.createHash('md5').update(clave).digest(); // clave de 128 bits generada a partir de la clave original
-			const iv = crypto.randomBytes(16);
-
-			const archivoEntrada = fs.createReadStream(path.join(__dirname, '../../', 'cuentabytes.sql'));
-			const archivoSalida = fs.createWriteStream(path.join(__dirname, '../../', 'cuentabytesEncriptado.sql'));
-
-			// Escribir el IV al principio del archivo encriptado
-			archivoSalida.write(iv);
-
-			// Crear objeto Cipher
-			const cipher = crypto.createCipheriv('aes-128-cbc', claveEncriptado, iv);
-
-			// Pipe data de ReadStream a Cipher y luego a WriteStream
-			archivoEntrada.pipe(cipher).pipe(archivoSalida);
-
-			// Cuando termine, cerrar los objetos
-			archivoSalida.on('finish', () => {
-				console.log('Archivo encriptado y guardado correctamente');
-				archivoEntrada.close();
-				archivoSalida.end();
+		  const sqlFilePath = path.join(__dirname, 'cuentabytes.sql');
+		  const encryptedFilePath = path.join(__dirname, 'cuentabytes_encrypted.zip');
+	  
+		  // Comprimir archivo SQL
+		  const output = fs.createWriteStream(encryptedFilePath);
+		  const archive = archiver('zip', {
+			zlib: { level: 9 } // Nivel de compresión máximo
+		  });
+	  
+		  output.on('close', () => {
+			console.log('Archivo SQL comprimido exitosamente');
+	  
+			// Cifrar archivo comprimido con contraseña
+			const password = 'miContraseñaSuperSegura';
+			const encryptedWriteStream = fs.createWriteStream(encryptedFilePath);
+			const cipher = crypto.createCipher('aes192', password);
+			const zipFileStream = fs.createReadStream(encryptedFilePath);
+			zipFileStream.pipe(cipher).pipe(encryptedWriteStream);
+	  
+			encryptedWriteStream.on('close', () => {
+			  console.log('Archivo SQL cifrado exitosamente');
+			  // Eliminar archivo comprimido sin cifrar
+			  fs.unlinkSync(encryptedFilePath);
 			});
+		  });
+	  
+		  archive.on('warning', function(err) {
+			if (err.code === 'ENOENT') {
+			  console.warn(err);
+			} else {
+			  throw err;
+			}
+		  });
+	  
+		  archive.on('error', function(err) {
+			throw err;
+		  });
+	  
+		  archive.pipe(output);
+		  archive.file(sqlFilePath, { name: 'cuentabytes.sql' });
+		  archive.finalize();
+	  
 		} catch (error) {
-			console.log(error);
-			res.status(500);
+		  console.log(error);
+		  res.status(500);
 		}
-	}
+	  };	
 
 	desencriptarArchivo = (req, res) => {
 		try {
 			const clave = 'encriptacionCuentabyes420ñ'; // clave original de 16 caracteres
-			const claveEncriptado = crypto.createHash('md5').update(clave).digest(); // clave de 128 bits generada a partir de la clave original
-
+			const claveEncriptado = crypto.createHash('sha256').update(clave).digest().slice(0, 16); // clave de 128 bits generada a partir de la clave original
+	
 			const archivoEntrada = fs.createReadStream(path.join(__dirname, '../../', 'cuentabytesEncriptado.sql'));
 			const archivoSalida = fs.createWriteStream(path.join(__dirname, '../../', 'cuentabytesDesencriptado.sql'));
-
+	
 			// Leer el IV del principio del archivo encriptado
 			let iv;
 			archivoEntrada.once('readable', () => {
-				iv = archivoEntrada.read(16);
+				iv = archivoEntrada.read(12);
 			});
-
+	
 			// Crear objeto Decipher después de que el IV sea leído
 			archivoEntrada.on('readable', () => {
-				const decipher = crypto.createDecipheriv('aes-128-cbc', claveEncriptado, iv);
-
+				const decipher = crypto.createDecipheriv('aes-128-gcm', claveEncriptado, iv);
+	
 				// Pipe data de ReadStream a Decipher y luego a WriteStream
 				archivoEntrada.pipe(decipher).pipe(archivoSalida);
 			});
-
+	
 			// Cuando termine, cerrar los objetos
 			archivoSalida.on('finish', () => {
 				console.log('Archivo desencriptado y guardado correctamente');
@@ -92,8 +110,7 @@ class Ajustes {
 			console.log(error);
 			res.status(500);
 		}
-	}
-	  
+	} 
 
 	callbackCmdBackup = (error, stdout, stderr) => {
 		if (error) {
