@@ -156,6 +156,49 @@ let renderItemReg = () => {
 
 }
 
+
+let configModalEdit = async (event) => {
+    let idCompra = event.target.getAttribute("idcompra");
+    let resultado = await fetch(`http://localhost:3000/listarCompra${idCompra}`);
+    let compra = await resultado.json();
+    let numeroItem = 0;
+    vItemsEditar = [];
+
+    reiniciarModal(idCompra);
+    document.getElementById("tblItemsVta").innerHTML = "";
+
+    document.getElementById("fechaCompra").value = compra[0].fechaCompra.slice(0, 10);
+    document.getElementById("slcProveedor").value = compra[0].idProveedor;
+
+    document.getElementById("btnAnadir").disabled = true;
+    document.getElementById("btnGuardar").disabled = true;
+    document.getElementById("slcProveedor").disabled = true;
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(compra[0].vrTotalCompra)}`;    
+
+    compra.forEach(detalle => {
+        document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+        <tr id="item${numeroItem}" class="h-25">
+            <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/productos/${detalle.nombreImagen}" alt="Producto 1"></td>
+            <td class="align-middle">
+                <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
+            </td>
+            <td class="align-middle">
+                <div class="row">
+                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.cantidadCompra}" disabled required>
+                </div>                                    
+            </td>
+            <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
+            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.cantidadCompra)}</p></td>
+            <td class="align-middle">
+                <div class="btnAccion row p-1 bg-danger mx-auto">
+                    <p class="col-12 btnEliminar mx-auto"></p>
+                </div>  
+            </td>
+        </tr>
+        `);
+    });
+}
+
 let reiniciarModal = () => {
     //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
     vItemsCompra = [];
