@@ -222,6 +222,16 @@ const conficInicialGraficos = {
                 legend: {
                     display: true,
                     onClick: null, // deshabilita la funcionalidad de ocultar datasets al hacer click
+                },
+                datalabels: {
+                    display: true, // Habilitar las etiquetas de datos
+                    color: 'white', // Color de las etiquetas de datos
+                    font: {
+                        weight: 'bold' // Estilo de la fuente de las etiquetas de datos
+                    },
+                    formatter: function(value, context) { // Función que define el contenido de las etiquetas de datos
+                        return value.toFixed(2); // Por ejemplo, redondear los valores a dos decimales
+                    }
                 }
             }
         }
@@ -307,11 +317,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById('acordionProductos').classList.add('show');
 
+    Chart.register(ChartDataLabels);
+
+    // Change default options for ALL charts
+    Chart.defaults.set('plugins.datalabels', {
+        display: true,
+        formatter: function(value, context) {
+          return value.toLocaleString('en-US');
+    }});
+    
     let graficoClientes = new Chart(document.getElementById('canvaClientes'), conficInicialGraficos.configClientes);
     let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), conficInicialGraficos.configEgresos);
     let graficoVentas = new Chart(document.getElementById('canvaVentas'), conficInicialGraficos.configVentas);
     let graficoCompras = new Chart(document.getElementById('canvaCompras'), conficInicialGraficos.configCompras);
     let graficoProductos = new Chart(document.getElementById('canvaProductos'), conficInicialGraficos.configProductos);
+
 
     objModeloGraficos.setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes);
     
