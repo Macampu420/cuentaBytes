@@ -74,7 +74,6 @@ const traerClientes = async () => {
         .catch(err => console.log(err));
 }
 
-
 const vrTotalRegistar = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
     let dto = document.getElementById("inpDescuento").value;
@@ -203,7 +202,7 @@ const registrarVenta = () => {
         alert("Por favor llena todos los campos y añade items a la venta");
     }
     else if (!itemsConUnidades) {
-        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados pafra registrar la venta");
+        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
     }
     else {
 

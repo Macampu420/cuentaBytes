@@ -12,6 +12,8 @@ let traerAjustes = async () => {
 
     //se pone el nombre de la empresa en el header de la vista
     document.getElementById("pHeader").innerHTML = ajustes.nombreEmpresa;
+    document.getElementById("inpHoraApertura").value = ajustes.horaApertura;
+    document.getElementById("inpHoraCierre").value = ajustes.horaCierre;
 }
 
 document.getElementById('btnEnviarNuevoNombreEmpresa').addEventListener('click', async () => {

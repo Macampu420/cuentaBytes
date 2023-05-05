@@ -173,7 +173,7 @@ let configModalEdit = async (event) => {
     document.getElementById("btnAnadir").disabled = true;
     document.getElementById("btnGuardar").disabled = true;
     document.getElementById("slcProveedor").disabled = true;
-    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(compra[0].vrTotalCompra)}`;    
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(compra[0].vrTotalCompra)}`;
 
     compra.forEach(detalle => {
         document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
@@ -182,13 +182,10 @@ let configModalEdit = async (event) => {
             <td class="align-middle">
                 <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
             </td>
-            <td class="align-middle">
-                <div class="row">
-                    <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="${detalle.cantidadCompra}" disabled required>
-                </div>                                    
-            </td>
-            <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
-            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.cantidadCompra)}</p></td>
+            <td class="align-middle"><p id="inpCantidad${numeroItem}" class="text-center">${conversorColombia.format(detalle.cantidadCompra)}</p></td>
+            <td class="align-middle"><p id="pCostoUnitario${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioCompra)}</p></td>
+            <td class="align-middle"><p id="pPrecioCompra${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioVenta)}</p></td>
+            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioCompra * detalle.cantidadCompra)}</p></td>
             <td class="align-middle">
                 <div class="btnAccion row p-1 bg-danger mx-auto">
                     <p class="col-12 btnEliminar mx-auto"></p>
@@ -307,29 +304,34 @@ let enviarRegCompra = async () => {
     let vrTotalCompra = document.getElementById('pValorTotal').innerHTML.replace(',', '');
     vrTotalCompra = vrTotalCompra.slice(1);
 
-    let compraActual = {
-        idProveedor,
-        vrTotalCompra,
-        vItemsCompra
-    };
+    if (vItemsCompra.length == 0) {
+        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
+    }
+    else {
+        let compraActual = {
+            idProveedor,
+            vrTotalCompra,
+            vItemsCompra
+        };
 
-    console.log(compraActual);
-
-    await fetch('http://localhost:3000/guardarCompra', {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(compraActual)
-    })
-        .then(response => response.text())
-        .then(mensaje => {
-            alert(mensaje);
-            location.reload();
+        await fetch('http://localhost:3000/guardarCompra', {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(compraActual)
         })
-        .catch(err => {
-            alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
-            location.reload();
-        });
+            .then(response => response.text())
+            .then(mensaje => {
+                alert(mensaje);
+                location.reload();
+            })
+            .catch(err => {
+                alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
+                location.reload();
+            });
+    }
+
+
 }
