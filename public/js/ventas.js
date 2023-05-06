@@ -185,8 +185,9 @@ const registrarVenta = () => {
     let idMetPago = document.getElementById("slcMetodoPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
     let descuento = parseInt(document.getElementById("inpDescuento").value);
-    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
     let fecha = document.getElementById("inpFecha").value
+    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    vrTotal = vrTotal.replace(',', '');
     vrTotal = vrTotal.slice(1);
 
     let itemsConUnidades = vItemsVta.some(item => {

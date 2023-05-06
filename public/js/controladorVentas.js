@@ -22,7 +22,6 @@ divModal.addEventListener('hidden.bs.modal', (event) => {
 });
 
 document.getElementById('btnAnadir').addEventListener('click', event => {
-    console.log(event.target);
     renderItem();
 });
 

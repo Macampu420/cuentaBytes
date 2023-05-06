@@ -302,6 +302,7 @@ let enviarRegCompra = async () => {
 
     let idProveedor = document.getElementById('slcProveedor').value;
     let vrTotalCompra = document.getElementById('pValorTotal').innerHTML.replace(',', '');
+    vrTotalCompra = vrTotalCompra.replace(',', '');
     vrTotalCompra = vrTotalCompra.slice(1);
 
     if (vItemsCompra.length == 0) {
