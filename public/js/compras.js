@@ -152,10 +152,9 @@ let renderItemReg = () => {
     `);
     }
 
-    numeroItem++;
+    numeroItem = numeroItem + 10;
 
 }
-
 
 let configModalEdit = async (event) => {
     let idCompra = event.target.getAttribute("idcompra");
@@ -239,6 +238,7 @@ const subtotal = (disparador, vector) => {
     document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesCompradas
         * item.costoProducto)}`;
 }
+
 const actualizarCrearItem = (item, disparador, vector) => {
 
     let nroItemDisparador = parseInt(disparador.id.slice(-1));

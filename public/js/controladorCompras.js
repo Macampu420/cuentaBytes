@@ -38,6 +38,7 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
             element => element.idItem ==  parseInt(disparador.id.slice(-1)));
 
         actualizarCrearItem(item, event.target, vItemsCompra);
+        console.log("A");
         
         disparador.nextElementSibling.classList.remove("d-none");
     }   
@@ -45,10 +46,7 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
 });
 
 document.getElementById('btnAnadir').addEventListener('click', event => {
-
         divModal.getAttribute('editar') == 'false' ? renderItemReg(numeroItem, vProductos) : renderItemEdit(vProductos);
-        numeroItem++; 
-
 });
 
 document.getElementById("tblItemsVta").addEventListener("click", (event) => {
@@ -133,10 +131,8 @@ document.getElementById("buscadorCompras").addEventListener("change", () => {
     console.log(compras);
 
     if (swNoCoinc == false) {
-
         //hay coincidencias
-        alert.classList.remove("d-none");
-        
+        alert.classList.remove("d-none");     
     } 
     else{
         alert.classList.add("d-none");
