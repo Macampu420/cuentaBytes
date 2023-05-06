@@ -38,7 +38,6 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
             element => element.idItem ==  parseInt(disparador.id.slice(-1)));
 
         actualizarCrearItem(item, event.target, vItemsCompra);
-        console.log("A");
         
         disparador.nextElementSibling.classList.remove("d-none");
     }   
@@ -93,7 +92,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
 
     divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
 });
-
 
 document.getElementById('filaCompras').addEventListener('click', event => {
     if (event.target.classList.contains("puntosAcciones")) {

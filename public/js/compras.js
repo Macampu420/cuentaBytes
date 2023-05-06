@@ -241,7 +241,7 @@ const subtotal = (disparador, vector) => {
 
 const actualizarCrearItem = (item, disparador, vector) => {
 
-    let nroItemDisparador = parseInt(disparador.id.slice(-1));
+    let nroItemDisparador = (disparador.id.slice(11));
     let productoItem = vProductos.find(producto => producto.idProducto == disparador.value);
 
     document.getElementById(`imgProductoItem${nroItemDisparador}`).src =
