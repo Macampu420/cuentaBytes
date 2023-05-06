@@ -152,7 +152,7 @@ let renderItemReg = () => {
     `);
     }
 
-    numeroItem = numeroItem + 10;
+    numeroItem++;
 
 }
 
