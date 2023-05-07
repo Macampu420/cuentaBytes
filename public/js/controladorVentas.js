@@ -34,7 +34,7 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
         let item = vItemsVta.find(
             //busca en los elementos de la venta actual uno que coincida con el item modificado
             //si no existe se define como undefined
-            element => element.idItem ==  parseInt(disparador.id.slice(-1)));
+            element => element.idItem ==  parseInt(disparador.id.match(/\d+$/)[0]));
 
         actualizarCrearItem(item, event.target, vItemsVta);
         
@@ -86,7 +86,18 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
+    let itemsConUnidades = vItemsVta.some(item => {
+        if (parseInt(item.unidadesVendidas) <= 0) {
+            return false;
+        }
+        return true;
+    });
+
     if (vItemsVta.length != 0) {
+        if (!itemsConUnidades) {
+            window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
+            return;
+        }
         registrarVenta(); 
         generarPdf();
     } else {

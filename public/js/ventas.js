@@ -128,7 +128,7 @@ const renderItem = () => {
 
 const actualizarCrearItem = (item, disparador, vector) => {
 
-    let nroItemDisparador = parseInt(disparador.id.slice(-1));
+    let nroItemDisparador = parseInt(disparador.id.match(/\d+$/)[0]);
     let productoItem = vObjsProductos.find(producto => producto.idProducto == disparador.value);
 
     if (item == undefined) {
@@ -172,7 +172,8 @@ const actualizarCrearItem = (item, disparador, vector) => {
 
 const actualizarUnidadesVendidas = (disparador, vector) => {
 
-    let nroIdItem = disparador.id.slice(-1);
+    let nroIdItem = parseInt(disparador.id.match(/\d+$/)[0]);
+    console.log(nroIdItem);
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     vector[vector.indexOf(item)].unidadesVendidas = disparador.value;
@@ -190,22 +191,11 @@ const registrarVenta = () => {
     vrTotal = vrTotal.replace(',', '');
     vrTotal = vrTotal.slice(1);
 
-    let itemsConUnidades = vItemsVta.some(item => {
-        if (parseInt(item.unidadesVendidas) <= 0) {
-            return false;
-        }
-        return true;
-    });
-
 
     //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
     if (idMetPago == "" || idCliente == "" || descuento == NaN || vrTotal == NaN || vItemsVta.length == 0) {
         alert("Por favor llena todos los campos y añade items a la venta");
-    }
-    else if (!itemsConUnidades) {
-        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
-    }
-    else {
+    } else {
 
         let ventaActual = {
             idMetPago,
@@ -247,7 +237,7 @@ const eliminarItem = (disparador, vector_) => {
     let item = vector_.findIndex(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
-        element => (element.idItem) == disparador.id.slice(-1)
+        element => (element.idItem) == parseInt(disparador.id.match(/\d+$/)[0])
     );
 
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
