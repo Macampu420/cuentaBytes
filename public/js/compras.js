@@ -301,22 +301,34 @@ const vrTotal = (vItems) => {
 }
 
 let enviarRegCompra = async () => {
-
+    // Obtener el ID del proveedor y el valor total de la compra
     let idProveedor = document.getElementById('slcProveedor').value;
     let vrTotalCompra = document.getElementById('pValorTotal').innerHTML.replace(',', '');
     vrTotalCompra = vrTotalCompra.replace(',', '');
     vrTotalCompra = vrTotalCompra.slice(1);
 
-    if (vItemsCompra.length == 0) {
-        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
-    }
-    else {
+    // Verificar si hay elementos con unidades compradas mayores a cero
+    let itemsConUnidades = vItemsCompra.some(item => {
+        if (parseInt(item.unidadesCompradas) <= 0) {
+            return false;
+        }
+        return true;
+    });
+
+    // Verificar si no se han seleccionado elementos o si no hay unidades compradas
+    if (vItemsCompra.length != 0) {
+        if (!itemsConUnidades) {
+            window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
+            return;
+        }
+        // Crear objeto con los datos de la compra
         let compraActual = {
             idProveedor,
             vrTotalCompra,
             vItemsCompra
         };
 
+        // Enviar la compra al servidor
         await fetch('http://localhost:3000/guardarCompra', {
             method: "POST",
             credentials: "same-origin",
@@ -334,7 +346,8 @@ let enviarRegCompra = async () => {
                 alert("Ha ocurrido un error registrando la compra, por favor intentalo mas tarde");
                 location.reload();
             });
+    } else {
+        window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
+        return;
     }
-
-
 }

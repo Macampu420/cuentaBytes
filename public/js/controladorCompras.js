@@ -90,7 +90,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    divModal.getAttribute("editar") == "false" ? enviarRegCompra() : enviarEditCompra();
+    enviarRegCompra();
 });
 
 document.getElementById('filaCompras').addEventListener('click', event => {
