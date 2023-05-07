@@ -35,7 +35,7 @@ document.getElementById("tblItemsVta").addEventListener("change", (event) => {
         let item = vItemsCompra.find(
             //busca en los elementos de la venta actual uno que coincida con el item modificado
             //si no existe se define como undefined
-            element => element.idItem ==  parseInt(disparador.id.slice(-1)));
+            element => element.idItem ==  parseInt(disparador.id.match(/\d+$/)[0]));
 
         actualizarCrearItem(item, event.target, vItemsCompra);
         

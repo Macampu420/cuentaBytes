@@ -77,11 +77,13 @@ let mostrarCompras = async () => {
 
 const eliminarItem = (disparador, vector_) => {
 
-    let item = vector_.findIndex(
+    let item = vector_.find(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
-        element => (element.idItem) == disparador.id.slice(-1)
+        element => (element.idItem) == parseInt(disparador.id.match(/\d+$/)[0])
     );
+
+    console.log(item);
 
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
     //sino solo eliminara la carta
@@ -214,7 +216,7 @@ let reiniciarModal = () => {
 
 const actualizarUnidadesCompradas = (disparador, vector) => {
 
-    let nroIdItem = disparador.id.slice(-1);
+    let nroIdItem = disparador.id.match(/\d+$/)[0];
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     vector[vector.indexOf(item)].unidadesCompradas = disparador.value;
@@ -225,14 +227,14 @@ const actualizarUnidadesCompradas = (disparador, vector) => {
 
 const actualizarPropiedadItem = (disparador, vector, propiedad) => {
 
-    let nroIdItem = disparador.id.slice(-1);
+    let nroIdItem = disparador.id.match(/\d+$/)[0];
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     vector[vector.indexOf(item)][propiedad] = parseInt(disparador.value);
 }
 
 const subtotal = (disparador, vector) => {
-    let nroIdItem = disparador.id.slice(-1);
+    let nroIdItem = disparador.id.match(/\d+$/)[0];
     let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
 
     document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesCompradas
@@ -241,7 +243,7 @@ const subtotal = (disparador, vector) => {
 
 const actualizarCrearItem = (item, disparador, vector) => {
 
-    let nroItemDisparador = (disparador.id.slice(11));
+    let nroItemDisparador = (disparador.id.match(/\d+$/)[0]);
     let productoItem = vProductos.find(producto => producto.idProducto == disparador.value);
 
     document.getElementById(`imgProductoItem${nroItemDisparador}`).src =

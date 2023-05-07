@@ -234,7 +234,7 @@ const enviarRegVenta = async (ventaActual_) => {
 
 const eliminarItem = (disparador, vector_) => {
 
-    let item = vector_.findIndex(
+    let item = vector_.find(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
         element => (element.idItem) == parseInt(disparador.id.match(/\d+$/)[0])
