@@ -1,51 +1,81 @@
 const pool = require('./../conexion');
+const moment = require('moment-timezone');
 
 class Graficos {
 
-  obtenerDatosCompras = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenCompras(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+    async traerDatosVentas(query) {
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(query);
+            // Convertir el resultado en un arreglo de objetos
+            let datosVentas = results.map(element => JSON.parse(JSON.stringify(element)));
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+            return datosVentas;
+        } catch (error) {
+            console.log(error);
+            res.status(500);
+        }
+    }
 
-  obtenerDatosVentas = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenVenta(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+    async traerDatosCompras(query) {
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(query);
+            // Convertir el resultado en un arreglo de objetos
+            let datosCompras = results.map(element => JSON.parse(JSON.stringify(element)));
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+            return datosCompras;
+        } catch (error) {
+            console.log(error);
+            res.status(500);
+        }
+    }
 
-  obtenerDatosEgresos = (req) => {
-    return new Promise((resolve, reject) => {
-      // Hacer la consulta a varias tablas
-      pool.query('CALL resumenEgreso(?, ?)', [req.body.inicio, req.body.fin], (error, results, fields) => {
-        if (error) reject(error);
+    async traerDatosEgresos(query) {
 
-        // Guardar los resultados en una variable
-        let datos = results[0].map(element => JSON.parse(JSON.stringify(element)));
+        try {
+            // Llamar a un procedimiento almacenado en la base de datos que devuelve un resultado
+            let [results] = await pool.query(query);
+            // Convertir el resultado en un arreglo de objetos
+            let datosEgresos = results.map(element => JSON.parse(JSON.stringify(element)));
 
-        // Resolver la promesa con los resultados
-        resolve(datos);
-      });
-    });
-  }
+            return datosEgresos;
+        } catch (error) {
+            console.log(error);
+            res.status(500);
+        }
+    }
+
+    async traerProductosFacturas(procedimiento) {
+        try {
+            let [results] = await pool.query(procedimiento);
+            let datos = results.map(element => JSON.parse(JSON.stringify(element)));
+
+            // Obtener la hora actual en formato 24 horas
+            let vProductos = datos
+
+            return vProductos;
+        } catch (error) {
+            console.log(error);
+            res.status(500)
+        }
+    }
+
+    async traerClientesFacturas(procedimiento) {
+        try {
+            let [results] = await pool.query(procedimiento);
+            let vClientes = results.map(element => JSON.parse(JSON.stringify(element)));
+
+
+            return vClientes;
+        } catch (error) {
+            console.log(error);
+            res.status(500)
+        }
+
+    }
 
 }
 

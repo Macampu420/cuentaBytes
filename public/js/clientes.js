@@ -1,7 +1,5 @@
 
 const traerClientes = async clientes => {
-
-    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiVentas.php')
     
     await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
 
@@ -15,14 +13,14 @@ const traerClientes = async clientes => {
     });
 }
 
-renderClientes= async clientes => {
+renderClientes = async clientes => {
 
     await traerClientes(clientes);
-    
-if(clientes.length > 0) {
-    clientes.forEach(element => {
 
-        document.getElementById("filaClientes").insertAdjacentHTML('beforeend', `
+    if (clientes.length > 0) {
+        clientes.forEach(element => {
+
+            document.getElementById("filaClientes").insertAdjacentHTML('beforeend', `
         
         <div id="${element.idCliente}" idCliente="${element.idCliente}" cartaItem="true"
         class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
@@ -34,13 +32,12 @@ if(clientes.length > 0) {
             <h5>Telefono: ${element.telefonoCliente}</h5>
         </div>
         </div>
-
         `)
-    }
+        }
 
-    );
-} else {
-    document.getElementById("filaClientes").innerHTML = "<h2 class='text-center'>No hay clientes registrados, puedes registrar uno presionando el boton de arriba</h2/>"
-}
+        );
+    } else {
+        document.getElementById("filaClientes").innerHTML = "<h2 class='text-center'>No hay clientes registrados, puedes registrar uno presionando el boton de arriba</h2/>"
+    }
 
 }

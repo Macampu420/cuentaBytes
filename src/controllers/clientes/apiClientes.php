@@ -2,7 +2,6 @@
 include "./../../conexion.php";
 
 $sqlTraerTodo = "select * from clientes order by idCliente desc";
-//ventas
 $clientes = array();
 $datos = $connection -> query($sqlTraerTodo);
 $clientes['items'] = array();

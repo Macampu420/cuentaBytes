@@ -1,4 +1,5 @@
 let vObjsProductos = [];
+let vObjAjustes;
 let vObjsCliente = [];
 let vObjsVentaActual = [];
 let vItemsVta = [];
@@ -8,8 +9,41 @@ let nuevoStock = 0;
 let vObjsEncVentas = [];
 let vItemsEditar = [];
 let vItemsElim = [];
+let vObjsMetodosPago;
+let vPDF = [];
+let idUltimaVenta;
 const conversorColombia = new Intl.NumberFormat('en-CO');
 
+//METODOS PARA TRAER DE LA BD LA INFORMACION NECESARIA
+
+const traerAjustesVta = async () => {
+    //se consume el API de los ajustes
+    let resAjustes = await fetch('http://localhost:3000/ajustes');
+    vObjAjustes = await resAjustes.json();
+    console.log(vObjAjustes);
+}
+
+const traerMetodosPago = async () => {
+
+    try {
+        let resMetodosPago = await fetch('http://localhost:3000/listarMetodoPago');
+        vObjsMetodosPago = await resMetodosPago.json();
+    } catch (error) {
+        console.log(error);
+    }
+
+
+    vObjsMetodosPago.forEach(metodoPago => {
+        document.getElementById("slcMetodoPago").insertAdjacentHTML('beforeend', `
+        
+            <option value="${metodoPago.idMetodoPago}">${metodoPago.metodoPago}</option>
+
+
+        `);
+
+    });
+
+}
 
 const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
@@ -30,122 +64,61 @@ const traerClientes = async () => {
         .then(data => {
 
             //cada item se pone en el vector correspondiente para poderse usar posteriormente en el resto del programa
-            data.forEach(element => {
-
-                vObjsCliente.push(element);
-
-            })
+            data.forEach(element => vObjsCliente.push(element));
 
             //se renderizan todos los clientes
-            for (let i = 0; i < vObjsCliente.length; i++) {
-                document.getElementById("slcClientes").innerHTML += `<option value="${vObjsCliente[i].idCliente}">${vObjsCliente[i].nombresCliente}</option>`
-            }
+            vObjsCliente.forEach(cliente => {
+                document.getElementById("slcClientes").innerHTML += `<option value="${cliente.idCliente}">${cliente.nombresCliente + " " + cliente.apellidosCliente}</option>`
+            })
         })
         .catch(err => console.log(err));
 }
 
-const agregarItem = (disparador_, vector) => {
-    //agrega un item de la vta actual al vector
-
-    let sliderItem = document.querySelector('.' + disparador_.id);
-
-    //en el vector de productos busca el que coincida con el seleccionado
-    //y setea el item segun los datos
-    vObjsProductos.forEach((producto) => {
-        if (disparador_.value == producto.idProducto) {
-
-            if (divModal.getAttribute('editar') == "false") {
-                vector.push({
-                    idItem: disparador_.parentElement.id,
-                    idProducto: producto.idProducto,
-                    precioVta: producto.precioVenta,
-                    unidVend: parseInt(sliderItem.value),
-                    porcentajeIva: producto.porcentajeIva,
-                    nuevoStock: producto.stockProducto - 1
-
-                })
-            } else {
-
-                vector.push({
-                    idItem: disparador_.parentElement.id,
-                    idProducto: producto.idProducto,
-                    precioUnitario: producto.precioVenta,
-                    uniVendidas: parseInt(sliderItem.value),
-                    porcentajeIva: producto.porcentajeIva,
-                    nuevoStock: producto.stockProducto - 1
-
-
-                })
-
-            }
-
-        }
-    })
-};
-
 const vrTotalRegistar = (vItems) => {
     //calcula el valor total de la venta y del IVA cuando se va a registrar
-    let dto = document.getElementById("inpDto").value;
+    let dto = document.getElementById("inpDescuento").value;
     let vrTot = 0;
-    let vrIva = 0
 
     //por cada item de la venta calcula el valor de las unidVend * precioUnit
-    //y el valor del iva unidVend * ((porcentajeIva / 100) * precioVta)
-    vItems.forEach(item => {
-
-        vrTot += item.unidVend * item.precioVta;
-        item.porcentajeIva <= 0 ? vrIva += 0 : vrIva += item.unidVend * ((item.porcentajeIva / 100) * item.precioVta);
-
-    });
+    vItems.forEach(item => vrTot += item.unidadesVendidas * item.precioUnitario);
 
     vrTot -= dto;
 
-    document.getElementById("inpVrIva").value = conversorColombia.format(vrIva).toString();
-    document.getElementById("inpVrTotal").value = conversorColombia.format(vrTot).toString();
-}
-
-const vrTotalEditar = (vItems) => {
-    //calcula el valor total de la venta y del iva cuando se va a editar
-    let dto = document.getElementById("inpDto").value;
-    let vrTot = 0;
-    let vrIva = 0
-
-    //por cada item de la venta calcula el valor de las unidVend * precioUnit
-    //y el valor del iva unidVend * ((porcentajeIva / 100) * precioVta)
-    vItems.forEach(item => {
-
-        vrTot += (item.uniVendidas * item.precioUnitario);
-        item.porcentajeIva <= 0 ? vrIva += 0 : vrIva += item.uniVendidas * ((item.porcentajeIva / 100) * item.precioUnitario);
-
-    });
-
-    vrTot -= dto;
-
-    document.getElementById("inpVrIva").value = conversorColombia.format(vrIva).toString();
-    document.getElementById("inpVrTotal").value = conversorColombia.format(vrTot);
+    document.getElementById("pValorTotal").innerHTML = "$" + conversorColombia.format(vrTot);
 }
 
 const renderItem = () => {
     //agrega un nuevo item de la venta al html
 
-    document.getElementById("rowItems").insertAdjacentHTML('beforeend', `
-        <div id="${divModal.getAttribute('editar') == "true" ? numeroItem : "item"+numeroItem }" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-        <div class="containerBtn">
-          <div id="dlt${numeroItem}" class="btnEliminar"></div>
-        </div>
-            <select id="slc${numeroItem}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-                <option selected>Selecciona el producto</option>
-            </select>
-            <div id="slidecontainer${numeroItem}" class="">
-                <input disabled type="range" min="1" max="100" value="50" class="slc${numeroItem}">
-                <p id="pValor"></p>
+    document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+    <tr id="item${numeroItem}" class="h-25">
+        <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/placeholderProducto.jpg" alt="Producto 1"></td>
+        <td class="align-middle">
+            <div class="mx-auto">
+                <select id="slcProducto${numeroItem}" class="" name="slcProductos" required>
+                    <option value="">Producto:</option>
+                </select>
+                <p class="text-center mt-2 d-none"></p>
             </div>
-        </div>
-        `);
+        </td>
+        <td class="align-middle">
+            <div class="row">
+                <input id="inpCantidad${numeroItem}" class="form-control w-75 mx-auto mb-2" type="number" value="1" disabled required>
+            </div>                                    
+        </td>
+        <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$0</p></td>
+        <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$0</p></td>
+        <td class="align-middle">
+            <div class="btnAccion row p-1 bg-danger mx-auto" id="btnEliminarItem${numeroItem}">
+                <a class="col-12 btnEliminar mx-auto"></a>
+            </div>  
+        </td>
+    </tr>
+    `)
 
     //pone todos los productos que se traigan en el select del item creado
     for (let i = 0; i < vObjsProductos.length; i++) {
-        document.getElementById("slc" + numeroItem).insertAdjacentHTML("beforeend", `
+        document.getElementById("slcProducto" + numeroItem).insertAdjacentHTML("beforeend", `
                 <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
         `);
     }
@@ -155,120 +128,85 @@ const renderItem = () => {
 
 const actualizarCrearItem = (item, disparador, vector) => {
 
-    //si el disparador existe lo actualiza, sino lo crea
-    if (item != undefined) {
+    let nroItemDisparador = parseInt(disparador.id.match(/\d+$/)[0]);
+    let productoItem = vObjsProductos.find(producto => producto.idProducto == disparador.value);
 
-        vObjsProductos.forEach((producto) => {
-            if (disparador.value == producto.idProducto) {
-                vector[vector.indexOf(item)] = {
-                    idItem: disparador.parentElement.id,
-                    idProducto: producto.idProducto,
-                    precioVta: producto.precioVenta,
-                    unidVend: parseInt(slider.value),
-                    porcentajeIva: producto.porcentajeIva,
-                    nuevoStock: producto.stockProducto
-                }
-            }
-        });
-
-        divModal.getAttribute("editar") == "true" ? vrTotalEditar(vector) : vrTotalRegistar(vector);
-
+    if (item == undefined) {
+        vector.push({
+            idItem: nroItemDisparador,
+            idProducto: productoItem.idProducto,
+            precioUnitario: productoItem.precioVenta,
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? 1 : 0,
+            nombreProducto: productoItem.nombreProducto,
+        })
     } else {
-        agregarItem(disparador, vector);
-        divModal.getAttribute("editar") == "true" ? vrTotalEditar(vector) : vrTotalRegistar(vector);
+        vector[vector.indexOf(item)] = {
+            idItem: nroItemDisparador,
+            idProducto: productoItem.idProducto,
+            precioUnitario: productoItem.precioVenta,          
+            unidadesVendidas: productoItem.existenciaProducto > 0 ? document.getElementById(`inpCantidad${nroItemDisparador}`).value : 0,
+            nombreProducto: productoItem.nombreProducto,
+
+        }
     }
 
-}
+    document.getElementById(`imgProductoItem${nroItemDisparador}`).src = `./../../public/img/productos/${productoItem.nombreImagen}`;
+    document.getElementById(`pPrecioVenta${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
+    document.getElementById(`pSubtotalItem${nroItemDisparador}`).innerHTML = "$" + conversorColombia.format(`${productoItem.precioVenta}`);
 
-const habilitarSlider = (slider, stockActual) => {
-    //habilita el input range
-    slider.removeAttribute("disabled");
-    //setea el valor maximo(stock actual del prod)
-    slider.setAttribute("max", stockActual);
-    slider.setAttribute("value", 1);
-    //genera el nuevo stock del producto
-    nuevoStock = (slider.max - slider.value);
-    //imprime las unidades actuales  y el stock restante
-    slider.nextElementSibling.innerHTML = (slider.value + " unidades. " + nuevoStock + " restantes");
-
-}
-
-const renderNuevoStock = (disparador, vector_) => {
-    //genera el nuevo stock del producto
-    nuevoStock = (disparador.max - disparador.value);
-    //imprime las unidades actuales  y el stock restante
-    disparador.nextElementSibling.innerHTML = (disparador.value + " unidades. " + nuevoStock + " restantes");
-
-    let item = vector_.find(
-        //busca en los elementos de la venta actual uno que coincida con el item modificado
-        //si no existe se define como undefined
-        element => element.idItem || element.idDetVenta == disparador.parentElement.parentElement.id
-    );
-
-    vector_[vector_.indexOf(item)].nuevoStock = nuevoStock;
-}
-
-const actualizarUnidVend = (disparador, vector_) => {
-
-    if (divModal.getAttribute("editar") == "true") {
-        let item = vector_.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem || element.idDetVenta == parseInt(disparador.parentElement.parentElement.id)
-        );
-
-        //actualiza el numero de unidades vendidas para poder calcular el valor total de la venta condicionando si la venta se va a registrar o a editar
-        vector_[vector_.indexOf(item)].uniVendidas = parseInt(disparador.value);
-
-        //llama el valor total dependiendo del estado del att editar
-        vrTotalEditar(vector_);
-
+    if (productoItem.existenciaProducto == 0) {
+        disparador.nextElementSibling.innerHTML = `No hay unidades disponibles.`;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute("readonly", "");
+        document.getElementById(`inpCantidad${nroItemDisparador}`).value = 0;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("disabled");
     } else {
-
-        let item = vector_.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idItem == disparador.parentElement.parentElement.id
-        );
-
-        //actualiza el numero de unidades vendidas para poder calcular el valor total de la venta condicionando si la venta se va a registrar o a editar
-        vector_[vector_.indexOf(item)].unidVend = parseInt(disparador.value);
-
-        //llama el valor total dependiendo del estado del att editar
-        vrTotalRegistar(vector_);
-
+        document.getElementById(`inpCantidad${nroItemDisparador}`).removeAttribute("readonly");
+        document.getElementById(`inpCantidad${nroItemDisparador}`).disabled = false;
+        document.getElementById(`inpCantidad${nroItemDisparador}`).setAttribute('max', productoItem.existenciaProducto);
+        disparador.nextElementSibling.innerHTML = `Actualmente tienes: ${productoItem.existenciaProducto} unidades.`;
     }
+
+    vrTotalRegistar(vector);
+
+}
+
+const actualizarUnidadesVendidas = (disparador, vector) => {
+
+    let nroIdItem = parseInt(disparador.id.match(/\d+$/)[0]);
+    console.log(nroIdItem);
+    let item = vector.find(itemVenta => itemVenta.idItem == parseInt(nroIdItem));
+
+    vector[vector.indexOf(item)].unidadesVendidas = disparador.value;
+    document.getElementById(`pSubtotalItem${nroIdItem}`).innerHTML = `$${conversorColombia.format(item.unidadesVendidas * item.precioUnitario)}`;
 
 }
 
 const registrarVenta = () => {
 
-    let now = new Date();
-    let fecha = now.toISOString();
-
-    let tituloVenta = document.getElementById("inpTitulo").value;
-    let metPago = document.getElementById("inpMetPago").value;
+    let idMetPago = document.getElementById("slcMetodoPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
-    let dto = parseInt(document.getElementById("inpDto").value);
-    let vrIva = parseInt(document.getElementById("inpVrIva").value.replace(',', ''));
-    let vrTotal = parseInt(document.getElementById("inpVrTotal").value.replace(',', ''));
+    let descuento = parseInt(document.getElementById("inpDescuento").value);
+    let fecha = document.getElementById("inpFecha").value
+    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    vrTotal = vrTotal.replace(',', '');
+    vrTotal = vrTotal.slice(1);
+
 
     //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
-    if (tituloVenta == "" || fecha == "" || metPago == "" || idCliente == NaN || dto == NaN || vrTotal == NaN || vItemsVta.length == 0) {
+    if (idMetPago == "" || idCliente == "" || descuento == NaN || vrTotal == NaN || vItemsVta.length == 0) {
         alert("Por favor llena todos los campos y añade items a la venta");
     } else {
 
         let ventaActual = {
-            tituloVenta,
-            fecha,
-            metPago,
+            idMetPago,
             idCliente,
-            dto,
-            vrIva,
+            descuento,
             vrTotal,
-            itemsVta: vItemsVta,
+            fecha,
+            itemsVta: vItemsVta
         };
 
+        llenarPDF();
         enviarRegVenta(ventaActual);
     }
 }
@@ -276,13 +214,13 @@ const registrarVenta = () => {
 const enviarRegVenta = async (ventaActual_) => {
 
     await fetch('http://localhost:3000/guardarVta', {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ventaActual_)
-        })
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ventaActual_)
+    })
         .then(response => response.text())
         .then(mensaje => {
             alert(mensaje);
@@ -296,42 +234,26 @@ const enviarRegVenta = async (ventaActual_) => {
 
 const eliminarItem = (disparador, vector_) => {
 
-    let item = vector_.findIndex(
+    let item = vector_.find(
         //busca en los elementos de la venta actual uno que coincida con el item modificado
         //si no existe se define como undefined
-        element => (element.idItem || element.idDetVenta) == disparador.parentElement.parentElement.getAttribute("id")
+        element => (element.idItem) == parseInt(disparador.id.match(/\d+$/)[0])
     );
 
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
     //sino solo eliminara la carta
     if (item != -1) {
         if (item == 0) {
-
             vector_.shift();
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
             disparador.parentElement.parentElement.remove();
 
         } else {
-
             vector_.splice(vector_.indexOf(item), 1);
-
-            divModal.getAttribute("editar") == "false" ? vrTotalRegistar(vector_) : vrTotalEditar(vector_);
-
             disparador.parentElement.parentElement.remove();
         }
+        vrTotalRegistar(vector_);
     } else {
         disparador.parentElement.parentElement.remove();
-    }
-
-}
-
-const stockItemElim = (item) => {
-
-    if (item.idVenta) {
-        vItemsElim.push({
-            idProducto: item.idProducto,
-            nuevo
-        })
     }
 
 }
@@ -349,6 +271,7 @@ const renderVentas = async () => {
                     element.fechaVenta = element.fechaVenta.slice(0, 10);
 
                     vObjsEncVentas.push(element);
+                    idUltimaVenta = data[0][0].idVenta;
                 })
             }
         })
@@ -367,7 +290,6 @@ const renderVentas = async () => {
                 <div id="${element.idVenta}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
                     <div class="card-body mt-2 mx-auto">
                         <h5 btnAcciones idventa="${element.idVenta}" class="puntosAcciones m-2 w-25">...</h5>
-                        <h5>Concepto: ${element.tituloVenta}</h5>
                         <h5>Valor Total: ${conversorColombia.format(element.vrTotalVta)}</h5>
                         <h5>Fecha: ${element.fechaVenta}</h5>
                         <h5>Vendido a: ${element.nombresCliente + " " + element.apellidosCliente}</h5>
@@ -386,176 +308,203 @@ const renderVentas = async () => {
 
 }
 
-const configModal = (modal, event) => {
-
-    //configura el modal dependiendo del estado editar
-    if (modal.getAttribute('editar') == "true") {
-        modalEditar(event);
-
-    } else {
-        modalRegistrar();
-    }
-
-
-}
-
-const modalEditar = async event => {
-
-    //deja el contenedor de items vacios para evitar interferencia de ventas pasadas
-    document.getElementById('rowItems').innerHTML = "";
-    //muestra las acciones para poder ejecutarlas
-    document.getElementById('divAcciones').classList.remove("d-none");
-    //desabilita el btn guardar que se habilitara cuando el usuario clickee editar
-    document.getElementById('btnGuardar').disabled = true;
-    //cambia el valor del btn actualizar
-    document.getElementById('btnGuardar').innerHTML = "Actualizar";
-    document.getElementById('btnFactura').classList.remove("d-none");
-    document.getElementById('inpFecha').setAttribute('type', 'date');
-
-    let idVenta = event.target.getAttribute("idventa");
-
-    document.getElementById("btnGuardar").setAttribute("idVenta", idVenta);
-    document.querySelector("form").setAttribute("idVenta", idVenta);
-
-    //trae la venta (enc y dets) para renderizarlos
-    await fetch(`http://localhost:3000/editVenta${idVenta}`)
-        .then(res => res.json())
-        .then(data => {
-            vItemsEditar = data
-        })
-        .catch(e => console.log(e));
-
-    //da un formato legible a la fecha de la venta
-    vItemsEditar[0].fechaVenta = vItemsEditar[0].fechaVenta.slice(0, 10);
-
-    if (vItemsEditar[0].editado == 1) document.getElementById('btnEditar').classList.add('d-none');
-
-    //setea en los inputs los valores traidos de la bd para que el usuario los pueda editar
-    document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
-    document.getElementById('inpMetPago').value = vItemsEditar[0].metodoPagoVenta;
-    document.getElementById('inpTitulo').value = vItemsEditar[0].tituloVenta;
-    document.getElementById('slcClientes').value = vItemsEditar[0].idCliente;
-    document.getElementById('inpFecha').value = vItemsEditar[0].fechaVenta;
-    document.getElementById('inpVrTotal').value = conversorColombia.format(vItemsEditar[0].vrTotalVta);
-    document.getElementById('inpDto').value = vItemsEditar[0].descuentoVenta;
-    document.getElementById('inpVrIva').value = conversorColombia.format(vItemsEditar[0].vrtotalIva);
-
-
-    //renderiza todos los detalles traidos de la bd para poderlos editar
-    vItemsEditar.forEach(element => {
-        document.getElementById('rowItems').insertAdjacentHTML('beforeend', `
-        <div id="${element.idDetVenta}" class="border border-dark rounded item p-2 mx-auto my-3 col-11 col-md-9 col-lg-5">
-            <div class="containerBtn">
-                <div id="dlt${element.idDetVenta}" class="btnEliminar"></div>
-            </div>
-                <select disabled id="slc${element.idDetVenta}" class="form-select col-9 mb-2 mt-1" aria-label="Default select example">
-                    <option selected>Selecciona el producto</option>
-                </select>
-                <div id="slidecontainer${element.idDetVenta}" class="">
-                    <input disabled type="range" min="1" max="100" value="${element.uniVendidas}" class="slc${element.idDetVenta}" id="slider${element.idDetVenta}">
-                    <p id="pValor"></p>
-                </div>
-        </div>`)
-
-        //pone todos los productos que se traigan en el select del item creado
-        for (let i = 0; i < vObjsProductos.length; i++) {
-            document.getElementById("slc" + element.idDetVenta).insertAdjacentHTML("beforeend", `
-                <option value="${vObjsProductos[i].idProducto}">${vObjsProductos[i].nombreProducto}</option>
-            `);
-        }
-
-        slider = document.getElementById("slider" + element.idDetVenta);
-
-
-        //si el stock actual es mayor a 0 habilita el slider y genera el texto con el stock restante del
-        //sino lo deja deshabilitado e inserta un texto mostrando que no hay stock
-        if (element.stockProducto > 0) {
-            document.getElementById("slc" + element.idDetVenta).value = element.idProducto;
-            slider.disabled = false;
-            slider.max = element.stockProducto + element.uniVendidas;
-            slider.nextElementSibling.innerHTML = (slider.value + " unidades. " + element.stockProducto + " restantes");
-        } else {
-            slider.nextElementSibling.innerHTML = "No hay unidades disponibles";
-        }
-
-    });
-
-    document.getElementById('btnEliminar').setAttribute("idVenta", vItemsEditar[0].idVenta)
-
-
-}
-
-const modalRegistrar = () => {
+const iniciarModalRegistrar = () => {
 
     //setea todos los inputs/items como vacios para registrar una venta nueva
     vItemsVta = [];
     let date = new Date();
+    numeroItem = 0;
 
+    document.getElementById('btnAnadir').disabled = false;
     document.getElementById('btnGuardar').disabled = false;
-    document.getElementById('btnFactura').classList.add("d-none");
-    document.getElementById('divAcciones').classList.add("d-none");
-    document.getElementById('rowItems').innerHTML = "";
-    document.getElementById('btnGuardar').innerHTML = "Guardar";
-    document.getElementById('inpFecha').value = 0;
-    document.getElementById('inpMetPago').value = "";
-    document.getElementById('inpTitulo').value = "";
-    document.getElementById('slcClientes').value = 0;
+    document.getElementById('slcClientes').disabled = false;
+    document.getElementById('slcMetodoPago').disabled = false;
+    document.getElementById('inpDescuento').disabled = false;
+
     document.getElementById('inpFecha').value = date.toISOString().slice(0, 10);
-    document.getElementById('inpVrTotal').value = 0;
-    document.getElementById('inpDto').value = 0;
-    document.getElementById('inpVrIva').value = 0;
+    document.getElementById('tblItemsVta').innerHTML = "";
+    document.getElementById('inpDescuento').value = 0;
+    document.getElementById('pValorTotal').innerHTML = "$0";
+    document.getElementById('slcClientes').selectedIndex = 0;
+    document.getElementById('slcMetodoPago').selectedIndex = 0;
 
 }
 
-const actualizarVenta = async (event) => {
+const iniciarModalDetallesVenta = async (disparador) => {
 
-    let idVenta = event.target.getAttribute('idventa');
-    let tituloVenta = document.getElementById("inpTitulo").value;
-    let fecha = document.getElementById("inpFecha").value;
-    let metPago = document.getElementById("inpMetPago").value;
+    let resVenta = await fetch(`http://localhost:3000/editVenta${disparador.getAttribute('idVenta')}`);
+    let venta = await resVenta.json();
+
+    document.getElementById("tblItemsVta").innerHTML = "";
+
+    document.getElementById("inpFecha").value = venta[0].fechaVenta.slice(0, 10);
+    document.getElementById("slcMetodoPago").value = venta[0].idMetodoPago;
+    document.getElementById("slcClientes").value = venta[0].idCliente;
+    document.getElementById("inpDescuento").value = venta[0].descuentoVenta;
+
+    document.getElementById("btnAnadir").disabled = true;
+    document.getElementById("btnGuardar").disabled = true;
+    document.getElementById("slcMetodoPago").disabled = true;
+    document.getElementById("slcClientes").disabled = true;
+    document.getElementById("inpDescuento").disabled = true;
+    document.getElementById("pValorTotal").innerHTML = `$${conversorColombia.format(venta[0].vrTotalVta)}`;
+
+    venta.forEach(detalle => {
+        document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
+        <tr id="item${numeroItem}" class="h-25">
+            <td><img id="imgProductoItem${numeroItem}" class="border border-2 img-size mx-auto" src="./../../public/img/productos/${detalle.nombreImagen}" alt="Producto 1"></td>
+            <td class="align-middle">
+                <p id="pPrecioVenta${numeroItem}" class="text-center">${detalle.nombreProducto}</p>                                  
+            </td>
+            <td class="align-middle"><p id="inpCantidad${numeroItem}" class="text-center">${detalle.uniVendidas}</p></td>                                                                
+            <td class="align-middle"><p id="pPrecioVenta${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario)}</p></td>
+            <td class="align-middle"><p id="pSubtotalItem${numeroItem}" class="text-center">$${conversorColombia.format(detalle.precioUnitario * detalle.uniVendidas)}</p></td>
+            <td class="align-middle">
+                <div class="btnAccion row p-1 bg-danger mx-auto">
+                    <p class="col-12 btnEliminar mx-auto"></p>
+                </div>  
+            </td>
+        </tr>
+        `);
+    });
+
+}
+
+const llenarPDF = async () => {
+    let nombreCliente, apellidoCliente, telefonoCliente, cedulaCliente, metodoPago;
+    let idMetPago = document.getElementById("slcMetodoPago").value;
     let idCliente = parseInt(document.getElementById("slcClientes").value);
-    let dto = parseInt(document.getElementById("inpDto").value.replace(',', ''));
-    let vrtotalIva = parseInt(document.getElementById("inpVrIva").value.replace(',', ''));
-    let vrTotal = parseInt(document.getElementById("inpVrTotal").value.replace(',', ''));
+    let descuento = parseInt(document.getElementById("inpDescuento").value);
+    let vrTotal = document.getElementById("pValorTotal").innerHTML.replace(',', '');
+    let fecha = document.getElementById("inpFecha").value
+    vrTotal = vrTotal.slice(1);
 
-    //valida que todos los datos hayan sido ingresados y que haya items en la venta actual
-    if (tituloVenta == "" || fecha == "" || metPago == "" || idCliente == NaN || dto == NaN || vrTotal == NaN || vItemsEditar.length == 0) {
-        alert("Por favor llena todos los campos y añade items a la venta");
-    } else {
+    vObjsCliente.forEach(cliente => {
+        if (cliente.idCliente == idCliente) {
+            nombreCliente = cliente.nombresCliente;
+            apellidoCliente = cliente.apellidosCliente;
+        }
+    })
 
-        let ventaActualizar = {
-            idVenta,
-            tituloVenta,
-            fecha,
-            metPago,
-            idCliente,
-            dto,
-            vrtotalIva,
-            vrTotal,
-            vItemsEditar: vItemsEditar
-        };
+    vObjsMetodosPago.forEach(element => {
+        if (element.idMetodoPago == idMetPago) {
+            metodoPago = element.metodoPago
+        }
+    })
 
-        await fetch('http://localhost:3000/actualizarVta' + idVenta, {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(ventaActualizar)
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                location.reload();
-            })
-            .catch(err => {
-                alert("Ha ocurrido un error actualizando la venta, por favor intentalo mas tarde");
-                location.reload();
-            });
-    }
+
+    let PDFActual = {
+        descuento,
+        vrTotal,
+        fecha,
+        nombreCliente,
+        apellidoCliente,
+        cedulaCliente,
+        telefonoCliente,
+        metodoPago,
+        itemsVta: vItemsVta,
+    };
+
+    vPDF.push(PDFActual);
+
 }
 
-const generarPdf = props_ => {
-    var pdfObject = jsPDFInvoiceTemplate.default(props_);
-    console.log("Nose ", pdfObject);
+const generarPdf = () => {
+    vPDF.forEach(element => {
+        descuento = parseInt(vPDF[0].descuento)
+        total = parseInt(vPDF[0].vrTotal)
+        subtotal = total + descuento;
+
+        props = {
+            outputType: jsPDFInvoiceTemplate.OutputType.Save,
+            returnJsPDFDocObject: true,
+            fileName: `Factura ${idUltimaVenta}`,
+            orientationLandscape: false,
+            compress: true,
+            logo: {
+                src: "./../../public/img/CuentaBytes.png",
+                type: 'PNG', //optional, when src= data:uri (nodejs case)
+                width: 53.33, //aspect ratio = width/height
+                height: 53.33,
+                margin: {
+                    top: -15, //negative or positive num, from the current position
+                    left: 0 //negative or positive num, from the current position
+                }
+            },
+            business: {
+                name: vObjAjustes.nombreEmpresa,
+            },
+            contact: {
+                label: "Factura venta",
+                name: "Cliente: " + vPDF[0].nombreCliente + " " + vPDF[0].apellidoCliente,
+                otherInfo: "Metodo de Pago: " + vPDF[0].metodoPago
+            },
+            invoice: {
+                label: "Factura #: ",
+                num: idUltimaVenta + 1,
+                invDate: "Fecha Venta: " + vPDF[0].fecha,
+                invGenDate: "Fecha Factura: " + vPDF[0].fecha,
+                headerBorder: false,
+                tableBodyBorder: false,
+                header: [{
+                    title: "Codigo",
+                    style: {
+                        width: 20
+                    }
+                },
+                {
+                    title: "Producto",
+                    style: {
+                        width: 50,
+
+                    }
+                },
+                {
+                    title: "Precio"
+                },
+                {
+                    title: "Cantidad"
+                },
+                {
+                    title: "Total"
+                }
+                ],
+                table: Array.from(Array(vItemsVta.length), (item, index) => ([
+                    vItemsVta[index].idProducto,
+                    vItemsVta[index].nombreProducto,
+                    conversorColombia.format(vItemsVta[index].precioUnitario),
+                    conversorColombia.format(vItemsVta[index].unidadesVendidas),
+                    conversorColombia.format(parseInt(vItemsVta[index].precioUnitario) * parseInt(vItemsVta[index].unidadesVendidas))
+                ])),
+                additionalRows: [{
+                    col1: 'Subtotal: $',
+                    col2: conversorColombia.format(subtotal),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Descuento: $',
+                    col2: conversorColombia.format(vPDF[0].descuento),
+                    style: {
+                        fontSize: 10 //optional, default 12
+                    }
+                },
+                {
+                    col1: 'Total: $',
+                    col2: conversorColombia.format(vPDF[0].vrTotal),
+                    style: {
+                        fontSize: 14 //optional, default 12
+                    }
+                }
+                ],
+                invDescLabel: "Total : $" + conversorColombia.format(vPDF[0].vrTotal),
+                invDesc: "Subtotal : $" + conversorColombia.format(subtotal) + "      Descuento : $" + conversorColombia.format(vPDF[0].descuento),
+            }
+        };
+    })
+
+
+    var pdfObject = jsPDFInvoiceTemplate.default(props);
+    console.log("Factura ", pdfObject);
 }

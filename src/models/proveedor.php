@@ -7,7 +7,7 @@
         if(!$registro){
             echo "error en el registro";
         } else {
-            echo "todo melo papa";
+            echo "todo melo papa";       
         }
 
         header("Location: http://localhost/cuentabytes/src/views/proveedores.php");

@@ -5,23 +5,32 @@ function registrar($sqlRegCl, $conn){
     $registro = $conn -> query("$sqlRegCl");
 
     if(!$registro){
-        echo "error en el registro";
+        echo "<script> alert('ha ocurrido un error al crear el cliente ')</script>";
     } else {
-        echo "todo melo papa";
+        echo "<script> alert('se ha registrado correctamente')</script>";
+        echo "<script> window.location.href='http://localhost/cuentabytes/src/views/clientes.php';</script>";
     }
-
-    header("Location: http://localhost/cuentabytes/src/views/clientes.php");
-    
 }
+
 function eliminarCliente($sqlEliminar, $conn){
 
-    $resEliminar = $conn -> query($sqlEliminar);
+    try{
+        $resEliminar = $conn -> query($sqlEliminar);
 
-    if(!$resEliminar){
-        echo "ha ocurrido un error al eliminar el cliente";
-    } else {
-        echo "todo melo papa";
+        // verificar si hay errores
+        if (!$resEliminar) {
+            echo "<script> alert('ha ocurrido un error al eliminar el cliente ')</script>";
+        }
+        else {
+            echo "se ha eliminado correctamente";
+        }
+    } catch (mysqli_sql_exception $err) {
+    
+        if($err->getCode() == 1451){
+            echo "No se puede eliminar el cliente debido a que está asociado a una o mas facturas.";
+        }
     }
+
 }
 
 function listarUnCliente($sqlListar, $conn){
@@ -36,12 +45,12 @@ function actualizarCliente($sqlActualizar, $conn){
     $resActualizar = $conn->query($sqlActualizar);
 
     if(!$resActualizar){
-        echo "ha ocurrido un error al actualizar la venta";
+        echo "<script> alert('ha ocurrido un error al actualizar el cliente ')</script>";
     } else {
-        echo "todo melo papa";
+        echo "<script> alert('se ha actualizado correctamente')</script>";
+        echo "<script> window.location.href='http://localhost/cuentabytes/src/views/clientes.php';</script>";
     }
 
-    header("Location: http://localhost/cuentabytes/src/views/clientes.php");
 }
 
 ?>

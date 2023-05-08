@@ -15,12 +15,12 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color: #E5ECEC">
         <div class="row">
 
             <!-- navbar  -->
             <div class="col-2 d-none d-xl-block nav vh-100 py-5 overflow-hidden">
-                <?php include 'partials/navbar.php' ?>
+            <?php $parametro = 'linkEgresos'; include 'partials/navbar.php';?>
             </div>
 
             <!-- contenido principal -->
@@ -37,7 +37,7 @@
 
                     <h2 class="text-center fs-2 mt-5">Egresos</h2>
 
-                    <input id="buscadorCompras" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
+                    <input id="buscadorEgresos" class="col-12 col-lg-7 mx-auto search__input" type="text" placeholder="Buscar egreso">
 
                 </div>
 
@@ -68,13 +68,21 @@
         </div>
 
         <?php include './modals/modalRegEgreso.php' ?>
+        <?php include './modals/modalRegNota.php' ?>
+        <?php include './partials/notas.php' ?>
+        <?php include './partials/ajustes.php' ?>
 
         <script src="./../../public/js/bootstrap.js"></script>
         <script src="./../../public/js/egresos.js"></script>
         <script src="./../../public/js/controladorEgresos.js"></script>
-        <script>
-            
-        </script>
+        <script src="./../../public/js/notas/ctrNotas.js"></script>
+        <script src="./../../public/js/notas/notas.js"></script>
+        <script src="./../../public/js/ajustes/ctrAjustes.js"></script>
+
+
+
+
+
 </body>
 
 </html>

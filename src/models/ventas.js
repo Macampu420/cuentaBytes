@@ -13,7 +13,7 @@ class ModuloVentas {
         this.idUltimaVenta++;
 
         //se inserta el encabezado de la venta con los campos que vienen del formilario
-        await pool.query("CALL insertarEncVenta(?, ?, ?, ?, ?, ?, ?)", [this.idUltimaVenta, req.body.tituloVenta, req.body.metPago, req.body.dto, req.body.vrTotal, req.body.vrIva, req.body.idCliente],
+        await pool.query("CALL insertarEncVenta(?, ?, ?, ?, ?)", [this.idUltimaVenta, req.body.idMetPago, req.body.descuento, req.body.vrTotal, req.body.idCliente],
             (err, rows) => {
                 //si hay error lo imprime y lo envia como respuesta
                 if (err) {
@@ -26,7 +26,7 @@ class ModuloVentas {
                     if (req.body.itemsVta != undefined && req.body.itemsVta.length > 0) {
 
                         req.body.itemsVta.forEach(element => {
-                            pool.query("CALL insertarDetVenta(?,?,?,?)", [element.unidVend, element.precioVta, this.idUltimaVenta, element.idProducto],
+                            pool.query("CALL insertarDetVenta(?,?,?,?)", [element.unidadesVendidas, element.precioUnitario, this.idUltimaVenta, element.idProducto],
                                 (err, rows) => {
 
                                     //si hay error lo imprime y termina la peticion
@@ -35,7 +35,7 @@ class ModuloVentas {
                                         res.write(err);
                                         res.end();
                                     } else {
-                                        pool.query("CALL actualizarStock(?,?)", [element.unidVend, element.idProducto],
+                                        pool.query("CALL actualizarExistencia(?,?)", [element.unidadesVendidas, element.idProducto],
                                             err => {
                                                 if (err) {
                                                     console.log(err);
@@ -137,9 +137,21 @@ class ModuloVentas {
 
     }
 
+    listarMetodoPago = async (req, res) => {
+        await pool.query("CALL 	listarMetodoPago()", (err,rows) =>{
+            if (err) {
+                console.log(err);
+                res.write(err);
+                res.end();
+            } else {
+                res.send(rows[0]);
+            }
+        })
+    }
+
     listarProductos = async (req, res) => {
 
-        await pool.query("CALL listarProductos()", (err, rows) => {
+        await pool.query("CALL mostrarProductos()", (err, rows) => {
 
             if (err) {
                 console.log(err);
@@ -197,6 +209,7 @@ class ModuloVentas {
             })
 
     }
+    
 }
 
 module.exports = ModuloVentas;
