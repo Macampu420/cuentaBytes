@@ -308,15 +308,14 @@ let enviarRegCompra = async () => {
     vrTotalCompra = vrTotalCompra.slice(1);
 
     // Verificar si hay elementos con unidades compradas mayores a cero
-    let itemsConUnidades = vItemsCompra.some(item => {
-        if (parseInt(item.unidadesCompradas) <= 0) {
-            return false;
-        }
+    let swItemsSinUnidades = false;
+    swItemsSinUnidades = vItemsCompra.some(item => {
+        return parseInt(item.unidadesCompradas) <= 0
     });
 
     // Verificar si no se han seleccionado elementos o si no hay unidades compradas
-    if (vItemsCompra.length != 0) {
-        if (!itemsConUnidades) {
+    if (vItemsCompra.length !== 0) {
+        if (swItemsSinUnidades) {
             window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
             return;
         }

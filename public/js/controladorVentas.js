@@ -86,14 +86,13 @@ document.querySelector("form").addEventListener("submit", (event) => {
     //evita que la pagina se recargue
     event.preventDefault();
 
-    let itemsConUnidades = vItemsVta.some(item => {
-        if (parseInt(item.unidadesVendidas) <= 0) {
-            return false;
-        }
+    let swItemsSinUnidades = false;
+    swItemsSinUnidades = vItemsVta.some(item => {
+        return parseInt(item.unidadesVendidas) <= 0 
     });
 
-    if (vItemsVta.length != 0) {
-        if (!itemsConUnidades) {
+    if (vItemsVta.length !== 0) {
+        if (swItemsSinUnidades) {
             window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
             return;
         }
