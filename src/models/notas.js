@@ -12,7 +12,7 @@ class ModuloNotas {
                     res.write(err);
                     res.end();
                 } else {
-                    res.write("La Nota fue registrado correctamente");
+                    res.write("La nota fue registrada correctamente");
                     res.end();
                 }
             });
@@ -27,7 +27,7 @@ class ModuloNotas {
                     res.write(err);
                     res.end();
                 } else {
-                    res.write("La Nota fue actualizada correctamente");
+                    res.write("La nota fue actualizada correctamente");
                     res.end();
                 }
             });
