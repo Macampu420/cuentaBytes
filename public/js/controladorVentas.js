@@ -90,7 +90,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
         if (parseInt(item.unidadesVendidas) <= 0) {
             return false;
         }
-        return true;
     });
 
     if (vItemsVta.length != 0) {

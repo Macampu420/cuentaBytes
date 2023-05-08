@@ -312,7 +312,6 @@ let enviarRegCompra = async () => {
         if (parseInt(item.unidadesCompradas) <= 0) {
             return false;
         }
-        return true;
     });
 
     // Verificar si no se han seleccionado elementos o si no hay unidades compradas
