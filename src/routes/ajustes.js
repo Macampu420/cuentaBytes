@@ -23,7 +23,7 @@ router.post('/cambiarNombre', async (req, res) => {
         console.log(error);
         res.status(500);
     }
-})
+});
 
 router.post('/cambiarHoras', async (req, res) => {
     try {
@@ -38,9 +38,13 @@ router.post('/cambiarHoras', async (req, res) => {
         console.log(error);
         res.status(500);
     }
-})
+});
 
 router.get('/backup', (req, res) => {
-    objModuloAjustes.encriptarArchivo(req, res);
-} )
+    objModuloAjustes.backupDatabase(req, res);
+});
+
+router.get('/subirBackup', (req, res) => {
+    objModuloAjustes.restarurarBd(req, res);
+})
 module.exports = router
