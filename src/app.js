@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const rutasGraficos = require('./routes/graficos');
 const morgan = require('morgan');
-let  corsOptions = { origin: 'http://localhost'}
+let  corsOptions = { origin: 'http://localhost:8012'}
 
 const app = express();
 
