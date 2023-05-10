@@ -68,7 +68,6 @@ class Ajustes {
 					res.status(500).send('Error al descargar la copia de seguridad');
 				} else {
 					console.log(`Copia de seguridad descargada correctamente`);
-					fs.unlinkSync(rutaSalida); // Eliminar el archivo de copia de seguridad del servidor después de descargarlo
 				}
 				});
 			});
@@ -78,8 +77,9 @@ class Ajustes {
 		}
 	}
 
-	desencriptarArchivo = (req, res) => {
+	desencriptarArchivo = () => {
 		try {
+			let iv;
 			const clave = 'encriptacionCuentabyes420ñ'; // clave original de 16 caracteres
 			const claveEncriptado = crypto.createHash('md5').update(clave).digest(); // clave de 128 bits generada a partir de la clave original
 
@@ -87,18 +87,12 @@ class Ajustes {
 			const archivoSalida = fs.createWriteStream(path.join(__dirname, '../../', 'cuentabytesDesencriptado.sql'));
 
 			// Leer el IV del principio del archivo encriptado
-			let iv;
-
 			archivoEntrada.once('readable', () => {
 				iv = archivoEntrada.read(16);
-
 				const decipher = crypto.createDecipheriv('aes-128-cbc', claveEncriptado, iv);
-
 				// Pipe data de ReadStream a Decipher y luego a WriteStream
 				archivoEntrada.pipe(decipher).pipe(archivoSalida);
 			});
-
-			archivoSalida.setMaxListeners(20);
 
 			// Cuando termine, cerrar los objetos
 			archivoSalida.on('finish', () => {
@@ -108,7 +102,6 @@ class Ajustes {
 			});
 		} catch (error) {
 			console.log(error);
-			res.status(500);
 		}
 	}
 
@@ -137,11 +130,12 @@ class Ajustes {
     
 	restarurarBd = async (req, res) => {
 		try {
+
 			await pool.query('DROP DATABASE IF EXISTS cuentabytes');
 			await pool.query('CREATE DATABASE IF NOT EXISTS cuentabytes');
 			await pool.query('USE cuentabytes');
 
-			const backupFilePath = `${__dirname}/../../cuentabytes.sql`;
+			const backupFilePath = `${__dirname}/../../cuentabytesDesencriptado.sql`;
 			const cmd = `mysql -u root cuentabytes < ${backupFilePath}`;
 
 			exec(cmd, (error, stdout, stderr) => {

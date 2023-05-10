@@ -519,7 +519,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEgreso`(IN `_idEgreso` INT(11), IN `_tituloEgreso` VARCHAR(80), IN `_vrTotalEgreso` INT(8), IN `_idTipoEgreso` INT(11))
-UPDATE `encegreso` SET 
+UPDATE `encegreso` SET 
 `idEgreso`=_idEgreso,`tituloEgreso`=_tituloEgreso,`vrTotalEgreso`=_vrTotalEgreso,`idTipoEgreso`=_idTipoEgreso WHERE idEgreso = _idEgreso ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -537,9 +537,9 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarEncVenta`(IN `titVenta` VARCHAR(35), IN `metodoPagoVenta_` VARCHAR(20), IN `descuentoVenta_` INT(11), IN `vrTotal` INT(11), IN `vrIva` INT(11), IN `idCliente_` INT(11), IN `idVenta_` INT)
-BEGIN
-UPDATE `encventas` SET `tituloVenta`=titVenta,`metodoPagoVenta`=metodoPagoVenta_,`descuentoVenta`=descuentoVenta_
-,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`editado`= 1,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
+BEGIN
+UPDATE `encventas` SET `tituloVenta`=titVenta,`metodoPagoVenta`=metodoPagoVenta_,`descuentoVenta`=descuentoVenta_
+,`vrTotalVta`=vrTotal,`vrTotalIva`=vrIva,`editado`= 1,`idCliente`=idCliente_ WHERE idVenta = idVenta_ ;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -557,8 +557,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarExistencia`(IN `unidVend` INT(11), IN `_idProducto` INT(11))
-BEGIN
-UPDATE productos SET existenciaProducto = existenciaProducto - unidVend WHERE idProducto = _idProducto;
+BEGIN
+UPDATE productos SET existenciaProducto = existenciaProducto - unidVend WHERE idProducto = _idProducto;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -593,7 +593,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProducto`(IN `_idProducto` INT(11), IN `_nombreProducto` VARCHAR(30), IN `_descripcionProducto` VARCHAR(100), IN `_costoProducto` INT(8), IN `_precioVenta` INT(8), IN `_existenciaProducto` INT(7), IN `_idImagen` INT(11))
-UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
+UPDATE `productos` SET `nombreProducto`=_nombreProducto,`descripcionProducto`=_descripcionProducto,`costoProducto`=_costoProducto,`precioVenta`=_precioVenta,
 `existenciaProducto`=_existenciaProducto,`idImagen`=_idImagen WHERE idProducto = _idProducto ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -611,8 +611,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarProveedor`(IN `_idProveedor` INT(11), IN `_nombreProveedor` VARCHAR(40), IN `_direccionProveedor` VARCHAR(30), IN `_telefonoProveedor` VARCHAR(15))
-BEGIN
-UPDATE `proveedor` SET `nombreProveedor`=_nombreProveedor,`direccionProveedor`=_direccionProveedor,`telefonoProveedor`=_telefonoProveedor WHERE idProveedor = _idProveedor;
+BEGIN
+UPDATE `proveedor` SET `nombreProveedor`=_nombreProveedor,`direccionProveedor`=_direccionProveedor,`telefonoProveedor`=_telefonoProveedor WHERE idProveedor = _idProveedor;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -630,20 +630,20 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-	SELECT 
-		COUNT(encventas.idCliente) as nroFacturas, 
-		    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
-	FROM 
-    	encventas
-	INNER JOIN 
-    	clientes ON encventas.idCliente = clientes.idCliente
-    INNER JOIN 
-    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-	WHERE 
-    	encventas.fechaVenta BETWEEN inicio AND fin
-	GROUP BY clientes.nombresCliente
-	ORDER BY nroFacturas DESC;
+BEGIN
+	SELECT 
+		COUNT(encventas.idCliente) as nroFacturas, 
+		    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+	FROM 
+    	encventas
+	INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+    	encventas.fechaVenta BETWEEN inicio AND fin
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -661,28 +661,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientesFacturasHoras`(IN `dia` VARCHAR(30))
-BEGIN
-DECLARE
-        fecha DATE;
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-SELECT
-    COUNT(encventas.idCliente) as nroFacturas,
-    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS 				nombres
-FROM encventas
-INNER JOIN
-clientes ON encventas.idCliente = clientes.idCliente
-    INNER JOIN
-    ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-WHERE
-DATE(encVentas.fechaVenta) = fecha
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas DESC;
+BEGIN
+DECLARE
+        fecha DATE;
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+SELECT
+    COUNT(encventas.idCliente) as nroFacturas,
+    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS 				nombres
+FROM encventas
+INNER JOIN
+clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN
+    ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE
+DATE(encVentas.fechaVenta) = fecha
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -700,11 +700,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `comprasPorDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-    SELECT DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia, SUM(enccompraproducto.vrTotalCompra) AS VrTotalDia
-    FROM enccompraproducto
-    WHERE enccompraproducto.fechaCompra >= inicio AND enccompraproducto.fechaCompra <= fin
-    GROUP BY Dia;
+BEGIN
+    SELECT DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia, SUM(enccompraproducto.vrTotalCompra) AS VrTotalDia
+    FROM enccompraproducto
+    WHERE enccompraproducto.fechaCompra >= inicio AND enccompraproducto.fechaCompra <= fin
+    GROUP BY Dia;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -739,11 +739,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `egresosPorDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-    SELECT DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia, SUM(encegreso.vrTotalEgreso) AS VrTotalDia
-    FROM encegreso
-    WHERE encegreso.fechaEgreso >= inicio AND encegreso.fechaEgreso <= fin
-    GROUP BY Dia;
+BEGIN
+    SELECT DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia, SUM(encegreso.vrTotalEgreso) AS VrTotalDia
+    FROM encegreso
+    WHERE encegreso.fechaEgreso >= inicio AND encegreso.fechaEgreso <= fin
+    GROUP BY Dia;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -761,8 +761,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `egresosPorHora`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-SELECT HOUR(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) as hora, SUM(encegreso.vrTotalEgreso) as vrTotalHora FROM encegreso WHERE encegreso.fechaEgreso >= inicio AND encegreso.fechaEgreso <= fin GROUP BY HOUR(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s'));
+BEGIN
+SELECT HOUR(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) as hora, SUM(encegreso.vrTotalEgreso) as vrTotalHora FROM encegreso WHERE encegreso.fechaEgreso >= inicio AND encegreso.fechaEgreso <= fin GROUP BY HOUR(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s'));
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -848,9 +848,9 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProducto`(IN `_idProducto` INT(11))
-BEGIN
-DELETE FROM productos
-WHERE idProducto = _idProducto;
+BEGIN
+DELETE FROM productos
+WHERE idProducto = _idProducto;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -868,8 +868,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarProvee`(IN `_idProveedor` INT(11))
-BEGIN
-	DELETE FROM proveedor WHERE proveedor.idProveedor = _idProveedor;
+BEGIN
+	DELETE FROM proveedor WHERE proveedor.idProveedor = _idProveedor;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -887,8 +887,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarVta`(`idVenta_` INT)
-BEGIN
-	DELETE FROM encventas WHERE encventas.idVenta = idVenta_;
+BEGIN
+	DELETE FROM encventas WHERE encventas.idVenta = idVenta_;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -923,13 +923,13 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAjustes`(IN `nombreEmpresa_` VARCHAR(40))
-BEGIN
-DECLARE cantidad_registros INT;
-SELECT COUNT(*) INTO cantidad_registros FROM ajustes;
-
-IF cantidad_registros = 0 THEN
-INSERT INTO `ajustes`(`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES (nombreEmpresa_,'07:00:00','17:00:00','barras');
-END IF;
+BEGIN
+DECLARE cantidad_registros INT;
+SELECT COUNT(*) INTO cantidad_registros FROM ajustes;
+
+IF cantidad_registros = 0 THEN
+INSERT INTO `ajustes`(`nombreEmpresa`, `horaApertura`, `horaCierre`, `tipoGrafico`) VALUES (nombreEmpresa_,'07:00:00','17:00:00','barras');
+END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -964,7 +964,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetCompra`(IN `_cantidadCompra` INT(11), IN `_precioCompra` INT(8), IN `_precioVenta` INT, IN `_idCompra` INT(11), IN `_idProducto` INT(11))
-INSERT INTO `detcompraproducto`(`cantidadCompra`, `precioCompra`, `precioVenta`,`idCompra`, `idProducto`) 
+INSERT INTO `detcompraproducto`(`cantidadCompra`, `precioCompra`, `precioVenta`,`idCompra`, `idProducto`) 
 VALUES (_cantidadCompra,_precioCompra,_precioVenta,_idCompra,_idProducto) ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -999,7 +999,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarDetVenta`(IN `_uniVendidas` INT(8), IN `precioUnit` INT(11), IN `_idVenta` INT(11), IN `idProducto` INT(11))
-BEGIN
+BEGIN
 INSERT INTO `detalleventa` (`uniVendidas`, `precioUnitario`, `idVenta`, `idProducto`) VALUES (_uniVendidas, precioUnit, _idVenta, idProducto); END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1017,7 +1017,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncCompra`(IN `_idCompra` INT(11), IN `_idProveedor` INT(11), IN `_vrTotalCompra` INT(11))
-INSERT INTO enccompraproducto(idCompra,  fechaCompra, idProveedor, vrTotalCompra) 
+INSERT INTO enccompraproducto(idCompra,  fechaCompra, idProveedor, vrTotalCompra) 
 VALUES (_idCompra, now(),_idProveedor,_vrTotalCompra) ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1052,8 +1052,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEncVenta`(IN `_idVenta` INT(11), IN `_metPago` INT(11), IN `dto` INT(11), IN `vrTotal` INT(11), IN `_idCliente` INT(11))
-BEGIN
-INSERT INTO `encventas`(`idVenta`, `fechaVenta`, `descuentoVenta`,`idMetodoPago`,  `vrTotalVta`, `idCliente`) VALUES (_idVenta,now(), dto, _metPago,  vrTotal, _idCliente);                                         
+BEGIN
+INSERT INTO `encventas`(`idVenta`, `fechaVenta`, `descuentoVenta`,`idMetodoPago`,  `vrTotalVta`, `idCliente`) VALUES (_idVenta,now(), dto, _metPago,  vrTotal, _idCliente);                                         
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1105,8 +1105,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarAjustes`()
-BEGIN
-SELECT * FROM ajustes;
+BEGIN
+SELECT * FROM ajustes;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1124,8 +1124,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarClientes`()
-BEGIN
-SELECT * FROM clientes;
+BEGIN
+SELECT * FROM clientes;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1143,16 +1143,16 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarCompra`(IN `_idCompra` INT(11))
-SELECT enccompraproducto.idCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, 
-proveedor.nombreProveedor, proveedor.idProveedor,
-detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioCompra,detcompraproducto.precioVenta, 
-productos.nombreProducto, productos.idProducto, productos.existenciaProducto,
-imagen.nombreImagen
-FROM enccompraproducto 
-INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
-INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
-INNER JOIN productos ON productos.idProducto = detcompraproducto.idProducto
-INNER JOIN imagen ON imagen.idImagen = productos.idImagen
+SELECT enccompraproducto.idCompra, enccompraproducto.fechaCompra, enccompraproducto.vrTotalCompra, 
+proveedor.nombreProveedor, proveedor.idProveedor,
+detcompraproducto.idDetCompra, detcompraproducto.cantidadCompra, detcompraproducto.precioCompra,detcompraproducto.precioVenta, 
+productos.nombreProducto, productos.idProducto, productos.existenciaProducto,
+imagen.nombreImagen
+FROM enccompraproducto 
+INNER JOIN proveedor ON proveedor.idProveedor = enccompraproducto.idProveedor
+INNER JOIN detcompraproducto ON detcompraproducto.idCompra = enccompraproducto.idCompra
+INNER JOIN productos ON productos.idProducto = detcompraproducto.idProducto
+INNER JOIN imagen ON imagen.idImagen = productos.idImagen
 WHERE enccompraproducto.idCompra = _idCompra ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1187,11 +1187,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgreso`(IN `_idEgreso` INT(11))
-SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
-detalleegreso.idDetEgreso ,detalleegreso.valorEgreso, detalleegreso.descripcion, detalleegreso.idEgreso,
-tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso FROM encegreso
-INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso
-INNER JOIN detalleegreso ON detalleegreso.idEgreso = encegreso.idEgreso
+SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
+detalleegreso.idDetEgreso ,detalleegreso.valorEgreso, detalleegreso.descripcion, detalleegreso.idEgreso,
+tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso FROM encegreso
+INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso
+INNER JOIN detalleegreso ON detalleegreso.idEgreso = encegreso.idEgreso
 WHERE encegreso.idEgreso = _idEgreso ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1209,9 +1209,9 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarEgresos`()
-SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
-tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso 
-FROM encegreso
+SELECT encegreso.idEgreso, encegreso.fechaEgreso, encegreso.tituloEgreso, encegreso.vrTotalEgreso,
+tipoegreso.idTipoEgreso, tipoegreso.nombreTipoEgreso 
+FROM encegreso
 INNER JOIN tipoegreso ON tipoegreso.idTipoEgreso = encegreso.idTipoEgreso ORDER BY encegreso.idEgreso DESC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1246,8 +1246,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarProductos`()
-BEGIN
-SELECT idProducto, nombreProducto, existenciaProducto, precioVenta, costoProducto FROM productos ORDER BY nombreProducto ASC;
+BEGIN
+SELECT idProducto, nombreProducto, existenciaProducto, precioVenta, costoProducto FROM productos ORDER BY nombreProducto ASC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1299,32 +1299,32 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVenta`(IN `idVenta_` INT)
-BEGIN
-    SELECT
-        encventas.idVenta,
-        encventas.fechaVenta,
-        metodopago.metodoPago,
-        metodopago.idMetodoPago,
-        encventas.descuentoVenta,
-        encventas.vrTotalVta,
-        clientes.idCliente,
-        clientes.nombresCliente,
-        detalleventa.idDetVenta,
-        detalleventa.uniVendidas,
-        detalleventa.precioUnitario,
-        detalleventa.idProducto,
-        productos.nombreProducto,
-        productos.existenciaProducto,
-        imagen.nombreImagen
-    FROM
-        encventas
-    INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-    INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-    INNER JOIN clientes ON clientes.idCliente = encventas.idCliente
-    INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
-    INNER JOIN imagen ON imagen.idImagen = productos.idImagen
-    WHERE
-        encventas.idVenta = idVenta_; 
+BEGIN
+    SELECT
+        encventas.idVenta,
+        encventas.fechaVenta,
+        metodopago.metodoPago,
+        metodopago.idMetodoPago,
+        encventas.descuentoVenta,
+        encventas.vrTotalVta,
+        clientes.idCliente,
+        clientes.nombresCliente,
+        detalleventa.idDetVenta,
+        detalleventa.uniVendidas,
+        detalleventa.precioUnitario,
+        detalleventa.idProducto,
+        productos.nombreProducto,
+        productos.existenciaProducto,
+        imagen.nombreImagen
+    FROM
+        encventas
+    INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+    INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+    INNER JOIN clientes ON clientes.idCliente = encventas.idCliente
+    INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
+    INNER JOIN imagen ON imagen.idImagen = productos.idImagen
+    WHERE
+        encventas.idVenta = idVenta_; -- Reemplazar el valor constante por el parámetro de entrada
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1342,11 +1342,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarVentas`()
-BEGIN
-SELECT idVenta, fechaVenta, metodoPago, descuentoVenta, vrTotalVta, nombresCliente, apellidosCliente FROM encventas 
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente 
-INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
-order by idVenta DESC;
+BEGIN
+SELECT idVenta, fechaVenta, metodoPago, descuentoVenta, vrTotalVta, nombresCliente, apellidosCliente FROM encventas 
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente 
+INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
+order by idVenta DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1364,8 +1364,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayorEgreso`()
-BEGIN
-SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor DESC LIMIT 1;
+BEGIN
+SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor DESC LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1383,21 +1383,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresComprasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
-        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ORDER BY
-        vrTotalDia
-    DESC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1415,28 +1415,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresComprasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        enccompraproducto.vrTotalCompra, 
-        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(enccompraproducto.fechaCompra) = fecha
-    ORDER BY
-        enccompraproducto.vrTotalCompra
-    DESC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+    ORDER BY
+        enccompraproducto.vrTotalCompra
+    DESC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1454,21 +1454,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresEgresosDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
-        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-            ORDER BY
-        vrTotalDia
-    DESC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+            ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1486,28 +1486,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mayoresEgresosPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encegreso.vrTotalEgreso, 
-        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encegreso.fechaEgreso) = fecha
-    ORDER BY
-        encegreso.vrTotalEgreso
-    DESC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+    ORDER BY
+        encegreso.vrTotalEgreso
+    DESC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1525,16 +1525,16 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-SELECT
-COUNT(encventas.idCliente) as nroFacturas,
-    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
-FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-WHERE encventas.fechaVenta BETWEEN inicio AND fin
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas desc limit 10;
+BEGIN
+SELECT
+COUNT(encventas.idCliente) as nroFacturas,
+    CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE encventas.fechaVenta BETWEEN inicio AND fin
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas desc limit 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1552,25 +1552,25 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresClientesFacturasHoras`(IN `dia` VARCHAR(10))
-BEGIN
-DECLARE
-        fecha DATE;
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-SELECT
-COUNT(encventas.idCliente) as nroFacturas,     CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
-FROM encventas
-INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
-INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-WHERE
-DATE(encVentas.fechaVenta) = fecha
-GROUP BY clientes.nombresCliente
-ORDER BY nroFacturas desc limit 10;
+BEGIN
+DECLARE
+        fecha DATE;
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY);
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+SELECT
+COUNT(encventas.idCliente) as nroFacturas,     CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+FROM encventas
+INNER JOIN clientes ON encventas.idCliente = clientes.idCliente
+INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+WHERE
+DATE(encVentas.fechaVenta) = fecha
+GROUP BY clientes.nombresCliente
+ORDER BY nroFacturas desc limit 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1588,12 +1588,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1611,12 +1611,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresProductosFacturasHoras`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1634,21 +1634,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresVentasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encventas.vrTotalVta) AS vrTotalDia,
-        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ORDER BY
-        vrTotalDia
-    DESC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    DESC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1666,28 +1666,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mejoresVentasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encventas.vrTotalVta, 
-        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encVentas.fechaVenta) = fecha
-    ORDER BY
-        encventas.vrTotalVta
-    DESC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+    ORDER BY
+        encventas.vrTotalVta
+    DESC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1705,8 +1705,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menorEgreso`()
-BEGIN
-SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
+BEGIN
+SELECT SUM(detalleegreso.valorEgreso)as mayorValor, detalleegreso.descripcion, encegreso.tituloEgreso FROM detalleegreso INNER JOIN encegreso ON encegreso.idEgreso = detalleegreso.idEgreso GROUP BY detalleegreso.idegreso ORDER BY mayorValor ASC LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1724,21 +1724,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresComprasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
-        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ORDER BY
-        vrTotalDia
-    ASC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1756,28 +1756,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresComprasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        enccompraproducto.vrTotalCompra, 
-        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(enccompraproducto.fechaCompra) = fecha
-    ORDER BY
-        enccompraproducto.vrTotalCompra
-    ASC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+    ORDER BY
+        enccompraproducto.vrTotalCompra
+    ASC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1795,21 +1795,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresEgresosDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
-        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ORDER BY
-        vrTotalDia
-    ASC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1827,28 +1827,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresEgresosPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encegreso.vrTotalEgreso, 
-        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encegreso.fechaEgreso) = fecha
-    ORDER BY
-        encegreso.vrTotalEgreso
-    ASC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+    ORDER BY
+        encegreso.vrTotalEgreso
+    ASC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1866,21 +1866,21 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresVentasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encventas.vrTotalVta) AS vrTotalDia,
-        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ORDER BY
-        vrTotalDia
-    ASC
-LIMIT 10;
+BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ORDER BY
+        vrTotalDia
+    ASC
+LIMIT 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1898,28 +1898,28 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `menoresVentasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encventas.vrTotalVta, 
-        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encVentas.fechaVenta) = fecha
-    ORDER BY
-        encventas.vrTotalVta
-    ASC
-LIMIT 10;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+    ORDER BY
+        encventas.vrTotalVta
+    ASC
+LIMIT 10;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1937,8 +1937,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarNotas`()
-BEGIN
-SELECT * FROM notas ORDER BY idNota DESC;
+BEGIN
+SELECT * FROM notas ORDER BY idNota DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1956,9 +1956,9 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarProductos`()
-SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.costoProducto, productos.precioVenta, productos.existenciaProducto, imagen.nombreImagen
-FROM productos INNER JOIN imagen
-ON productos.idImagen = imagen.idImagen
+SELECT productos.idProducto, productos.nombreProducto,productos.descripcionProducto, productos.costoProducto, productos.precioVenta, productos.existenciaProducto, imagen.nombreImagen
+FROM productos INNER JOIN imagen
+ON productos.idImagen = imagen.idImagen
 ORDER BY productos.nombreProducto ASC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1976,8 +1976,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnaNota`(IN `_idNota` INT(11))
-BEGIN
-SELECT * FROM notas WHERE idNota = _idNota;
+BEGIN
+SELECT * FROM notas WHERE idNota = _idNota;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1995,10 +1995,10 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarUnProducto`(IN `_idProducto` INT(11))
-SELECT productos.idProducto, productos.nombreProducto, productos.existenciaProducto, productos.precioVenta, productos.costoProducto, imagen.nombreImagen, imagen.idImagen
-FROM productos 
-INNER JOIN imagen
-ON productos.idImagen = imagen.idImagen
+SELECT productos.idProducto, productos.nombreProducto, productos.existenciaProducto, productos.precioVenta, productos.costoProducto, imagen.nombreImagen, imagen.idImagen
+FROM productos 
+INNER JOIN imagen
+ON productos.idImagen = imagen.idImagen
 WHERE productos.idProducto = _idProducto ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2016,20 +2016,20 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-BEGIN
-	SELECT 
-        COUNT(encventas.idCliente) as nroFacturas, 
-            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres	
-	FROM 
-    	encventas
-	INNER JOIN 
-    	clientes ON encventas.idCliente = clientes.idCliente
-    INNER JOIN 
-    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-	WHERE 
-    	encventas.fechaVenta BETWEEN inicio AND fin
-	GROUP BY clientes.nombresCliente
-	ORDER BY nroFacturas ASC limit 10;
+BEGIN
+	SELECT 
+        COUNT(encventas.idCliente) as nroFacturas, 
+            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres	
+	FROM 
+    	encventas
+	INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+    INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+    	encventas.fechaVenta BETWEEN inicio AND fin
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas ASC limit 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2047,29 +2047,29 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresClientesFacturasHoras`(IN `dia` VARCHAR(10))
-BEGIN
-	DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-	SELECT  
-        COUNT(encventas.idCliente) as nroFacturas, 
-            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
-	FROM 
-    	encventas
-    INNER JOIN 
-    	clientes ON encventas.idCliente = clientes.idCliente
-	INNER JOIN 
-    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-	WHERE 
-		DATE(encVentas.fechaVenta) = fecha
-	GROUP BY clientes.nombresCliente
-	ORDER BY nroFacturas ASC limit 10;
+BEGIN
+	DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+	SELECT  
+        COUNT(encventas.idCliente) as nroFacturas, 
+            CONCAT(SUBSTRING_INDEX(clientes.nombresCliente, ' ', 1), ' ' ,SUBSTRING_INDEX(clientes.apellidosCliente, ' ', 1) ) AS nombres
+	FROM 
+    	encventas
+    INNER JOIN 
+    	clientes ON encventas.idCliente = clientes.idCliente
+	INNER JOIN 
+    	ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+	WHERE 
+		DATE(encVentas.fechaVenta) = fecha
+	GROUP BY clientes.nombresCliente
+	ORDER BY nroFacturas ASC limit 10;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2087,12 +2087,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas ASC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2110,12 +2110,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `peoresProductosFacturasHoras`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas ASC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2133,11 +2133,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMasStock`()
-SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
-FROM productos 
-INNER JOIN imagen ON productos.idImagen = imagen.idImagen
-GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
-ORDER BY stockMayor DESC 
+SELECT MAX(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
+FROM productos 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY stockMayor DESC 
 LIMIT 1 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2155,11 +2155,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prodMenStock`()
-SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
-FROM productos 
-INNER JOIN imagen ON productos.idImagen = imagen.idImagen
-GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
-ORDER BY stockMayor ASC 
+SELECT MIN(productos.stockProducto) AS stockMayor, productos.nombreProducto, imagen.nombreImagen 
+FROM productos 
+INNER JOIN imagen ON productos.idImagen = imagen.idImagen
+GROUP BY productos.idProducto, productos.nombreProducto, imagen.nombreImagen
+ORDER BY stockMayor ASC 
 LIMIT 1 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2177,9 +2177,9 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistencia`()
-SELECT MAX(productos.existenciaProducto) AS existencia, productos.nombreProducto
-FROM productos
-GROUP BY productos.idProducto, productos.nombreProducto
+SELECT MAX(productos.existenciaProducto) AS existencia, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
 ORDER BY existencia DESC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2197,10 +2197,10 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMayor`()
-SELECT MAX(productos.existenciaProducto) AS existenciaMayor, productos.nombreProducto
-FROM productos
-GROUP BY productos.idProducto, productos.nombreProducto
-ORDER BY existenciaMayor DESC 
+SELECT MAX(productos.existenciaProducto) AS existenciaMayor, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
+ORDER BY existenciaMayor DESC 
 LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2218,10 +2218,10 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productoExistenciaMenor`()
-SELECT MAX(productos.existenciaProducto) AS menorExistencia, productos.nombreProducto
-FROM productos
-GROUP BY productos.idProducto, productos.nombreProducto
-ORDER BY menorExistencia ASC
+SELECT MAX(productos.existenciaProducto) AS menorExistencia, productos.nombreProducto
+FROM productos
+GROUP BY productos.idProducto, productos.nombreProducto
+ORDER BY menorExistencia ASC
 LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2239,12 +2239,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2262,12 +2262,12 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosFacturasHoras`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
-FROM encventas
-INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
-INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
-GROUP BY productos.nombreProducto
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, COUNT(detalleventa.idProducto)AS nroFacturas, productos.nombreProducto
+FROM encventas
+INNER JOIN detalleventa ON detalleventa.idVenta = encventas.idVenta
+INNER JOIN productos ON productos.idProducto = detalleventa.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+GROUP BY productos.nombreProducto
 ORDER BY nroFacturas DESC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2285,11 +2285,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadDia`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad DESC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2307,11 +2307,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMayorRentabilidadHora`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto  ORDER BY Rentabilidad DESC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2329,11 +2329,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadDia`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2351,11 +2351,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosMenorRentabilidadHora`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ASC LIMIT 10 ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2373,11 +2373,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadDias`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d')AS Dia, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2395,11 +2395,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productosRentabilidadHoras`(IN `inicio` VARCHAR(30), IN `fin` VARCHAR(30))
-SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
-FROM encventas 
-INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
-INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
-WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
+SELECT HOUR(DATE_FORMAT(encventas.fechaVenta, '%Y-%m-%d %H:%i:%s'))AS hora, SUM(productos.precioVenta - productos.costoProducto)/(detalleventa.precioUnitario* detalleventa.uniVendidas)* 100 AS Rentabilidad, productos.nombreProducto 
+FROM encventas 
+INNER JOIN detalleventa ON encventas.idVenta = detalleventa.idVenta
+INNER JOIN productos ON detalleventa.idProducto = productos.idProducto
+WHERE encventas.fechaVenta >= inicio AND encventas.fechaVenta <= fin
 GROUP BY productos.nombreProducto ORDER BY Rentabilidad ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2417,7 +2417,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registrarEmpresa`(IN `nombreUsuario_` VARCHAR(40), IN `correoUsuario_` VARCHAR(40), IN `contrasenaUsuario_` VARCHAR(255))
-INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
+INSERT INTO `usuarios`(`nombreUsuario`, `correoUsuario`, `contrasenaUsuario`) 
 VALUES (nombreUsuario_,correoUsuario_,contrasenaUsuario_) ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2452,7 +2452,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenCompras`(IN `fecha1_` DATE, IN `fecha2_` DATE)
-SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
+SELECT enccompraproducto.vrTotalCompra as total, enccompraproducto.conceptoCompra, enccompraproducto.fechaCompra FROM enccompraproducto WHERE
 enccompraproducto.fechaCompra >= fecha1_ AND enccompraproducto.fechaCompra <= fecha2_ GROUP BY enccompraproducto.idCompra ORDER BY enccompraproducto.fechaCompra ASC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2470,7 +2470,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenEgreso`(IN `fecha1_` DATE, IN `fecha2_` DATE)
-SELECT encegreso.vrTotalEgreso as total, encegreso.tituloEgreso, encegreso.fechaEgreso FROM encegreso WHERE
+SELECT encegreso.vrTotalEgreso as total, encegreso.tituloEgreso, encegreso.fechaEgreso FROM encegreso WHERE
 encegreso.fechaEgreso >= fecha1_ AND encegreso.fechaEgreso <= fecha2_ GROUP BY encegreso.idEgreso ORDER BY encegreso.fechaEgreso ASC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2488,7 +2488,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `resumenVenta`(IN `fecha1_` DATE, IN `fecha2_` DATE)
-SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
+SELECT encventas.vrTotalVta as total, encventas.tituloVenta, encventas.fechaVenta FROM encventas WHERE
 encventas.fechaVenta >= fecha1_ AND encventas.fechaVenta <= fecha2_ GROUP BY encventas.idVenta ORDER BY encventas.fechaVenta ASC ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2506,18 +2506,18 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalComprasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
-        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ASC;
+BEGIN
+    SELECT
+        SUM(enccompraproducto.vrTotalCompra) AS vrTotalDia,
+        DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d') AS Dia
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        enccompraproducto.fechaCompra BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2535,25 +2535,25 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalComprasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        enccompraproducto.vrTotalCompra, 
-        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        enccompraproducto
-    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(enccompraproducto.fechaCompra) = fecha
-     ORDER BY hora ASC;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        enccompraproducto.vrTotalCompra, 
+        TIME(DATE_FORMAT(enccompraproducto.fechaCompra, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        enccompraproducto
+    INNER JOIN ajustes ON TIME(enccompraproducto.fechaCompra) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(enccompraproducto.fechaCompra) = fecha
+     ORDER BY hora ASC;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2571,18 +2571,18 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalEgresosDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
-        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ASC;
+BEGIN
+    SELECT
+        SUM(encegreso.vrTotalEgreso) AS vrTotalDia,
+        DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d') AS Dia
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encegreso.fechaEgreso BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2600,25 +2600,25 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalEgresosPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encegreso.vrTotalEgreso, 
-        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encegreso
-    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encegreso.fechaEgreso) = fecha
-     ORDER BY hora ASC;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encegreso.vrTotalEgreso, 
+        TIME(DATE_FORMAT(encegreso.fechaEgreso, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encegreso
+    INNER JOIN ajustes ON TIME(encegreso.fechaEgreso) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encegreso.fechaEgreso) = fecha
+     ORDER BY hora ASC;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2636,18 +2636,18 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasDias`(IN `diaInicio` DATE, IN `diaFin` DATE)
-BEGIN
-    SELECT
-        SUM(encventas.vrTotalVta) AS vrTotalDia,
-        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
-    GROUP BY
-        Dia
-    ASC;
+BEGIN
+    SELECT
+        SUM(encventas.vrTotalVta) AS vrTotalDia,
+        DATE_FORMAT(fechaVenta, '%Y-%m-%d') AS Dia
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        encVentas.fechaVenta BETWEEN diaInicio AND diaFin
+    GROUP BY
+        Dia
+    ASC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2665,25 +2665,25 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `totalVentasPorHora`(IN `dia` VARCHAR(10))
-BEGIN
-    DECLARE
-        fecha DATE; 
-    IF dia = 'ayer' THEN
-    SET
-        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
-    ELSE
-    SET
-        fecha = CURDATE();
-    END IF;
-    SELECT
-        encventas.vrTotalVta, 
-        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
-    FROM
-        encVentas
-    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
-    WHERE
-        DATE(encVentas.fechaVenta) = fecha
-     ORDER BY hora ASC;
+BEGIN
+    DECLARE
+        fecha DATE; 
+    IF dia = 'ayer' THEN
+    SET
+        fecha = DATE_SUB(CURDATE(), INTERVAL 1 DAY); 
+    ELSE
+    SET
+        fecha = CURDATE();
+    END IF;
+    SELECT
+        encventas.vrTotalVta, 
+        TIME(DATE_FORMAT(fechaVenta, '%Y-%m-%d %H:%i:%s')) AS hora
+    FROM
+        encVentas
+    INNER JOIN ajustes ON TIME(encVentas.fechaVenta) BETWEEN ajustes.horaApertura AND ajustes.horaCierre
+    WHERE
+        DATE(encVentas.fechaVenta) = fecha
+     ORDER BY hora ASC;
         END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2717,4 +2717,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 10:18:09
+-- Dump completed on 2023-05-10 10:58:04

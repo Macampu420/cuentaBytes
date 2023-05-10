@@ -28,7 +28,7 @@ const downloadBackup = () => {
         // Crea un enlace para descargar el archivo
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'cuentabytes.sql';
+        a.download = 'cuentabytesEncriptado.sql';
         document.body.appendChild(a);
         
         // Descarga el archivo
