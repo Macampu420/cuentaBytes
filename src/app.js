@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Ajustes = require("./models/ajustes");
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
 let  corsOptions = { origin: 'http://localhost'}
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(cors(corsOptions));
 //middlewares
 // parse application/x-www-form-urlencoded
 app.use(morgan('tiny'));
-
+app.use(fileUpload());
 app.use(bodyParser.urlencoded({
     extended: false
 }))

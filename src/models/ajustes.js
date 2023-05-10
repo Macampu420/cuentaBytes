@@ -1,10 +1,8 @@
 const pool = require('./../conexion');
 const fs = require('fs');
 const crypto = require('crypto');
-const path = require('path');
 const { exec } = require('child_process');
-const archiver = require('archiver');
-const { log } = require('console');
+const nodemon = require('nodemon');
 
 class Ajustes {
 
@@ -53,7 +51,7 @@ class Ajustes {
         try {
           const backupFilePath = `${__dirname}/../../cuentabytes.sql`; // Ruta completa del archivo de copia de seguridad
             
-          const cmd = `mysqldump -h localhost -u root --databases cuentabytes --routines --triggers > ${backupFilePath}`; // Comando para hacer la copia de seguridad          
+          const cmd = `mysqldump -h localhost -u root --databases cuentabytes --routines > ${backupFilePath}`; // Comando para hacer la copia de seguridad          
           
 		  //se ejecuta el comando para realizar la copia de seguridad
           exec(cmd, (error, stdout, stderr) => this.callbackCmdBackup(error, stdout, stderr, backupFilePath, res));
@@ -66,20 +64,28 @@ class Ajustes {
 		try {
 			await pool.query('DROP DATABASE IF EXISTS cuentabytes');
 			await pool.query('CREATE DATABASE IF NOT EXISTS cuentabytes');
+			await pool.query('USE cuentabytes');
 
-			const backupFilePath = `${__dirname}/../../cuentabytes.sql`; // Ruta completa del archivo de copia de seguridad
-			const cmd = `mysql -u root cuentabytes < ${backupFilePath}`; // Comando para hacer la copia de seguridad          
+			const backupFilePath = `${__dirname}/../../cuentabytes.sql`;
+			const cmd = `mysql -u root cuentabytes < ${backupFilePath}`;
 
-			//se ejecuta el comando para realizar la copia de seguridad
 			exec(cmd, (error, stdout, stderr) => {
-				if (error) console.log(error);
+				if (error) {
+					console.log(error);
+					res.status(500).send('Error al importar la base de datos');
+				} else {
+					console.log('Bd importada exitosamente');
+					res.status(200).send();
+					// Reiniciar el servidor usando nodemon
+					// Dentro de tu función restarurarBd
+					nodemon.restart();
+				}
 			});
-
 		} catch (error) {
 			console.log(error);
+			res.status(500).send('Error al importar la base de datos');
 		}
-	}
-	  
+	};
             
 }
 
