@@ -1,7 +1,6 @@
 const express = require('express');
 const clsModuloAjustes = require('../models/ajustes');
 const router = express.Router();
-const fileUpload = require('express-fileupload');
 const objModuloAjustes = new clsModuloAjustes();
 const nodemon = require('nodemon');
 

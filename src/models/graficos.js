@@ -1,5 +1,4 @@
 const pool = require('./../conexion');
-const moment = require('moment-timezone');
 
 class Graficos {
 

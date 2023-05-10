@@ -1,10 +1,8 @@
 const Graficos = require('../models/graficos');
 const express = require('express');
-const moment = require('moment-timezone');
 const router = express.Router();
 
 const objGraficos = new Graficos();
-moment.tz.setDefault('America/Bogota');
 
 router.post('/reportesProductos/:tiempo', async (req, res, next) => {
     try {

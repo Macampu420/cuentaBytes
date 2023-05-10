@@ -1324,7 +1324,7 @@ BEGIN
     INNER JOIN metodopago ON metodopago.idMetodoPago = encventas.idMetodoPago
     INNER JOIN imagen ON imagen.idImagen = productos.idImagen
     WHERE
-        encventas.idVenta = idVenta_; -- Reemplazar el valor constante por el parámetro de entrada
+        encventas.idVenta = idVenta_; 
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2717,4 +2717,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 10:58:04
+-- Dump completed on 2023-05-10 11:14:46
