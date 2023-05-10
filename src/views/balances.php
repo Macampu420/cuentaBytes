@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-<div class="container-fluid" style="background-color: #E5ECEC">
+<div class="container-fluid vh-100 overflow-auto" style="background-color: #E5ECEC">
     <div class="row containerA">
 
         <!-- navbar  -->
@@ -80,6 +80,7 @@
         <?php include './modals/modalRegNota.php' ?>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>

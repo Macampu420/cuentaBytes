@@ -146,8 +146,6 @@ export default class modeloGraficos {
 
 	mostrarDatosProductos = (vectorDatos, tipoBalance, propiedadData, labelGrafico) => {
 
-		console.log(vectorDatos);
-
 		this.mostrarTextoNoData(vectorDatos[tipoBalance], 'pNoDataProductos');
 
 		//se obtienen todos los valores de las horas correspondientes

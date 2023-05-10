@@ -307,11 +307,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById('acordionProductos').classList.add('show');
 
+    Chart.register(ChartDataLabels);
+
+    // Change default options for ALL charts
+    Chart.defaults.set('plugins.datalabels', {
+        display: true,
+        formatter: function(value, context) {
+          return value.toLocaleString('en-US');
+    }});
+    
     let graficoClientes = new Chart(document.getElementById('canvaClientes'), conficInicialGraficos.configClientes);
     let graficoEgresos = new Chart(document.getElementById('canvaEgresos'), conficInicialGraficos.configEgresos);
     let graficoVentas = new Chart(document.getElementById('canvaVentas'), conficInicialGraficos.configVentas);
     let graficoCompras = new Chart(document.getElementById('canvaCompras'), conficInicialGraficos.configCompras);
     let graficoProductos = new Chart(document.getElementById('canvaProductos'), conficInicialGraficos.configProductos);
+
 
     objModeloGraficos.setGraficos(graficoProductos, graficoVentas, graficoCompras, graficoEgresos, graficoClientes);
     
