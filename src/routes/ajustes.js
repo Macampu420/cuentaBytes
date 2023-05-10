@@ -53,9 +53,18 @@ router.post('/subirBackup', (req, res) => {
     let archivo = req.files.archivo;
 
      // Guardar el archivo en el servidor
-    archivo.mv(`${__dirname}/../../cuentabytes.sql`);
-    objModuloAjustes.restarurarBd(req, res);
-    nodemon.restart();
-    
+    archivo.mv(`${__dirname}/../../cuentabytesEncriptado.sql`, (error) => {
+        objModuloAjustes.desencriptarArchivo();
+        objModuloAjustes.restarurarBd(req, res);
+        nodemon.restart();    
+    });    
+});
+
+router.get('/backupCifrado', (req, res) => {
+    objModuloAjustes.backupDatabase(req, res);
+});
+
+router.get('/descifrado', ( req, res) => {
+    objModuloAjustes.desencriptarArchivo(req, res);
 })
 module.exports = router
