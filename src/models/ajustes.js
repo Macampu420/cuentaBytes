@@ -1,14 +1,23 @@
-const pool = require('./../conexion');
 const fs = require('fs');
-const crypto = require('crypto');
 const { exec } = require('child_process');
 const nodemon = require('nodemon');
+const mysql = require('mysql');
+const { promisify } = require('util');
+
+const databaseConfig = {
+	host: 'localhost',
+	user: 'root',
+	password: '',
+	database: 'cuentabytes'
+};  
+
+const pool = mysql.createPool(databaseConfig);
+pool.query = promisify(pool.query);
 
 class Ajustes {
 
     servirAjustes = async (req, res) => {
         try {
-
             //se traen los datos de la bd y si todo sale bien se sirve la API
             let resAjustes = await pool.query("CALL listarAjustes");
             let ajustes = JSON.stringify(resAjustes[0][0]);
@@ -77,7 +86,6 @@ class Ajustes {
 					console.log('Bd importada exitosamente');
 					res.status(200).send();
 					// Reiniciar el servidor usando nodemon
-					// Dentro de tu función restarurarBd
 					nodemon.restart();
 				}
 			});
