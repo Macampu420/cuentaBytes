@@ -92,12 +92,13 @@
         width: 20px;
         height: 100%;
         cursor: pointer;
+        filter: invert();
     }
 
     .btnAccion {
         width: 3.4rem;
         height: 3.4rem;
-        border: 2px solid #000;
+        /* border: 2px solid #000; */
         border-radius: 15px;
     }
 

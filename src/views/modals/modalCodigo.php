@@ -16,7 +16,7 @@
                         <br><br><br>
                         <div class="modal-footer">
                             <button type="button" id="reenviar" class="btn btn-secondary" data-bs-dismiss="modal">Reenviar</button>
-                            <button type="submit" class="btn btn-primary">Verificar Codigo</button>
+                            <button type="submit" class="btn btn-secondary">Verificar Codigo</button>
                         </div>
                     </div>
                 </form>

@@ -3,12 +3,16 @@
 
 function registrarImg() {
     if (isset($_FILES['imgProducto'])) {
+        //parametros para la conexion
         $host = 'localhost';
         $user = 'root';
         $pass = '';
         $db = 'cuentabytes';
 
+        //se crea la coneixon
         $connection = new mysqli($host, $user, $pass, $db);
+
+        //variables necesarias para el registro de la imagen
         $nombreArchivo = $_FILES['imgProducto']['name'];
         $tipo_archivo = $_FILES['imgProducto']['type'];
         $ruta_temporal = $_FILES['imgProducto']['tmp_name'];
@@ -56,13 +60,20 @@ function registrar($sqlRegProduc, $conn) {
 
 function eliminarProducto($sqlEliminar, $conn) {
 
+   try {
     $resEliminar = $conn -> query($sqlEliminar);
 
     if (!$resEliminar) {
-        echo "<script> alert('ha ocurrido un error al eliminar el producto ')</script>";
+        echo "ha ocurrido un error al eliminar el producto')";
     } else {
         echo "Se ha eliminado correctamente el producto";
     }
+   } catch (mysqli_sql_exception $err) {
+    
+    if($err->getCode() == 1451){
+        echo "No se puede eliminar el producto debido a que está asociado a una o mas facturas.";
+    }
+   }
 }
 
 function listarUnProducto($sqlListar, $conn) {

@@ -3,15 +3,19 @@
 </div>
 <div class="text-white">
 <ul>
-    <li class="nav-li"><a class="nav-link" href="./balances.php">Inicio</a></li>
-    <li class="nav-li"><a class="nav-link" href="./productos.php">Inventario</a></li>
-    <li class="nav-li"><a class="nav-link" href="./egresos.php">Egresos</a></li>
-    <li class="nav-li"><a class="nav-link" href="./ventas.php">Ventas</a></li>
-    <li class="nav-li"><a class="nav-link" href="./compras.php">Compras</a></li>
-    <li class="nav-li"><a class="nav-link" href="./clientes.php">Clientes</a></li>
-    <li class="nav-li"><a class="nav-link" href="./proveedores.php">Proveedores</a></li>
+    <li id="linkInicio" class="nav-li"><a class="nav-link" href="./balances.php">Inicio</a></li>
+    <li id="linkInventario" class="nav-li"><a class="nav-link" href="./productos.php">Inventario</a></li>
+    <li id="linkEgresos" class="nav-li"><a class="nav-link" href="./egresos.php">Egresos</a></li>
+    <li id="linkVentas" class="nav-li"><a class="nav-link" href="./ventas.php">Ventas</a></li>
+    <li id="linkCompras" class="nav-li"><a class="nav-link" href="./compras.php">Compras</a></li>
+    <li id="linkClientes" class="nav-li"><a class="nav-link" href="./clientes.php">Clientes</a></li>
+    <li id="linkProveedores" class="nav-li"><a class="nav-link" href="./proveedores.php">Proveedores</a></li>
 </ul>
 </div>
+<script>
+    let itemActive = "<?php echo $parametro;?>";
+    document.getElementById(itemActive).classList.add("itemNavActive");
+</script>
 <style>
     *{
     text-decoration: none;
@@ -47,6 +51,12 @@
     border-bottom: solid 3px #1CB3D3;
     animation: desplazar-rigth 1s;
     transition: 1s ease;
+    transform: translateX(40px);
+}
+
+.itemNavActive {
+    border-bottom: solid 3px #1CB3D3;
+    animation: desplazar-right 1s;
     transform: translateX(40px);
 }
 

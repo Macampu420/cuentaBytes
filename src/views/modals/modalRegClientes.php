@@ -1,6 +1,6 @@
 <div class="modal" id="modalCl" tabindex="-1" editar="false">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content text-white">
+        <div class="modal-content">
             <div class="modal-body pb-lg-5 px-lg-5 mx-3">
                 <form action="../../controllers/clientes.php" method="post">
                     <div class="row">

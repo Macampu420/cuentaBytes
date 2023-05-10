@@ -11,16 +11,25 @@ function registrar($sqlRegCl, $conn){
         echo "<script> window.location.href='http://localhost/cuentabytes/src/views/clientes.php';</script>";
     }
 }
+
 function eliminarCliente($sqlEliminar, $conn){
 
-    $resEliminar = $conn -> query($sqlEliminar);
+    try{
+        $resEliminar = $conn -> query($sqlEliminar);
 
-    if(!$resEliminar){
-        echo "<script> alert('ha ocurrido un error al eliminar el cliente ')</script>";
-    } else {
-        echo "se ha eliminado correctamente";
+        // verificar si hay errores
+        if (!$resEliminar) {
+            echo "<script> alert('ha ocurrido un error al eliminar el cliente ')</script>";
+        }
+        else {
+            echo "se ha eliminado correctamente";
+        }
+    } catch (mysqli_sql_exception $err) {
+    
+        if($err->getCode() == 1451){
+            echo "No se puede eliminar el cliente debido a que está asociado a una o mas facturas.";
+        }
     }
-
 
 }
 

@@ -5,175 +5,110 @@ traerClientes();
 traerProductos();
 renderVentas();
 traerMetodosPago();
+traerAjustesVta();
 
 document.getElementById('btnAnadirVta').addEventListener('click', event => {
 
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
+    divModal.classList.add("d-flex");
+    iniciarModalRegistrar(divModal, event);
+    renderItem();
+    modalBootstrap.show();
+    
 
-        divModal.setAttribute('editar', false);
+});
 
-        configModal(divModal, event);
-
-        modalBootstrap.show();
-    }
-
+divModal.addEventListener('hidden.bs.modal', (event) => {
+    divModal.classList.remove("d-flex");
 });
 
 document.getElementById('btnAnadir').addEventListener('click', event => {
-
-    if (event.target.tagName == "H3" || event.target.tagName == "IMG") {
-        renderItem();
-    }
-
+    renderItem();
 });
 
-document.getElementById("contItems").addEventListener("change", (event) => {
+document.getElementById("tblItemsVta").addEventListener("change", (event) => {
 
-    var disparador = event.target;
+    let disparador = event.target;
 
-    if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "false") {
-
-        slider = document.querySelector("." + event.target.id);
+    if (disparador.tagName == "SELECT") {
 
         let item = vItemsVta.find(
             //busca en los elementos de la venta actual uno que coincida con el item modificado
             //si no existe se define como undefined
-            element => element.idItem == disparador.parentElement.id
-        );
+            element => element.idItem ==  parseInt(disparador.id.match(/\d+$/)[0]));
 
-
-        //busca el producto que coincida con el option seleccionado para definir el stockActual
-        vObjsProductos.forEach((element) => {
-            if (element.idProducto == disparador.value) {
-                stockActual = element.stockProducto;
-            }
-        });
-
-
-        //valida que haya unidades disponibles para vender
-        if (stockActual <= 0) {
-            slider.nextElementSibling.innerHTML = ("No hay unidades disponibles");
-        } else {
-            habilitarSlider(slider, stockActual);
-            actualizarCrearItem(item, event.target, vItemsVta);
-        }
-    } else if (disparador.tagName == "SELECT" && divModal.getAttribute('editar') == "true") {
-
-        slider = document.querySelector("." + event.target.id);
-
-        let item = vItemsEditar.find(
-            //busca en los elementos de la venta actual uno que coincida con el item modificado
-            //si no existe se define como undefined
-            element => element.idVenta == disparador.parentElement.id
-        );
-
-        //busca el producto que coincida con el option seleccionado para definir el stockActual
-        let producto = vObjsProductos.find(element => element.idProducto == parseInt(disparador.value));
-
-        stockActual = producto.stockProducto;
-
-        //valida que haya unidades disponibles para vender
-        if (stockActual <= 0) {
-            slider.nextElementSibling.innerHTML = ("No hay unidades disponibles");
-        } else {
-            habilitarSlider(slider, stockActual);
-            actualizarCrearItem(item, event.target, vItemsEditar);
-        }
-    }
-
-    if (disparador.tagName == "INPUT" && divModal.getAttribute('editar') == "false") {
-
-        actualizarUnidVend(disparador, vItemsVta);
-
-    }
-
-    if (disparador.tagName == "INPUT" && divModal.getAttribute('editar') == "true") {
-
-        actualizarUnidVend(disparador, vItemsEditar);
-
-    }
+        actualizarCrearItem(item, event.target, vItemsVta);
+        
+        disparador.nextElementSibling.classList.remove("d-none");
+    }   
 
 });
 
-document.getElementById("contItems").addEventListener("input", (event) => {
+document.getElementById("tblItemsVta").addEventListener("input", (event) => {
+    //codigo a ejecutar si el diparador es un inpCantidad producto
+    if (event.target.id.includes("inpCantidad")) {
+        //si el valor digitado es mayor que las unidades disponibles setea el valor del
+        //input como este numero de unidades
+        if (event.target.value > parseInt(event.target.getAttribute("max")))
+            event.target.value = parseInt(event.target.getAttribute("max"));
 
-    disparador = event.target;
+        //si el valor digitado es menor a  setea el valor del
+        //input como 0
+        if (event.target.value < 0) event.target.value = 0;
 
-    if (disparador.nodeName == "INPUT") {
-
-        divModal.getAttribute("editar") == "true" ? renderNuevoStock(disparador, vItemsEditar) : renderNuevoStock(disparador, vItemsVta);
-
-
-    }
-});
-
-document.getElementById("inpDto").addEventListener("input", () => {
-
-    if (divModal.getAttribute("editar") == "false") {
-        vrTotalRegistar(vItemsVta);
-    } else {
-        vrTotalEditar(vItemsEditar);
+        actualizarUnidadesVendidas(event.target, vItemsVta);
     }
 
+    vrTotalRegistar(vItemsVta);
+
 });
+
+document.getElementById("inpDescuento").addEventListener("input", (event) => {
+    //si el valor digitado es menor a  setea el valor del
+    //input como 0
+    if(event.target.value < 0) event.target.value = 0;
+})
+
+document.getElementById("tblItemsVta").addEventListener("click", (event) => {
+
+    if(event.target.id == "" && event.target.nodeName == "A"){
+        eliminarItem(event.target.parentElement, vItemsVta);
+    }
+    if(event.target.id.includes("btnEliminarItem")){
+        eliminarItem(event.target, vItemsVta);
+    };
+
+});
+
+document.getElementById("inpDescuento").addEventListener("input", (event) => vrTotalRegistar(vItemsVta));
 
 document.querySelector("form").addEventListener("submit", (event) => {
 
     //evita que la pagina se recargue
     event.preventDefault();
 
-    if(divModal.getAttribute("editar") == "false")
-        registrarVenta()
-   else{
-    let confirmacion = confirm("Solo podrás editar la venta una unica vez");
-    if(confirmacion) actualizarVenta(event);
-   }
+    let swItemsSinUnidades = false;
+    swItemsSinUnidades = vItemsVta.some(item => {
+        return parseInt(item.unidadesVendidas) <= 0 
+    });
+
+    if (vItemsVta.length !== 0) {
+        if (swItemsSinUnidades) {
+            window.alert("Debes seleccionar por lo menos 1 unidad de todos los productos seleccionados para registrar la venta");
+            return;
+        }
+        registrarVenta(); 
+        generarPdf();
+    } else {
+        window.alert("Debes seleccionar algún producto para registrar la venta");
+    }
+
 });
-
-document.getElementById("contItems").addEventListener("click", (event) => {
-
-    if (event.target.id.includes("dlt")) {
-        divModal.getAttribute("editar") == "true" ? eliminarItem(event.target, vItemsEditar) : eliminarItem(event.target, vItemsVta);
-    }
-});
-
-document.getElementById("filaVentas").addEventListener("click", async event => {
-
-    if (event.target.hasAttribute("btnAcciones")) {
-
-        divModal.setAttribute('editar', true);
-
-        configModal(divModal, event);
-
-        modalBootstrap.show();
-
-    }
-})
-
-document.getElementById("btnEditar").addEventListener("click", () => document.getElementById('btnGuardar').disabled = false)
-
-document.getElementById("btnEliminar").addEventListener("click", async () => {
-
-    idVenta = document.getElementById("btnEliminar").getAttribute("idventa");
-
-    if (confirm("¿Deseas eliminar la venta?") == true) {
-
-        await fetch(`http://localhost:3000/eliminarVta${idVenta}`)
-            .then(res => res.text())
-            .then(data => console.log(data));
-
-        location.reload();
-
-    }
-})
 
 document.getElementById("buscadorVtas").addEventListener("change", () => {
 
     let ventas = document.querySelectorAll("[cartaItem]");
     let swNoCoinc = false;
     var alert = document.getElementById("alert");
-
-    console.log(alert);
 
     ventas.forEach(element => {
 
@@ -200,6 +135,14 @@ document.getElementById("buscadorVtas").addEventListener("change", () => {
     else{
         alert.classList.add("d-none");
     
+    }
+})
+
+document.getElementById("filaVentas").addEventListener("click", (event) => {
+    if(event.target.hasAttribute("btnacciones")){
+        iniciarModalDetallesVenta(event.target);
+        divModal.classList.add("d-flex");
+        modalBootstrap.show();
     }
 })
 

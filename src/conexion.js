@@ -1,13 +1,14 @@
 //importacion de modulos
 const mysql = require('mysql');
+const { promisify } = require('util');
+
 const  database = {
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'cuentabytes'
+    database: 'cuentabytes',
 }
 
-const { promisify } = require('util');
 
 //se crea el pool de las conexiones
 const pool = mysql.createPool(database);

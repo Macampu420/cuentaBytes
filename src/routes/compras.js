@@ -16,10 +16,6 @@ router.get('/listarCompra:id', (req, res) => {
     objModuloCompras.listarCompra(req, res); 
 })
 
-router.post('/compras/editarCompra', async (req, res) => {
-    objModuloCompras.actualizarCompra(req,res);
-})
-
 router.get('/eliminarCompra:id', (req, res) => {
     objModuloCompras.eliminarCompra(req, res);
 })

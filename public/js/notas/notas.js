@@ -1,5 +1,5 @@
-var vObjsNotas = [];
-var vItemNota = [];
+let vObjsNotas = [];
+let vItemNota = [];
 
 const renderizarNotas = async () => {
     await fetch("http://localhost:3000/listarNotas")
@@ -16,14 +16,13 @@ const renderizarNotas = async () => {
             console.log(error)
         });
 
-    console.log(vObjsNotas);
 
     if (vObjsNotas.length > 0) {
         vObjsNotas.forEach(element => {
 
             document.getElementById("filaNotas").insertAdjacentHTML('beforeend', `
 
-            <div id="${element.idNota}" cartaItem="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
+            <div id="${element.idNota}" cartaItemNota="true" class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
             <div class="card-body mt-2 mx-auto">
                 <h5 btnAcciones idNota="${element.idNota}" class="puntosAcciones m-2 w-25">...</h5>
                 <h5 class="text-center" idNota="${element.idNota}">${element.tituloNota}</h5>
@@ -83,6 +82,43 @@ const desplegarModalNotas = (modal, event) => {
 
 }
 
+document.getElementById("buscadorNotas").addEventListener("change", () => {
+
+    let notas = document.querySelectorAll("[cartaItemNota]");
+    let swNoCoinc = false;
+    var alert = document.getElementById("alertNoNotas");
+
+    console.log(alert);
+
+    notas.forEach(element => {
+
+        let tituloNota = element.firstElementChild.innerHTML.toLowerCase();
+
+        if (!tituloNota.includes(document.getElementById("buscadorNotas").value.toLowerCase())) {
+            element.classList.add("d-none");
+            
+        } else {
+            
+            swNoCoinc = true;
+            element.classList.remove("d-none");
+        }
+
+    })
+
+    console.log(notas);
+
+    if (swNoCoinc == false) {
+
+        //hay coincidencias
+        alert.classList.remove("d-none");
+        
+    } 
+    else{
+        alert.classList.add("d-none");
+    
+    }
+})
+
 const modalEditarNota = async event => {
     document.getElementById('divAccionesNotas').classList.remove("d-none");
     //desabilita el btn guardar que se habilitara cuando el usuario clickee editar
@@ -140,5 +176,4 @@ const actualizarNota = async (idNota) => {
             location.reload();
         });
 
-        console.log(notaEditar);
 }
