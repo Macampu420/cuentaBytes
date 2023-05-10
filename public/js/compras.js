@@ -14,7 +14,7 @@ let traerProveedores = async () => {
 }
 
 //pone todos los proveedores en el slc
-let mostrarProveedores = async () => {
+const mostrarProveedores = async () => {
     let slcProveedor = document.getElementById("slcProveedor");
     vProveedores = await traerProveedores();
 
@@ -24,7 +24,7 @@ let mostrarProveedores = async () => {
     })
 };
 
-let traerProductos = async () => {
+const traerProductos = async () => {
     //se piden todos los productos y se guardan en el vector correspondiente
     fetch("http://localhost:3000/listarProductos")
         .then(res => res.json())
@@ -36,7 +36,7 @@ let traerProductos = async () => {
 }
 
 //trae todos los encs de las compras de la api y los devuelve como json
-let traerCompras = async () => {
+const traerCompras = async () => {
     let resultado = await fetch("http://localhost:3000/compras/listarcompras");
 
     let compras = await resultado.json();
@@ -44,7 +44,7 @@ let traerCompras = async () => {
 }
 
 //guarda las compras en el respectivo vector y muestra la carta de cada una
-let mostrarCompras = async () => {
+const mostrarCompras = async () => {
     vCompras = await traerCompras();
 
     //valida que haya compras registradas y renderiza cada una, si no hay muestra un mensaje indicando esto
@@ -101,7 +101,7 @@ const eliminarItem = (disparador, vector_) => {
 
 }
 
-let renderItemReg = () => {
+const renderItemReg = () => {
 
     document.getElementById("tblItemsVta").insertAdjacentHTML('beforeend', `
 <tr id="item${numeroItem}" class="h-25">
@@ -156,7 +156,7 @@ let renderItemReg = () => {
 
 }
 
-let configModalEdit = async (event) => {
+const configModalEdit = async (event) => {
     let idCompra = event.target.getAttribute("idcompra");
     let resultado = await fetch(`http://localhost:3000/listarCompra${idCompra}`);
     let compra = await resultado.json();
@@ -298,7 +298,7 @@ const vrTotal = (vItems) => {
     document.getElementById("pValorTotal").innerHTML = "$" + conversorColombia.format(vrTot);
 }
 
-let enviarRegCompra = async () => {
+const enviarRegCompra = async () => {
     // Obtener el ID del proveedor y el valor total de la compra
     let idProveedor = document.getElementById('slcProveedor').value;
     let vrTotalCompra = document.getElementById('pValorTotal').innerHTML.replace(',', '');
