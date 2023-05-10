@@ -83,11 +83,9 @@ const eliminarItem = (disparador, vector_) => {
         element => (element.idItem) == parseInt(disparador.id.match(/\d+$/)[0])
     );
 
-    console.log(item);
-
     //eliminará la carta del elemento y lo quitara del vector segun su posicion, si este existe en el array
     //sino solo eliminara la carta
-    if (item != -1) {
+    if (item != undefined) {
         if (item == 0) {
             vector_.shift();
             disparador.parentElement.parentElement.remove();
