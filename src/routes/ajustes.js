@@ -60,11 +60,4 @@ router.post('/subirBackup', (req, res) => {
     });    
 });
 
-router.get('/backupCifrado', (req, res) => {
-    objModuloAjustes.backupDatabase(req, res);
-});
-
-router.get('/descifrado', ( req, res) => {
-    objModuloAjustes.desencriptarArchivo(req, res);
-})
 module.exports = router
