@@ -17,14 +17,10 @@ class moduloInicioSesion {
                 res.write(err);
                 res.end();
             } else if (rows[0].length === 0) {
-
-                res.status(400).send('0');
+                res.status(400).send();
                 res.end();
-
             } else {
-                //si no hay error envia el texto, setea el id de la ultima vta y termina la peticion
                 res.status(200).send(rows[0])
-
             }
             });
     }
