@@ -1,3 +1,12 @@
+<?php
+require_once('./../models/InicioSesion.php');
+
+$objInicioSesion = new InicioSesion();
+session_start();
+error_reporting(0);
+$objInicioSesion->verificarSesion($_SESSION['usuario']);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

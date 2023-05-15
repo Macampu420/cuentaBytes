@@ -77,6 +77,7 @@
 
             </div>
 
+            <a class="col-5 mx-auto mt-5 btn btn-secondary" href="./../controllers/cerrarSesion.php">Cerrar sesion</a>
         </div>
 
     </div>

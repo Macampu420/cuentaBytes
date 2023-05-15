@@ -17,20 +17,20 @@
     </div>
     <div class="center my-5">
         <h2 class="titRegistro">Inicio de Sesión</h2>
-        <form action="./../views/balances.php" method="GET" id="inicioSesion">
+        <form action="./../controllers/inicioSesion.php" method="POST" id="inicioSesion">
             <div class="txt_field">
-                <input type="text" name="email" id="email" maxlength="40" required>
+                <input type="text" name="usuario" id="email" maxlength="40" required>
                 <span></span>
                 <label>Correo</label>
             </div>
             <div class="txt_field">
-                <input type="password" id="mostrar1" name="contrasena" maxlength="100" required>
+                <input type="password" id="mostrar1" name='clave' maxlength="100" required>
                 <span></span>
                 <label>Contraseña</label>
                 <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
             <div class="pass">Haz Olvidado tu Contraseña?</div>
-            <input type="submit" id="btn" value="Iniciar Sesión" onclick="verificarRegistro()">
+            <input type="submit" id="btn" value="Iniciar Sesión">
             <div id="alerta"></div>
             <div class="signup_link">
                 ¿No Tienes Cuenta? <a href="./registro.php">Registro</a>
@@ -44,7 +44,6 @@
     <?php include './modals/modalCodigo.php' ?>
     <script src="./../../public/js/inicioSesion.js">    
     MostrarPass();
-    verificarRegistro();
     </script>
     
 </body>

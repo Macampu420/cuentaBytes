@@ -52,7 +52,7 @@ class moduloRegistro {
 
         if (codigo == this.codigoEnv) {
 
-            const contrasena = CryptoJS.SHA256(this.contrasena).toString(CryptoJS.enc.Hex);
+            const contrasena = this.contrasena;
 
             await pool.query("CALL registrarEmpresa(?, ?, ?)", [this.nombreEmpresa, this.email, contrasena],
                 (err, rows) => {
@@ -61,18 +61,15 @@ class moduloRegistro {
                         console.log("internal error", err);
                         res.write(err);
                         res.end();
+                        return;
                     } else {
-                        res.send({
-                            status: 200,
-                            messaje: "Registrado Correctamente"
-                        })
-
                         pool.query("CALL insertarAjustes(?)", [this.nombreEmpresa],
                             (err, rows) => {
                                 if (err) {
                                     console.log("internal error", err);
                                     res.write(err);
                                     res.end();
+                                    return;
                                 }
                                 else {
                                     res.send({
@@ -90,7 +87,8 @@ class moduloRegistro {
             res.send({
                 status: 300,
                 messaje: "Codigo invalido",
-            })
+            });
+            return;
         }
     }
 
