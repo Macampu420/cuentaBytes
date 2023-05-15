@@ -29,7 +29,6 @@
                 <label>Contraseña</label>
                 <input type="checkbox" class="checkbox" onclick="MostrarPass()">
             </div>
-            <div class="pass">Haz Olvidado tu Contraseña?</div>
             <input type="submit" id="btn" value="Iniciar Sesión">
             <div id="alerta"></div>
             <div class="signup_link">
