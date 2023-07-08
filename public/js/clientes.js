@@ -1,26 +1,22 @@
-
 const traerClientes = async clientes => {
-    
-    await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
+  await fetch('http://localhost/cuentabytes/src/controllers/clientes/apiClientes.php')
 
     .then(res => res.json())
     .then(data => {
-        if(!data.mensaje){
-            data['items'].forEach(vta => clientes.push(vta));
-        } else {
-            clientes.length = 0;
-        }
-    });
+      if (!data.mensaje) {
+        data.items.forEach(vta => clientes.push(vta))
+      } else {
+        clientes.length = 0
+      }
+    })
 }
 
 renderClientes = async clientes => {
+  await traerClientes(clientes)
 
-    await traerClientes(clientes);
-
-    if (clientes.length > 0) {
-        clientes.forEach(element => {
-
-            document.getElementById("filaClientes").insertAdjacentHTML('beforeend', `
+  if (clientes.length > 0) {
+    clientes.forEach(element => {
+      document.getElementById('filaClientes').insertAdjacentHTML('beforeend', `
         
         <div id="${element.idCliente}" idCliente="${element.idCliente}" cartaItem="true"
         class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
@@ -33,11 +29,10 @@ renderClientes = async clientes => {
         </div>
         </div>
         `)
-        }
-
-        );
-    } else {
-        document.getElementById("filaClientes").innerHTML = "<h2 class='text-center'>No hay clientes registrados, puedes registrar uno presionando el boton de arriba</h2/>"
     }
 
+    )
+  } else {
+    document.getElementById('filaClientes').innerHTML = "<h2 class='text-center'>No hay clientes registrados, puedes registrar uno presionando el boton de arriba</h2/>"
+  }
 }

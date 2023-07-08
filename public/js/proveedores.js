@@ -1,25 +1,21 @@
 traerProveedores = async proveedores => {
-    
-    await fetch('http://localhost/cuentabytes/src/controllers/proveedores/apiProveedor.php')
+  await fetch('http://localhost/cuentabytes/src/controllers/proveedores/apiProveedor.php')
     .then(res => res.json())
     .then(data => {
-        if(!data.mensaje){
-            data['items'].forEach(provee => proveedores.push(provee));
-        } else {
-            proveedores.length = 0;
-        }
-    });
-
+      if (!data.mensaje) {
+        data.items.forEach(provee => proveedores.push(provee))
+      } else {
+        proveedores.length = 0
+      }
+    })
 }
 
 renderProveedores = async proveedores => {
+  await traerProveedores(proveedores)
 
-    await traerProveedores(proveedores);
-    
-    if(proveedores.length > 0) {
-        proveedores.forEach(element => {
-
-            document.getElementById("filaProvee").insertAdjacentHTML('beforeend', `
+  if (proveedores.length > 0) {
+    proveedores.forEach(element => {
+      document.getElementById('filaProvee').insertAdjacentHTML('beforeend', `
             
             <div id="${element.idProveedor}" idproveedor="${element.idProveedor}" cartaItem="true"
             class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
@@ -32,11 +28,10 @@ renderProveedores = async proveedores => {
             </div>
     
             `)
-        }
-    
-        );
-    } else {
-        document.getElementById("filaProvee").innerHTML = "<h2 class='text-center'>No hay proveedores registrados puedes registrarlos clickando el boton de 'Añadir'.</h2/>"
     }
 
+    )
+  } else {
+    document.getElementById('filaProvee').innerHTML = "<h2 class='text-center'>No hay proveedores registrados puedes registrarlos clickando el boton de 'Añadir'.</h2/>"
+  }
 }

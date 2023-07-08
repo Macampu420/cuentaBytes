@@ -1,30 +1,25 @@
-const conversorColombia = new Intl.NumberFormat('en-CO');
+const conversorColombia = new Intl.NumberFormat('en-CO')
 
 const traerProductos = async productos => {
+  await fetch('http://localhost/cuentabytes/src/controllers/productos/apiProductos.php')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.mensaje) {
+        data.items.forEach(product => productos.push(product))
+      } else {
+        productos.length = 0
+      }
 
-    await fetch('http://localhost/cuentabytes/src/controllers/productos/apiProductos.php')
-        .then(res => res.json())
-        .then(data => {
-            if (!data.mensaje) {
-                data['items'].forEach(product => productos.push(product));
-            } else {
-                productos.length = 0;
-            }
-
-            console.log(data);
-
-        });
-
+      console.log(data)
+    })
 }
 
 renderProductos = async productos => {
+  await traerProductos(Productos)
 
-    await traerProductos(Productos);
-
-    if (Productos.length > 0) {
-        Productos.forEach(element => {
-
-            document.getElementById("filaProductos").insertAdjacentHTML('beforeend', `
+  if (Productos.length > 0) {
+    Productos.forEach(element => {
+      document.getElementById('filaProductos').insertAdjacentHTML('beforeend', `
             
             <div id="${element.idProducto}" idProducto="${element.idProducto}" cartaItem="true"
             class="card shadow col-6 mx-auto my-3 my-lg-3" style="width: 18rem;" role="button">
@@ -42,11 +37,10 @@ renderProductos = async productos => {
             </div>
     
             `)
-        }
-
-        );
-    } else {
-        document.getElementById("filaProductos").innerHTML = "<h2 class='text-center'>No hay productos registradas, registra alguno clickando el boton añadir.</h2/>"
     }
 
+    )
+  } else {
+    document.getElementById('filaProductos').innerHTML = "<h2 class='text-center'>No hay productos registradas, registra alguno clickando el boton añadir.</h2/>"
+  }
 }

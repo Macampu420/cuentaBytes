@@ -1,29 +1,28 @@
-//importacion de modulos
-const mysql = require('mysql');
-const { promisify } = require('util');
+// importacion de modulos
+const mysql = require('mysql')
+const { promisify } = require('util')
 
-const  database = {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'cuentabytes',
+const database = {
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'cuentabytes'
 }
 
+// se crea el pool de las conexiones
+const pool = mysql.createPool(database)
 
-//se crea el pool de las conexiones
-const pool = mysql.createPool(database);
-
-//se hace la conexion a la base de datos
+// se hace la conexion a la base de datos
 pool.getConnection((err, connection) => {
-    if (err) {
-        console.error(err);
-    } else {                        
-        connection.release();
-        console.log('bd conectada');
-    }
-});
+  if (err) {
+    console.error(err)
+  } else {
+    connection.release()
+    console.log('bd conectada')
+  }
+})
 
-//se convierten los callbacks en promesas
-pool.query = promisify(pool.query);
+// se convierten los callbacks en promesas
+pool.query = promisify(pool.query)
 
-module.exports = pool;
+module.exports = pool
